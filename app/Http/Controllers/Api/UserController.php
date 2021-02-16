@@ -29,7 +29,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $model = Patient::query()->get();
+        $model = User::query()->get();
         return response()->json($model);
 //        return response('false');
     }

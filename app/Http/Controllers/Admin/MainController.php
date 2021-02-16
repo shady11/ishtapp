@@ -16,6 +16,7 @@ class MainController extends Controller
      */
     public function index()
     {
+        dd('sdf');
         return view('admin.main.index');
     }
 
@@ -103,7 +104,7 @@ class MainController extends Controller
                 ->toMediaCollection('main_logo', 'main_logo');
             $row->save();
         }
-        
+
         return redirect()->route('main.show', $row);
     }
 
@@ -121,7 +122,7 @@ class MainController extends Controller
 
     public function removethumb(Request $request){
         $row = Main::findOrfail($request->page);
-        $row->getMedia('main_logo')->last()->delete();        
+        $row->getMedia('main_logo')->last()->delete();
         return response()->json([
             'status' => 'true'
         ]);

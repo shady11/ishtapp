@@ -22,19 +22,11 @@ Route::group([
     Route::name('users.change_pass')->put('/change-password/{id}', ['uses' => 'ResetPasswordController@change_pass']);
     Route::name('users.resetpassword')->post('/resetpassword', ['uses' => 'ResetPasswordController@resetpassword']);
     Route::name('users.set_pin_kod')->post('/set_pin_kod/{id}', ['uses' => 'ResetPasswordController@set_pin_kod']);
-    Route::name('categorytests.api')->get('categories/{id}', ['uses' => 'CategorytestController@show']);
-    Route::name('consultants.api')->get('consultants/{id}', ['uses' => 'ConsultantController@show']);
-    Route::name('organizations.api')->get('organizations/{id}', ['uses' => 'OrganizationController@show']);
-    Route::name('resourcesforuserregistration.api')->get('resourcesforuserregistration', ['uses' => 'GetresourcesforregController@index']);
-    Route::name('moods.api')->get('moods', ['uses' => 'MoodController@index']);
-    Route::name('symptoms.api')->get('symptoms', ['uses' => 'SymptomController@index']);
-    Route::name('patientmoods.api')->post('patientmoods', ['uses' => 'PatientmoodController@store']);
-    Route::name('patientsymptoms.api')->post('patientsymptoms', ['uses' => 'PatientsymptomController@store']);
-    Route::name('notifications.api')->post('notifications', ['uses' => 'NotificationController@store']);
-    Route::name('patientresultimages.api')->post('patientresultimages', ['uses' => 'PatientresultimageController@store']);
-    Route::name('videoinformations.api')->get('videoinformations', ['uses' => 'VideoinformationController@index']);
-    Route::name('audioinformations.api')->get('audioinformations', ['uses' => 'AudioinformationController@index']);
-    Route::name('statistics.api')->post('statistics', ['uses' => 'StatisticController@store']);
+    Route::name('busyness.api')->get('busyness', ['uses' => 'BusynessController@index']);
+    Route::name('schedule.api')->get('schedule', ['uses' => 'ScheduleController@index']);
+    Route::name('region.api')->get('region', ['uses' => 'RegionController@index']);
+    Route::name('job_type.api')->get('job_type', ['uses' => 'JobTypeController@index']);
+    Route::name('vacancy_type.api')->get('vacancy_type', ['uses' => 'VacancyTypeController@index']);
 //    Route::name('users.api')->get('users/{id}', ['uses' => 'UserController@show']);
 
     Route::resources([

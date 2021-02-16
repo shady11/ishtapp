@@ -21,6 +21,7 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
+//        dd('sdf');
         return view('admin.main.index');
     }
 

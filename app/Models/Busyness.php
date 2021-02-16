@@ -11,7 +11,8 @@ class Busyness extends Model
 
     protected $connection = 'mysql';
 
-    protected $table = 'busyness';
+    protected $table = 'busynesses';
+    protected $guarded = ['id'];
     protected $fillable = [
         'name',
     ];
@@ -22,6 +23,11 @@ class Busyness extends Model
             'name' => 10,
         ],
     ];
+
+    public function busynesses(){
+        return Busyness::all();
+    }
+
 
     public function getCreatedDate()
     {
