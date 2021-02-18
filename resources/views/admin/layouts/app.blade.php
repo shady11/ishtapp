@@ -13,6 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
     <!--begin::Web font -->
     <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <link rel="canonical" href="https://keenthemes.com/metronic" />
     <script>
         WebFont.load({
             google: {"families":["Roboto:300,400,500,600,700"]},
@@ -34,6 +35,12 @@
     <link href="{{asset('css/admin/app.css')}}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{asset('assets/vendors/custom/datatables/datatables.bundle.css')}}">
+    <link href="{{asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.css')}}" rel="stylesheet" type="text/css" />
+    <!--end::Page Vendors Styles-->
+    <!--begin::Global Theme Styles(used by all pages)-->
+    <link href="{{asset('assets/plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/plugins/custom/prismjs/prismjs.bundle.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css" />
     <!--end::Base Styles -->
     <link rel="shortcut icon" href="{{asset('favicon.ico')}}" />
 
@@ -43,31 +50,35 @@
 <!-- end::Head -->
 
 <!-- end::Body -->
-<body  class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--fixed m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default {{request()->cookie('mini')}}">
+<body id="kt_body" class="header-fixed subheader-enabled page-loading">
 <!-- begin:: Page -->
-<div class="m-grid m-grid--hor m-grid--root m-page">
-    <!-- BEGIN: Header -->
-@include('admin.partials.header')
-<!-- END: Header -->
-    <!-- begin::Body -->
-    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
-        @include('admin.partials.nav')
-        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+<div class="d-flex flex-column flex-root">
+    <div class="d-flex flex-row flex-column-fluid page">
+        <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+        <!-- BEGIN: Header -->
+        @include('admin.partials.header')
+        <!-- END: Header -->
+            <!-- begin::Body -->
+            <div class="d-flex flex-row flex-column-fluid container">
+    {{--            @include('admin.partials.nav')--}}
+                <div class="main d-flex flex-column flex-row-fluid">
 
-            @yield('content')
+                    @yield('content')
 
+                </div>
+            </div>
+            <!-- end:: Body -->
+            <!-- begin::Footer -->
+        @include('admin.partials.footer')
+        <!-- end::Footer -->
         </div>
     </div>
-    <!-- end:: Body -->
-    <!-- begin::Footer -->
-@include('admin.partials.footer')
-<!-- end::Footer -->
 </div>
 <!-- end:: Page -->
 <!-- begin::Scroll Top -->
-<div id="m_scroll_top" class="m-scroll-top">
-    <i class="la la-arrow-up"></i>
-</div>
+{{--<div id="m_scroll_top" class="m-scroll-top">--}}
+{{--    <i class="la la-arrow-up"></i>--}}
+{{--</div>--}}
 <!-- end::Scroll Top -->
 
 <!--begin::Base Scripts -->
@@ -82,6 +93,18 @@
 
 <script src="{{asset('assets/vendors/custom/datatables/datatables.bundle.js')}}" type="text/javascript"></script>
 <script src="{{asset('assets/demo/default/custom/crud/forms/widgets/bootstrap-timepicker.js')}}" type="text/javascript"></script>
+<script src="{{asset('assets/plugins/global/plugins.bundle.js')}}"></script>
+<script src="{{asset('assets/plugins/custom/prismjs/prismjs.bundle.js')}}"></script>
+<script src="{{asset('assets/js/scripts.bundle.js')}}"></script>
+<!--end::Global Theme Bundle-->
+<!--begin::Page Vendors(used by this page)-->
+<script>var KTAppSettings = { "breakpoints": { "sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1200 }, "colors": { "theme": { "base": { "white": "#ffffff", "primary": "#8950FC", "secondary": "#E5EAEE", "success": "#1BC5BD", "info": "#6993FF", "warning": "#FFA800", "danger": "#F64E60", "light": "#F3F6F9", "dark": "#212121" }, "light": { "white": "#ffffff", "primary": "#EEE5FF", "secondary": "#ECF0F3", "success": "#C9F7F5", "info": "#E1E9FF", "warning": "#FFF4DE", "danger": "#FFE2E5", "light": "#F3F6F9", "dark": "#D6D6E0" }, "inverse": { "white": "#ffffff", "primary": "#ffffff", "secondary": "#212121", "success": "#ffffff", "info": "#ffffff", "warning": "#ffffff", "danger": "#ffffff", "light": "#464E5F", "dark": "#ffffff" } }, "gray": { "gray-100": "#F3F6F9", "gray-200": "#ECF0F3", "gray-300": "#E5EAEE", "gray-400": "#D6D6E0", "gray-500": "#B5B5C3", "gray-600": "#80808F", "gray-700": "#464E5F", "gray-800": "#1B283F", "gray-900": "#212121" } }, "font-family": "Poppins" };</script>
+<script src="{{asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.js')}}"></script>
+<script src="{{asset('//maps.google.com/maps/api/js?key=AIzaSyBTGnKT7dt597vo9QgeQ7BFhvSRP4eiMSM')}}"></script>
+<script src="{{asset('assets/plugins/custom/gmaps/gmaps.js')}}"></script>
+<!--end::Page Vendors-->
+<!--begin::Page Scripts(used by this page)-->
+<script src="{{asset('assets/js/pages/widgets.js')}}"></script>
 <!--end::Page Snippets -->
 
 <script>

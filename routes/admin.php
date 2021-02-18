@@ -18,7 +18,11 @@ Route::group([
         // Resources
         Route::resources([
             'users' => 'UserController',
+            'vacancy_types' => 'VacancyTypeController',
+            'busynesses' => 'BusynessController',
+            'permissions' => 'PermissionController',
         ]);
+
 
 
         Route::post('/main/removethumb', 'MainController@removethumb')->name('main.removethumb');
@@ -35,6 +39,8 @@ Route::group([
         Route::name('themeconsultantquestions.api')->get('themeconsultantquestions_api', ['uses' => 'ThemeconsultantController@api']);
         Route::name('consultants.api')->get('consultants_api', ['uses' => 'СonsultantController@api']);
         Route::name('admin.menus')->get('menus','HomeController@menu');
+        Route::name('vacancy_types.api')->get('vacancy_type', ['uses' => 'VacancyTypeController@api']);
+        Route::name('busynesses.api')->get('busyness', ['uses' => 'BusynessController@api']);
     });
 
 });

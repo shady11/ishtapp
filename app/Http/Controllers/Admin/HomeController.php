@@ -22,7 +22,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
 //        dd('sdf');
-        return view('admin.main.index');
+        return view('admin.demo8.dist.index');
     }
 
     public function nav_toggle(Request $request)

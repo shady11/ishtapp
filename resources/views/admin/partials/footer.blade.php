@@ -1,22 +1,14 @@
-<footer class="m-grid__item		m-footer ">
-    <div class="m-container m-container--fluid m-container--full-height m-page__container">
-        <div class="m-stack m-stack--flex-tablet-and-mobile m-stack--ver m-stack--desktop">
-            <div class="m-stack__item m-stack__item--left m-stack__item--middle m-stack__item--last">
-                <span class="m-footer__copyright">
-                    
-                </span>
-            </div>
-            <div class="m-stack__item m-stack__item--right m-stack__item--middle m-stack__item--first">
-                <ul class="m-footer__nav m-nav m-nav--inline m--pull-right">
-                    <li class="m-nav__item">
-                        <a href="#" class="m-nav__link">
-                            <span class="m-nav__link-text">
-                                Ulut Soft
-                            </span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+<!--begin::Footer-->
+<div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
+    <!--begin::Container-->
+    <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between">
+        <!--begin::Copyright-->
+        <div class="text-dark order-2 order-md-1">
+            <span class="text-muted font-weight-bold mr-2">2021 ©</span>
+            <a href="https://ulut.kg/" target="_blank" class="text-white text-hover-primary">UlutSoft</a>
         </div>
+        <!--end::Copyright-->
     </div>
-</footer>
+    <!--end::Container-->
+</div>
+<!--end::Footer-->

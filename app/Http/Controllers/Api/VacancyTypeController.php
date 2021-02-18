@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use \App\Models\VacancyType;
 use Illuminate\Http\Request;
+use function Sodium\add;
 
 class VacancyTypeController extends Controller
 {
@@ -17,7 +18,7 @@ class VacancyTypeController extends Controller
                 'name'=> $item->name
             ]);
         }
-        dd($result);
+//        dd($result);
         return $result;
 
     }
