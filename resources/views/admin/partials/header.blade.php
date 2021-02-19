@@ -987,6 +987,36 @@
                                                     <span class="menu-desc"></span>
                                                 </a>
                                             </li>
+                                            <li class="menu-item" aria-haspopup="true">
+                                                <a href="{{route('schedules.index')}}" class="menu-link">
+                                                    <span class="menu-text">График</span>
+                                                    <span class="menu-desc"></span>
+                                                </a>
+                                            </li>
+                                            <li class="menu-item" aria-haspopup="true">
+                                                <a href="{{route('regions.index')}}" class="menu-link">
+                                                    <span class="menu-text">Регионы</span>
+                                                    <span class="menu-desc"></span>
+                                                </a>
+                                            </li>
+                                            <li class="menu-item" aria-haspopup="true">
+                                                <a href="{{route('job_types.index')}}" class="menu-link">
+                                                    <span class="menu-text">Виды работ</span>
+                                                    <span class="menu-desc"></span>
+                                                </a>
+                                            </li>
+                                            <li class="menu-item" aria-haspopup="true">
+                                                <a href="{{route('permissions.index')}}" class="menu-link">
+                                                    <span class="menu-text">Разрешения</span>
+                                                    <span class="menu-desc"></span>
+                                                </a>
+                                            </li>
+                                            <li class="menu-item" aria-haspopup="true">
+                                                <a href="{{route('roles.index')}}" class="menu-link">
+                                                    <span class="menu-text">Роли</span>
+                                                    <span class="menu-desc"></span>
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </li>

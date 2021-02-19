@@ -9,7 +9,7 @@ trait HasPermissionsTrait {
     public function givePermissionsTo(... $permissions) {
 
         $permissions = $this->getAllPermissions($permissions);
-        dd($permissions);
+//        dd($permissions);
         if($permissions === null) {
             return $this;
         }

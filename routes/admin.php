@@ -8,7 +8,7 @@ Route::group([
 
     Auth::routes();
 
-    Route::middleware('auth')->group(function () {
+    Route::middleware('auth')->group( function () {
 
         Route::name('logout')->get('/logout', 'Auth\LoginController@logout');
 
@@ -21,6 +21,10 @@ Route::group([
             'vacancy_types' => 'VacancyTypeController',
             'busynesses' => 'BusynessController',
             'permissions' => 'PermissionController',
+            'roles' => 'RoleController',
+            'schedules' => 'ScheduleController',
+            'job_types' => 'JobTypeController',
+            'regions' => 'RegionController',
         ]);
 
 
@@ -41,6 +45,12 @@ Route::group([
         Route::name('admin.menus')->get('menus','HomeController@menu');
         Route::name('vacancy_types.api')->get('vacancy_type', ['uses' => 'VacancyTypeController@api']);
         Route::name('busynesses.api')->get('busyness', ['uses' => 'BusynessController@api']);
+        Route::name('permissions.api')->get('permission', ['uses' => 'PermissionController@api']);
+        Route::name('roles.api')->get('role', ['uses' => 'RoleController@api']);
+        Route::name('regions.api')->get('region', ['uses' => 'RegionController@api']);
+        Route::name('schedules.api')->get('schedule', ['uses' => 'ScheduleController@api']);
+        Route::name('job_types.api')->get('job_type', ['uses' => 'JobTypeController@api']);
+        Route::name('roll')->get('roll', ['uses' => 'PermissionController@Permission']);
     });
 
 });
