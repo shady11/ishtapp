@@ -25,6 +25,7 @@ Route::group([
             'schedules' => 'ScheduleController',
             'job_types' => 'JobTypeController',
             'regions' => 'RegionController',
+            'vacancies' => 'VacancyController',
         ]);
 
 
@@ -50,6 +51,7 @@ Route::group([
         Route::name('regions.api')->get('region', ['uses' => 'RegionController@api']);
         Route::name('schedules.api')->get('schedule', ['uses' => 'ScheduleController@api']);
         Route::name('job_types.api')->get('job_type', ['uses' => 'JobTypeController@api']);
+        Route::name('vacancies.api')->get('vacancy', ['uses' => 'VacancyController@api']);
         Route::name('roll')->get('roll', ['uses' => 'PermissionController@Permission']);
     });
 
