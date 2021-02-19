@@ -13,7 +13,7 @@ class CreateVacancy extends Migration
      */
     public function up()
     {
-        Schema::create('vacancy', function (Blueprint $table) {
+        Schema::create('vacancies', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('title');
@@ -62,6 +62,6 @@ class CreateVacancy extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vacancy');
+        Schema::dropIfExists('vacancies');
     }
 }
