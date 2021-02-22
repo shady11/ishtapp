@@ -25,7 +25,7 @@
 													</g>
 												</svg>
                                                 <!--end::Svg Icon-->
-											</span>New Record</a>
+											</span>{{ __('auth.new') }}</a>
                 <!--end::Button-->
             </div>
         </div>
