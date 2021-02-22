@@ -18,7 +18,6 @@ class VacancyTypeController extends Controller
                 'name'=> $item->name
             ]);
         }
-//        dd($result);
         return $result;
 
     }

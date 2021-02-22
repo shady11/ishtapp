@@ -27,6 +27,8 @@ Route::group([
     Route::name('region.api')->get('region', ['uses' => 'RegionController@index']);
     Route::name('job_type.api')->get('job_type', ['uses' => 'JobTypeController@index']);
     Route::name('vacancy_type.api')->get('vacancy_type', ['uses' => 'VacancyTypeController@index']);
+    Route::name('vacancy.api')->get('vacancy', ['uses' => 'VacancyController@index']);
+    Route::name('vacancy.api')->post('user_vacancy', ['uses' => 'VacancyController@likeOrSubmit']);
 //    Route::name('users.api')->get('users/{id}', ['uses' => 'UserController@show']);
 
     Route::resources([

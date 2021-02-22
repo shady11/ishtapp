@@ -17,7 +17,6 @@ class RegionController extends Controller
                 'name'=> $item->name
             ]);
         }
-        dd($result);
         return $result;
 
     }
