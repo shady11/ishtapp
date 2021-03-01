@@ -1,7 +1,12 @@
 <?php
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
+use App\Models\Busyness;
+use App\Models\JobType;
+use App\Models\Region;
+use App\Models\Schedule;
 use App\Models\Vacancy;
+use App\Models\VacancyType;
 use Illuminate\Http\Request;
 
 class VacancyController extends Controller

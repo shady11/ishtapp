@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Gender;
-use App\Models\Patient;
-use App\Models\Questionnaire;
-use App\Models\Sex;
 use App\Models\User;
-use App\Models\Userquestion;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class UserController extends Controller
 {
@@ -64,12 +62,24 @@ class UserController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $patient = Patient::findOrFail($id);
-        if ($request->header('token') == $patient->password) {
-            return response($patient);
+        $user = User::findOrFail($id);
+        if ($request->header('token') == $user->password) {
+            return response($user);
         }
         return response('false');
 
+    }
+
+    protected function avatar($user_id)
+    {
+        //check image exist or not
+        $user = User::findOrFail($user_id);
+        if ($user->avatar) {
+            //get content of image
+            return $user->avatar;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -109,29 +119,33 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        if (Patient::where('username', $request->username)->count()==0){
-            $patient = Patient::create([
-                'username' => $request->username,
-                'question1_id' => $request->question_id1,
-                'question2_id' => $request->question_id2,
-                'answer1' => $request->answer1,
-                'answer2' => $request->answer2,
+//        dd('$request');
+        if (User::where('login', $request->login)->count() == 0) {
+            $user = User::create([
+                'login' => $request->login,
+                'name' => $request->name,
+                'lastname' => $request->lastname,
+                'email' => $request->email,
+                'linkedin' => $request->linkedin,
+                'type' => $request->type,
+                'active' => true,
+                'phone_number' => $request->phone_number,
             ]);
-            $questionnaire = Questionnaire::create([
-                'sex_id'=>$request->sex_id,
-                'intersex'=>$request->intersex,
-                'gender_id' => $request->gender_id,
-                'year_of_birth' => $request->year_of_birth
-            ]);
+            if ($request->hasFile('avatar')) {
+                $file = $request->file('avatar');
+                $path = '/storage/avatars/'. Carbon::now()->format('YmdHms') . $file->getClientOriginalName();
+                $file->move(public_path() . '/storage/avatars/',  Carbon::now()->format('YmdHms').$file->getClientOriginalName());
+                $user->avatar = $path;
+            }
             if ($request->password) {
-                $patient->password = Hash::make($request->password);
+                $user->password = Hash::make($request->password);
             }
             try {
-                $patient->save();
-                $questionnaire->save();
+                $user->save();
                 return response()->json([
-                    'id' => $patient->id,
-                    'token' => $patient->password,
+                    'id' => $user->id,
+                    'token' => $user->password,
+                    'avatar' => $user->avatar,
                     'message' => 'Successfully created user!'
                 ], 201);
             } catch (QueryException $e) {
@@ -149,7 +163,6 @@ class UserController extends Controller
             'message' => 'user exist!',
             'status' => 999,
         ]);
-
     }
 
     /**
@@ -192,21 +205,21 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $patient = Patient::findOrFail($id);
-        if ($request->header('token') == $patient->password) {
-            $patient->update([
+        $user = User::findOrFail($id);
+        if ($request->header('token') == $user->password) {
+            $user->update([
                 'username' => $request->username,
                 'pin_kod' => $request->pin_kod,
             ]);
-            $patient->password = Hash::make($request->password);
+            $user->password = Hash::make($request->password);
             try {
-                $patient->save();
+                $user->save();
             } catch (QueryException $exception) {
                 return response('false');
             }
             return response()->json([
-                'id' => $patient->id,
-                'token' => $patient->password,
+                'id' => $user->id,
+                'token' => $user->password,
                 'message' => 'Successfully created user!'
             ], 201);
         }
@@ -240,11 +253,11 @@ class UserController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $patient = Patient::findOrFail($id);
-        if ($request->header('token') == $patient->password) {
-            $patient->delete();
+        $user = Patient::findOrFail($id);
+        if ($request->header('token') == $user->password) {
+            $user->delete();
         }
-        return response( 'deleted');
+        return response('deleted');
     }
 
 }

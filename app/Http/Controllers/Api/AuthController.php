@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Patient;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 use App\Notifications\SignupActivate;
@@ -43,7 +42,7 @@ class AuthController extends Controller
      */
     public function checkusername(Request $request)
     {
-        if (Patient::where('username', $request->username)->count() == 0) {
+        if (User::where('login', $request->username)->count() == 0) {
             return response()->json(false);
         }
         return response()->json(true);
@@ -78,19 +77,17 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $user = Patient::where('username', $request->username);
-        if (is_null($user->value('username'))) {
+        $user = User::where('login', $request->username);
+        if (is_null($user->value('login'))) {
             return response([
                 'message' => 'username incorrect',
                 'status' => 888
             ]);
         } else {
             if (Hash::check($request->password, $user->value('password'))) {
-                $user->update([
-                    'logged'=>true,
-                ]);
                 return response([
                     'id' => $user->value('id'),
+                    'avatar' => $user->value('avatar'),
                     'token' => $user->value('password')
                 ]);
 
@@ -130,9 +127,9 @@ class AuthController extends Controller
      */
     public function logged(Request $request)
     {
-        $patient = Patient::find($request->id);
-        if ($patient!=null) {
-            $patient->update([
+        $user = User::find($request->id);
+        if ($user!=null) {
+            $user->update([
                 'logged'=>false,
             ]);
             return response()->json('successfully');

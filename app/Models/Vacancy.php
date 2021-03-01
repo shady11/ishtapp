@@ -34,6 +34,61 @@ class Vacancy extends Model
         ],
     ];
 
+    public function vacancytypes()
+    {
+        return VacancyType::all();
+    }
+
+
+    public function vacancytype($id)
+    {
+        return VacancyType::findOrFail($id);
+    }
+
+    public function jobtypes()
+    {
+        return JobType::all();
+    }
+
+
+    public function jobtype($id)
+    {
+        return JobType::findOrFail($id);
+    }
+
+    public function busynesses()
+    {
+        return Busyness::all();
+    }
+
+
+    public function busyness($id)
+    {
+        return Busyness::findOrFail($id);
+    }
+
+    public function schedules()
+    {
+        return Schedule::all();
+    }
+
+
+    public function schedule($id)
+    {
+        return Schedule::findOrFail($id);
+    }
+
+    public function regions()
+    {
+        return Region::all();
+    }
+
+
+    public function region($id)
+    {
+        return Region::findOrFail($id);
+    }
+
     public function getCreatedDate()
     {
         return date('d-m-Y', strtotime($this->created_at));

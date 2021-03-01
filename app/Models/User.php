@@ -33,6 +33,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         ],
     ];
 
+    protected $fillable = [
+        'name',
+        'login',
+        'email',
+        'lastname',
+        'linkedin',
+        'phone_number',
+        'type',
+        'avatar',
+    ];
+
     public function getFullName()
     {
         return $this->name.' '.$this->lastname;

@@ -22,4 +22,9 @@ return [
     'forgot_pass'=>'Забыли пароль',
     'language'=>'Русский',
     'new'=>'Добавить',
+    'select_busynesses'=>'Выберите занятость',
+    'select_schedules'=>'Выберите график',
+    'select_job_types'=>'Выберите вид работы',
+    'select_regions'=>'Выберите регион',
+    'select_vacancy_types'=>'Выберите виды вакансий',
 ];
