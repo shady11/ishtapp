@@ -31,7 +31,7 @@ Route::group([
     Route::name('vacancy.api')->post('user_vacancy', ['uses' => 'VacancyController@likeOrSubmit']);
     Route::name('vacancy.api')->get('user_vacancy/{type}', ['uses' => 'VacancyController@getVacanciesByType']);
     Route::name('user.api.avatar')->get('/users/avatar/{user_id}', ['uses' => 'UserController@avatar']);
-//    Route::name('users.api')->get('users/{id}', ['uses' => 'UserController@show']);
+    Route::name('users.api')->get('user', ['uses' => 'UserController@show']);
 
     Route::resources([
 //        'users' => 'UserController',

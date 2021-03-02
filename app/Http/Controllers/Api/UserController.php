@@ -60,13 +60,14 @@ class UserController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show(Request $request)
     {
-        $user = User::findOrFail($id);
-        if ($request->header('token') == $user->password) {
+        $token = $request->header('Authorization');
+        $user = User::where("password", $token)->firstOrFail();
+        if ($user) {
             return response($user);
         }
-        return response('false');
+        return response('token is not valid');
 
     }
 

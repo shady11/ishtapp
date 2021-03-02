@@ -28,6 +28,7 @@ class VacancyController extends Controller
         $this->validate($request, [
             'name' => ['required'],
         ]);
+        dd($request->bussyness_id);
         $vacancy = Vacancy::create($request->all());
         $vacancy->save();
 

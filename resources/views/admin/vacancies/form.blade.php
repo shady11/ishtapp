@@ -50,7 +50,7 @@
             </label>
             <div class="form-group m-form__group row">
                 <div class="col-lg-6">
-                    <select name="region" id="region" class="form-control">
+                    <select name="region_id" id="region" class="form-control">
                         <option class="placeholder" selected disabled value="">{{__('auth.select_regions')}}</option>
                         @if($vacancy->id)
                             @foreach($vacancy->regions() as $region)
@@ -91,7 +91,7 @@
             </label>
             <div class="form-group m-form__group row">
                 <div class="col-lg-6">
-                    <select name="busyness" id="busyness" class="form-control">
+                    <select name="busyness_id" id="busyness" class="form-control">
                         <option class="placeholder" selected disabled value="">{{__('auth.select_busynesses')}}</option>
                         @if($vacancy->id)
                             @foreach($vacancy->busynesses() as $busyness)

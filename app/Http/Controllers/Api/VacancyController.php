@@ -9,6 +9,7 @@ use App\Models\Busyness;
 use App\Models\Schedule;
 use App\Models\JobType;
 use App\Models\VacancyType;
+use DateTime;
 use Illuminate\Http\Request;
 
 class VacancyController extends Controller
@@ -29,6 +30,7 @@ class VacancyController extends Controller
             $busyness_ids = $request->busyness_ids;
             $type_ids = $request->type_ids;
             $region_ids = $request->region_ids;
+            $time_type = $request->type;
             if ($job_type_ids == []) {
                 foreach (JobType::all() as $model) {
                     array_push($job_type_ids, $model->id);
@@ -56,6 +58,23 @@ class VacancyController extends Controller
             }
             $banned_ones = UserVacancy::where("user_id", $user->id)->pluck('vacancy_id')->toArray();
 
+            $specificDate = strtotime('2000-1-1');
+            $specificDate = date("Y-m-d H:i:s",$specificDate);
+            if($time_type == 'day'){
+                $date = new DateTime('-1 day');
+                $specificDate = $date->format('Y-m-d H:i:s');
+            }
+            else if($time_type == 'week'){
+                $date = new DateTime('-1 week');
+                $specificDate = $date->format('Y-m-d H:i:s');
+            }
+            else if($time_type == 'month'){
+                $date = new DateTime('-1 month');
+                $specificDate = $date->format('Y-m-d H:i:s');
+            }
+
+//            dd($specificDate);
+
             $result = [];
             foreach (Vacancy::whereIn('job_type_id', $job_type_ids)
                          ->whereIn('schedule_id', $schedule_ids)
@@ -63,6 +82,8 @@ class VacancyController extends Controller
                          ->whereIn('vacancy_type_id', $type_ids)
                          ->whereIn('region_id', $region_ids)
                          ->whereNotIn("id", $banned_ones)
+                         ->where('is_active',true)
+                         ->whereDate('created_at','>', $specificDate)
                          ->skip($offset)
                          ->take($limit)
                          ->get() as $item) {
