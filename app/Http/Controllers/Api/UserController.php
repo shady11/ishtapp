@@ -127,7 +127,7 @@ class UserController extends Controller
                 'name' => $request->name,
                 'lastname' => $request->lastname,
                 'email' => $request->email,
-                'linkedin' => $request->linkedin,
+                'birth_date' => $request->birth_date,
                 'type' => $request->type,
                 'active' => true,
                 'phone_number' => $request->phone_number,
@@ -162,6 +162,49 @@ class UserController extends Controller
             'id' => null,
             'token' => null,
             'message' => 'user exist!',
+            'status' => 999,
+        ]);
+    }
+    public function update1(Request $request,$id)
+    {
+        $user = User::findOrFail($id);
+//        dd($request);
+        if ($user) {
+            if ($request->hasFile('avatar')) {
+                $file = $request->file('avatar');
+                $path = '/storage/avatars/'. Carbon::now()->format('YmdHms') . $file->getClientOriginalName();
+                $file->move(public_path() . '/storage/avatars/',  Carbon::now()->format('YmdHms').$file->getClientOriginalName());
+                $user->avatar = $path;
+            }
+            $user ->update([
+                'name' => $request->name,
+                'lastname' => $request->lastname,
+                'email' => $request->email,
+                'birth_date' => $request->birth_date,
+                'phone_number' => $request->phone_number,
+            ]);
+            try {
+                $user->save();
+//                dd($request);
+                return response()->json([
+                    'id' => $user->id,
+                    'token' => $user->password,
+                    'avatar' => $user->avatar,
+                    'message' => 'Successfully updated user!'
+                ], 201);
+            } catch (QueryException $e) {
+                return response()->json([
+                    'id' => null,
+                    'token' => null,
+                    'message' => 'error!',
+                    'status' => 999,
+                ]);
+            }
+        }
+        return response()->json([
+            'id' => null,
+            'token' => null,
+            'message' => 'user doesn\'t exists!',
             'status' => 999,
         ]);
     }
@@ -204,7 +247,7 @@ class UserController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    /*public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
         if ($request->header('token') == $user->password) {
@@ -225,7 +268,7 @@ class UserController extends Controller
             ], 201);
         }
         return response('false');
-    }
+    }*/
 
 
     /**

@@ -1017,6 +1017,12 @@
                                                     <span class="menu-desc"></span>
                                                 </a>
                                             </li>
+                                            <li class="menu-item" aria-haspopup="true">
+                                                <a href="{{route('education_types.index')}}" class="menu-link">
+                                                    <span class="menu-text font-size-h4 font-size-lg-h2">Виды обучения</span>
+                                                    <span class="menu-desc"></span>
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </li>

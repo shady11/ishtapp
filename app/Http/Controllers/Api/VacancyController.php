@@ -9,6 +9,7 @@ use App\Models\Busyness;
 use App\Models\Schedule;
 use App\Models\JobType;
 use App\Models\VacancyType;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 
@@ -17,100 +18,195 @@ class VacancyController extends Controller
     public function index(Request $request)
     {
 
+        $limit = $request->limit;
+        $offset = $request->offset;
+        $job_type_ids = $request->job_type_ids;
+        $schedule_ids = $request->schedule_ids;
+        $busyness_ids = $request->busyness_ids;
+        $type_ids = $request->type_ids;
+        $region_ids = $request->region_ids;
+        $time_type = $request->type;
+
+        if ($job_type_ids == []) {
+            foreach (JobType::all() as $model) {
+                array_push($job_type_ids, $model->id);
+            }
+        }
+        if ($busyness_ids == []) {
+            foreach (Busyness::all() as $model) {
+                array_push($busyness_ids, $model->id);
+            }
+        }
+        if ($schedule_ids == []) {
+            foreach (Schedule::all() as $model) {
+                array_push($schedule_ids, $model->id);
+            }
+        }
+        if ($type_ids == []) {
+            foreach (VacancyType::all() as $model) {
+                array_push($type_ids, $model->id);
+            }
+        }
+        if ($region_ids == []) {
+            foreach (Region::all() as $model) {
+                array_push($region_ids, $model->id);
+            }
+        }
+
+        $specificDate = strtotime('2000-1-1');
+        $specificDate = date("Y-m-d H:i:s",$specificDate);
+        if($time_type == 'day'){
+            $date = new DateTime('-1 day');
+            $specificDate = $date->format('Y-m-d H:i:s');
+        }
+        else if($time_type == 'week'){
+            $date = new DateTime('-1 week');
+            $specificDate = $date->format('Y-m-d H:i:s');
+        }
+        else if($time_type == 'month'){
+            $date = new DateTime('-1 month');
+            $specificDate = $date->format('Y-m-d H:i:s');
+        }
+
+        $result = [];
+        $banned_ones = [];
+
+        $token = $request->header('Authorization');
+//        dd($token);
+        if($token!="null") {
+            $user = User::where("password", $token)->firstOrFail();
+            if($user)
+                $banned_ones = UserVacancy::where("user_id", $user->id)->pluck('vacancy_id')->toArray();
+        }
+        foreach (Vacancy::whereIn('job_type_id', $job_type_ids)
+                     ->whereIn('schedule_id', $schedule_ids)
+                     ->whereIn('busyness_id', $busyness_ids)
+                     ->whereIn('vacancy_type_id', $type_ids)
+                     ->whereIn('region_id', $region_ids)
+                     ->whereNotIn("id", $banned_ones)
+                     ->where('is_active',true)
+                     ->whereDate('created_at','>', $specificDate)
+                     ->skip($offset)
+                     ->take($limit)
+                     ->get() as $item) {
+//            dd($item);
+            array_push($result, [
+                'id' => $item->id,
+                'name' => $item->name,
+                'title' => $item->title,
+                'address' => $item->address,
+                'description' => $item->description,
+                'company_name' => User::findOrFail($item->company_id)->name,
+                'busyness' => Busyness::findOrFail($item->busyness_id)->name,
+                'job_type' => JobType::findOrFail($item->job_type_id)->name,
+                'schedule' => Schedule::findOrFail($item->schedule_id)->name,
+                'type' => VacancyType::findOrFail($item->vacancy_type_id)->name,
+                'region' => Region::findOrFail($item->region_id)->name,
+                'company' => User::findOrFail($item->company_id)->id
+            ]);
+        }
+        return $result;
+
+    }
+
+    /*public function store(Request $request)
+    {
         $token = $request->header('Authorization');
 
         $user = User::where("password", $token)->firstOrFail();
 
-        if($user) {
+        if ($user){
+            $this->validate($request, [
+                'name' => ['required'],
+                'user_id' => ['required'],
+                'title' => ['required'],
+                'address' => ['required'],
+                'description' => ['required'],
+                'busyness_id' => ['required'],
+                'job_type_id' => ['required'],
+                'schedule_id' => ['required'],
+                'type_id' => ['required'],
+                'region_id' => ['required'],
+                'company_id' => ['required'],
+            ]);
+            if($request->user_cv_id){
 
-            $limit = $request->limit;
-            $offset = $request->offset;
-            $job_type_ids = $request->job_type_ids;
-            $schedule_ids = $request->schedule_ids;
-            $busyness_ids = $request->busyness_ids;
-            $type_ids = $request->type_ids;
-            $region_ids = $request->region_ids;
-            $time_type = $request->type;
-            if ($job_type_ids == []) {
-                foreach (JobType::all() as $model) {
-                    array_push($job_type_ids, $model->id);
-                }
             }
-            if ($busyness_ids == []) {
-                foreach (Busyness::all() as $model) {
-                    array_push($busyness_ids, $model->id);
-                }
+            $user_cv = UserCV::create([
+                'name' => $request->name,
+                'lastname' => $request->lastname,
+                'job_title' => $request->job_title,
+                'email' => $request->email,
+                'birth_date' => $request->birth_date,
+                'phone_number' => $request->phone_number,
+                'user_id' => $request->user_id,
+                'experience_year' => $request->experience_year,
+            ]);
+            if ($request->hasFile('attachment')) {
+                $file = $request->file('attachment');
+                $path = '/storage/attachments/'. Carbon::now()->format('YmdHms') . $file->getClientOriginalName();
+                $file->move(public_path() . '/storage/attachments/',  Carbon::now()->format('YmdHms').$file->getClientOriginalName());
+                $user_cv->attachment = $path;
             }
-            if ($schedule_ids == []) {
-                foreach (Schedule::all() as $model) {
-                    array_push($schedule_ids, $model->id);
-                }
-            }
-            if ($type_ids == []) {
-                foreach (VacancyType::all() as $model) {
-                    array_push($type_ids, $model->id);
-                }
-            }
-            if ($region_ids == []) {
-                foreach (Region::all() as $model) {
-                    array_push($region_ids, $model->id);
-                }
-            }
-            $banned_ones = UserVacancy::where("user_id", $user->id)->pluck('vacancy_id')->toArray();
+            $user_cv->save();
 
-            $specificDate = strtotime('2000-1-1');
-            $specificDate = date("Y-m-d H:i:s",$specificDate);
-            if($time_type == 'day'){
-                $date = new DateTime('-1 day');
-                $specificDate = $date->format('Y-m-d H:i:s');
-            }
-            else if($time_type == 'week'){
-                $date = new DateTime('-1 week');
-                $specificDate = $date->format('Y-m-d H:i:s');
-            }
-            else if($time_type == 'month'){
-                $date = new DateTime('-1 month');
-                $specificDate = $date->format('Y-m-d H:i:s');
+            $experiences = $request->experiences;
+            $educations = $request->educations;
+            $courses = $request->courses;
+
+
+            if($experiences){
+                foreach ($experiences as $experience) {
+                    $user_experience = UserExperience::create([
+                        'job_title' => $experience['job_title'],
+                        'start_date' => $experience['start_date'],
+                        'end_date' => $experience['end_date'],
+                        'organization_name' => $experience['organization_name'],
+                        'description' => $experience['description'],
+                        'user_cv_id' => $user_cv->id,
+                    ]);
+                    $user_experience->save();
+                    dd($user_experience);
+                }
             }
 
-//            dd($specificDate);
-
-            $result = [];
-            foreach (Vacancy::whereIn('job_type_id', $job_type_ids)
-                         ->whereIn('schedule_id', $schedule_ids)
-                         ->whereIn('busyness_id', $busyness_ids)
-                         ->whereIn('vacancy_type_id', $type_ids)
-                         ->whereIn('region_id', $region_ids)
-                         ->whereNotIn("id", $banned_ones)
-                         ->where('is_active',true)
-                         ->whereDate('created_at','>', $specificDate)
-                         ->skip($offset)
-                         ->take($limit)
-                         ->get() as $item) {
-//            dd($item);
-                array_push($result, [
-                    'id' => $item->id,
-                    'name' => $item->name,
-                    'title' => $item->title,
-                    'address' => $item->address,
-                    'description' => $item->description,
-                    'company_name' => User::findOrFail($item->company_id)->name,
-                    'busyness' => Busyness::findOrFail($item->busyness_id)->name,
-                    'job_type' => JobType::findOrFail($item->job_type_id)->name,
-                    'schedule' => Schedule::findOrFail($item->schedule_id)->name,
-                    'type' => VacancyType::findOrFail($item->vacancy_type_id)->name,
-                    'region' => Region::findOrFail($item->region_id)->name,
-                    'company' => User::findOrFail($item->company_id)->id
-                ]);
+            if ($educations){
+                foreach ($educations as $education) {
+                    $user_education = UserEducation::create([
+                        'title' => $education['title'],
+                        'faculty' => $education['faculty'],
+                        'speciality' => $education['speciality'],
+                        'type_id' => $education['type_id'],
+                        'end_year' => $education['end_year'],
+                        'user_cv_id' => $user_cv->id,
+                    ]);
+                    $user_education->save();
+                }
             }
-//        dd($result);
-            return $result;
+
+            if ($courses){
+                foreach ($courses as $course) {
+                    $user_course = UserCourse::create([
+                        'name' => $course['name'],
+                        'organization_name' => $course['organization_name'],
+                        'duration' => $course['duration'],
+                        'end_year' => $course['end_year'],
+                        'user_cv_id' => $user_cv->id,
+                    ]);
+                    $user_course->save();
+                }
+            }
+
+
+            dd($request->experiences);
+
+
+            return "OK";
         }
         else{
             return "token is not valid";
         }
-
-    }
+    }*/
 
     public function likeOrSubmit(Request $request)
     {

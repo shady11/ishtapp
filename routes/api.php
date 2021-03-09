@@ -26,16 +26,19 @@ Route::group([
     Route::name('schedule.api')->get('schedule', ['uses' => 'ScheduleController@index']);
     Route::name('region.api')->get('region', ['uses' => 'RegionController@index']);
     Route::name('job_type.api')->get('job_type', ['uses' => 'JobTypeController@index']);
+    Route::name('education_type.api')->get('education_type', ['uses' => 'EducationTypeController@index']);
     Route::name('vacancy_type.api')->get('vacancy_type', ['uses' => 'VacancyTypeController@index']);
     Route::name('vacancy.api')->post('vacancy', ['uses' => 'VacancyController@index']);
     Route::name('vacancy.api')->post('user_vacancy', ['uses' => 'VacancyController@likeOrSubmit']);
     Route::name('vacancy.api')->get('user_vacancy/{type}', ['uses' => 'VacancyController@getVacanciesByType']);
     Route::name('user.api.avatar')->get('/users/avatar/{user_id}', ['uses' => 'UserController@avatar']);
     Route::name('users.api')->get('user', ['uses' => 'UserController@show']);
+    Route::name('users.api')->post('users/update/{user_id}', ['uses' => 'UserController@update1']);
 
     Route::resources([
 //        'users' => 'UserController',
         'users' => 'UserController',
+        'user_cv' => 'UserCvController',
     ]);
 });
 
