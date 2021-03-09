@@ -28,8 +28,10 @@ class VacancyController extends Controller
         $this->validate($request, [
             'name' => ['required'],
         ]);
-        dd($request->bussyness_id);
-        $vacancy = Vacancy::create($request->all());
+//        dd($request->busyness_id);
+        $user = auth()->user();
+//        dd($request->ad);
+        $vacancy = Vacancy::create(array_merge($request->all(), ['company_id' => $user->id]));
         $vacancy->save();
 
         return redirect()->route('vacancies.index', $vacancy);

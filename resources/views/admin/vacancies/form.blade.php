@@ -91,7 +91,7 @@
             </label>
             <div class="form-group m-form__group row">
                 <div class="col-lg-6">
-                    <select name="busyness_id" id="busyness" class="form-control">
+                    <select name="busyness_id" id="busyness" class="form-control" required>
                         <option class="placeholder" selected disabled value="">{{__('auth.select_busynesses')}}</option>
                         @if($vacancy->id)
                             @foreach($vacancy->busynesses() as $busyness)
@@ -134,7 +134,7 @@
             </label>
             <div class="form-group m-form__group row">
                 <div class="col-lg-6">
-                    <select name="vacancy_type" id="vacancy_type" class="form-control">
+                    <select name="vacancy_type_id" id="vacancy_type" class="form-control" required>
                         <option class="placeholder" selected disabled value="">{{__('auth.select_vacancy_types')}}</option>
                         @if($vacancy->id)
                             @foreach($vacancy->vacancytypes() as $vacancytype)
@@ -175,7 +175,7 @@
             </label>
             <div class="form-group m-form__group row">
                 <div class="col-lg-6">
-                    <select name="job_type" id="job_type" class="form-control">
+                    <select name="job_type_id" id="job_type" class="form-control"  required>
                         <option class="placeholder" selected disabled value="">{{__('auth.select_job_types')}}</option>
                         @if($vacancy->id)
                             @foreach($vacancy->jobtypes() as $jobtype)
@@ -218,7 +218,7 @@
             </label>
             <div class="form-group m-form__group row">
                 <div class="col-lg-6">
-                    <select name="schedule" id="schedule" class="form-control">
+                    <select name="schedule_id" id="schedule" class="form-control" required>
                         <option class="placeholder" selected disabled value="">{{__('auth.select_schedules')}}</option>
                         @if($vacancy->id)
                             @foreach($vacancy->schedules() as $schedule)
