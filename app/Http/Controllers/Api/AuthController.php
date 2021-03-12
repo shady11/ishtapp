@@ -42,7 +42,7 @@ class AuthController extends Controller
      */
     public function checkusername(Request $request)
     {
-        if (User::where('login', $request->username)->count() == 0) {
+        if (User::where('email', $request->email)->count() == 0) {
             return response()->json(false);
         }
         return response()->json(true);
@@ -77,10 +77,10 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $user = User::where('login', $request->username);
-        if (is_null($user->value('login'))) {
+        $user = User::where('email', $request->email);
+        if (is_null($user->value('email'))) {
             return response([
-                'message' => 'username incorrect',
+                'message' => 'email incorrect',
                 'status' => 888
             ]);
         } else {

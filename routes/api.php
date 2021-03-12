@@ -34,6 +34,7 @@ Route::group([
     Route::name('user.api.avatar')->get('/users/avatar/{user_id}', ['uses' => 'UserController@avatar']);
     Route::name('users.api')->get('user', ['uses' => 'UserController@show']);
     Route::name('users.api')->post('users/update/{user_id}', ['uses' => 'UserController@update1']);
+    Route::name('users.api')->post('users/email_check', ['uses' => 'UserController@checkUserEmail']);
 
     Route::resources([
 //        'users' => 'UserController',

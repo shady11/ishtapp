@@ -82,6 +82,19 @@ class UserController extends Controller
             return null;
         }
     }
+    protected function checkUserEmail(Request $request)
+    {
+        $email = $request->email;
+        if($email){
+            $count = User::where('email', $email)->count();
+            if($count>0)
+                return "true";
+            else
+                return "false";
+        }
+        else
+            return 'email not found';
+    }
 
     /**
      * @OA\Post(
@@ -147,8 +160,9 @@ class UserController extends Controller
                     'id' => $user->id,
                     'token' => $user->password,
                     'avatar' => $user->avatar,
-                    'message' => 'Successfully created user!'
-                ], 201);
+                    'message' => 'Successfully created user!',
+                    'status' => 200
+                ], 200);
             } catch (QueryException $e) {
                 return response()->json([
                     'id' => null,
