@@ -218,13 +218,23 @@ class VacancyController extends Controller
         $user = User::where("password", $token)->firstOrFail();
 
         if($user){
-            $request->user_id = $user->id;
-//            dd($request);
-            $user_vacancy = new UserVacancy;
-            $user_vacancy->user_id = $user->id;
-            $user_vacancy->vacancy_id = $vacancy_id;
-            $user_vacancy->type = $type;
-            $user_vacancy->save();
+            $existing_user_vacancy = UserVacancy::where("user_id", $user->id)
+                ->where("vacancy_id", $vacancy_id)
+                ->where("type", "LIKED")
+                ->firstOrFail();
+            if($existing_user_vacancy) {
+                $existing_user_vacancy ->update([
+                    'type' => $type,
+                ]);
+                $existing_user_vacancy->save();
+            }
+            else{
+                $user_vacancy = new UserVacancy;
+                $user_vacancy->user_id = $user->id;
+                $user_vacancy->vacancy_id = $vacancy_id;
+                $user_vacancy->type = $type;
+                $user_vacancy->save();
+            }
             return 'OK';
         }
         else{
