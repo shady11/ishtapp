@@ -25,6 +25,12 @@ class CreateUsersTable extends Migration
             $table->string('email')->nullable();
             $table->string('password')->nullable();
 
+            $table->date('birth_date')->nullable();
+
+            $table->enum('type', ['ADMIN', 'COMPANY', 'USER']);
+            $table->string('linkedin')->nullable();
+            $table->string('phone_number')->nullable();
+
             $table->boolean('active')->default(0);
 
             $table->rememberToken();
@@ -39,6 +45,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+//        Schema::dropIfExists('users');
     }
 }

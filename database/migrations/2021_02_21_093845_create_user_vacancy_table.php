@@ -23,7 +23,7 @@ class CreateUserVacancyTable extends Migration
             $table->bigInteger('vacancy_id')->unsigned();
             $table->foreign('vacancy_id')
                 ->references('id')
-                ->on('vacancy')
+                ->on('vacancies')
                 ->onDelete('cascade');
             $table->timestamps();
             $table->enum('type', ['LIKED', 'DISLIKED', 'SUBMITTED']);

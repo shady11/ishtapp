@@ -40,7 +40,18 @@ Route::group([
 //        'users' => 'UserController',
         'users' => 'UserController',
         'user_cv' => 'UserCvController',
+        'user_cv_experience' => 'UserCvExperienceController',
+        'user_cv_education' => 'UserCvEducationController',
+        'user_cv_course' => 'UserCvCourseController',
     ]);
+    Route::name('user.experience.update')->post('user/experience/update/{user_cv_experience}', ['uses' => 'UserCvExperienceController@update']);
+    Route::name('user.experience.delete')->post('user/experience/delete/{user_cv_experience}', ['uses' => 'UserCvExperienceController@delete']);
+
+    Route::name('user.education.update')->post('user/education/update/{user_cv_education}', ['uses' => 'UserCvEducationController@update']);
+    Route::name('user.education.delete')->post('user/education/delete/{user_cv_education}', ['uses' => 'UserCvEducationController@delete']);
+
+    Route::name('user.course.update')->post('user/course/update/{user_cv_course}', ['uses' => 'UserCvCourseController@update']);
+    Route::name('user.course.delete')->post('user/course/delete/{user_cv_course}', ['uses' => 'UserCvCourseController@delete']);
 });
 
 //Route::middleware('api')->get('/users', ['uses' => 'UserController@index'])->name('users.api');

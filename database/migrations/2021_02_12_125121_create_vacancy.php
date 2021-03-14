@@ -24,7 +24,7 @@ class CreateVacancy extends Migration
             $table->bigInteger('busyness_id')->unsigned();
             $table->foreign('busyness_id')
                 ->references('id')
-                ->on('busynesses')
+                ->on('bussynesses')
                 ->onDelete('cascade');
             $table->bigInteger('schedule_id')->unsigned();
             $table->foreign('schedule_id')

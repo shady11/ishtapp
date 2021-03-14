@@ -16,6 +16,13 @@ class CreateUserCvsTable extends Migration
         Schema::create('user_cvs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('experience_year');
+            $table->bigInteger('user_id')->unsigned();
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+            $table->string('attachment')->nullable();
+            $table->string('job_title');
             $table->timestamps();
         });
     }
