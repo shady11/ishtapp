@@ -96,7 +96,9 @@ class VacancyController extends Controller
                 'title' => $item->title,
                 'address' => $item->address,
                 'description' => $item->description,
+                'salary' => $item->salary,
                 'company_name' => User::findOrFail($item->company_id)->name,
+                'company_logo'=> User::findOrFail($item->company_id)->avatar,
                 'busyness' => Busyness::findOrFail($item->busyness_id)->name,
                 'job_type' => JobType::findOrFail($item->job_type_id)->name,
                 'schedule' => Schedule::findOrFail($item->schedule_id)->name,
@@ -218,13 +220,23 @@ class VacancyController extends Controller
         $user = User::where("password", $token)->firstOrFail();
 
         if($user){
-            $request->user_id = $user->id;
-//            dd($request);
-            $user_vacancy = new UserVacancy;
-            $user_vacancy->user_id = $user->id;
-            $user_vacancy->vacancy_id = $vacancy_id;
-            $user_vacancy->type = $type;
-            $user_vacancy->save();
+            $existing_user_vacancy = UserVacancy::where("user_id", $user->id)
+                ->where("vacancy_id", $vacancy_id)
+                ->where("type", "LIKED")
+                ->first();
+            if($existing_user_vacancy) {
+                $existing_user_vacancy ->update([
+                    'type' => $type,
+                ]);
+                $existing_user_vacancy->save();
+            }
+            else{
+                $user_vacancy = new UserVacancy;
+                $user_vacancy->user_id = $user->id;
+                $user_vacancy->vacancy_id = $vacancy_id;
+                $user_vacancy->type = $type;
+                $user_vacancy->save();
+            }
             return 'OK';
         }
         else{
@@ -232,14 +244,14 @@ class VacancyController extends Controller
         }
 
     }
-    public function getVacanciesByType(Request $request)
+    public function getVacanciesByType(Request $request,$type)
     {
 
         $token = $request->header('Authorization');
 
         $user = User::where("password", $token)->firstOrFail();
         if($user){
-            $type = $request->type;
+//            $type = $request->type;
             $result = UserVacancy::where("type", $type)
                 ->where("user_id", $user->id)
                 ->pluck('vacancy_id')->toArray();
@@ -254,7 +266,9 @@ class VacancyController extends Controller
                             'title'=> $item->title,
                             'address'=> $item->address,
                             'description'=> $item->description,
+                            'salary'=> $item->salary,
                             'company_name'=> User::findOrFail($item->company_id)->name,
+                            'company_logo'=> User::findOrFail($item->company_id)->avatar,
                             'busyness'=> Busyness::findOrFail($item->busyness_id)->name,
                             'job_type'=> JobType::findOrFail($item->job_type_id)->name,
                             'schedule'=> Schedule::findOrFail($item->schedule_id)->name,
@@ -266,6 +280,24 @@ class VacancyController extends Controller
 //            $vacancies = Vacancy::where('id', 3)->get();
 //            dd($vacancies);
             return $result1;
+        }
+        else{
+            return 'FALSE';
+        }
+
+    }
+    public function getNumberOfLikedVacancies(Request $request, $type)
+    {
+
+        $token = $request->header('Authorization');
+
+        $user = User::where("password", $token)->first();
+        if($user){
+            $result = UserVacancy::where("type", $type)
+                ->where("user_id", $user->id)
+                ->pluck('vacancy_id')->toArray();
+            $vacancies = Vacancy::wherein('id', $result)->get();
+            return count($vacancies);
         }
         else{
             return 'FALSE';

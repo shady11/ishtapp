@@ -36,14 +36,14 @@ Route::group([
         // Api Datatable
 
         Route::name('users.api')->get('users_api', ['uses' => 'UserController@api']);
-        Route::name('patients.api')->get('patients_api', ['uses' => 'PatientController@api']);
-        Route::name('categorytests.api')->get('categorytests_api', ['uses' => 'CategorytestController@api']);
-        Route::name('categorytests.deleted')->get('categorytests/delete/{id}', ['uses' => 'CategorytestController@deleted']);
-        Route::name('questiontests.deleted')->get('questiontests/delete/{id}', ['uses' => 'QuestiontestController@deleted']);
-        Route::name('questiontests.api')->get('questiontests_api', ['uses' => 'QuestiontestController@api']);
-        Route::name('questionnaires.api')->get('questionnaires_api', ['uses' => 'QuestionnaireController@api']);
-        Route::name('themeconsultantquestions.api')->get('themeconsultantquestions_api', ['uses' => 'ThemeconsultantController@api']);
-        Route::name('consultants.api')->get('consultants_api', ['uses' => 'СonsultantController@api']);
+//        Route::name('patients.api')->get('patients_api', ['uses' => 'PatientController@api']);
+//        Route::name('categorytests.api')->get('categorytests_api', ['uses' => 'CategorytestController@api']);
+//        Route::name('categorytests.deleted')->get('categorytests/delete/{id}', ['uses' => 'CategorytestController@deleted']);
+//        Route::name('questiontests.deleted')->get('questiontests/delete/{id}', ['uses' => 'QuestiontestController@deleted']);
+//        Route::name('questiontests.api')->get('questiontests_api', ['uses' => 'QuestiontestController@api']);
+//        Route::name('questionnaires.api')->get('questionnaires_api', ['uses' => 'QuestionnaireController@api']);
+//        Route::name('themeconsultantquestions.api')->get('themeconsultantquestions_api', ['uses' => 'ThemeconsultantController@api']);
+//        Route::name('consultants.api')->get('consultants_api', ['uses' => 'СonsultantController@api']);
         Route::name('admin.menus')->get('menus','HomeController@menu');
         Route::name('vacancy_types.api')->get('vacancy_type', ['uses' => 'VacancyTypeController@api']);
         Route::name('busynesses.api')->get('busyness', ['uses' => 'BusynessController@api']);

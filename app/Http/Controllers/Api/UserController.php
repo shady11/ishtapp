@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Models\UserCV;
+use App\Models\Vacancy;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -71,16 +73,21 @@ class UserController extends Controller
 
     }
 
-    protected function avatar($user_id)
+    protected function avatar(Request  $request)
     {
-        //check image exist or not
-        $user = User::findOrFail($user_id);
-        if ($user->avatar) {
-            //get content of image
-            return $user->avatar;
-        } else {
-            return null;
+        $vacancy_id = $request->vacancy_id;
+        $vacancy = Vacancy:: findOrFail($vacancy_id);
+        if($vacancy){
+            $user = User::findOrFail($vacancy->company_id);
+            if ($user->avatar) {
+                //get content of image
+                return $user->avatar;
+            } else {
+                return "company doesn't have image";
+            }
         }
+        else
+            return "vacancy doesn't exists";
     }
     protected function checkUserEmail(Request $request)
     {
@@ -94,6 +101,20 @@ class UserController extends Controller
         }
         else
             return 'email not found';
+    }
+
+    protected function checkUserCv(Request $request)
+    {
+        $user_id = $request->user_id;
+        if($user_id){
+            $count = UserCV::where('user_id', $user_id)->count();
+            if($count>0)
+                return "true";
+            else
+                return "false";
+        }
+        else
+            return 'user_id not found';
     }
 
     /**
@@ -134,9 +155,8 @@ class UserController extends Controller
     public function store(Request $request)
     {
 //        dd('$request');
-        if (User::where('login', $request->login)->count() == 0) {
+        if (User::where('email', $request->email)->count() == 0) {
             $user = User::create([
-                'login' => $request->login,
                 'name' => $request->name,
                 'lastname' => $request->lastname,
                 'email' => $request->email,
@@ -159,6 +179,7 @@ class UserController extends Controller
                 return response()->json([
                     'id' => $user->id,
                     'token' => $user->password,
+                    'email' => $user->email,
                     'avatar' => $user->avatar,
                     'message' => 'Successfully created user!',
                     'status' => 200

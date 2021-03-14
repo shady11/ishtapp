@@ -31,10 +31,16 @@ Route::group([
     Route::name('vacancy.api')->post('vacancy', ['uses' => 'VacancyController@index']);
     Route::name('vacancy.api')->post('user_vacancy', ['uses' => 'VacancyController@likeOrSubmit']);
     Route::name('vacancy.api')->get('user_vacancy/{type}', ['uses' => 'VacancyController@getVacanciesByType']);
+    Route::name('vacancy.api')->get('num_of/{type}', ['uses' => 'VacancyController@getNumberOfLikedVacancies']);
     Route::name('user.api.avatar')->get('/users/avatar/{user_id}', ['uses' => 'UserController@avatar']);
     Route::name('users.api')->get('user', ['uses' => 'UserController@show']);
     Route::name('users.api')->post('users/update/{user_id}', ['uses' => 'UserController@update1']);
     Route::name('users.api')->post('users/email_check', ['uses' => 'UserController@checkUserEmail']);
+    Route::name('users.api')->post('users/user_cv_check', ['uses' => 'UserController@checkUserCv']);
+    Route::name('users.api')->post('users/send_mail', ['uses' => 'ForgotPasswordController@sendMailToEmail']);
+    Route::name('users.api')->post('users/validate_code', ['uses' => 'ForgotPasswordController@validateCode']);
+    Route::name('users.api')->post('users/reset_password', ['uses' => 'ForgotPasswordController@resetPassword']);
+    Route::name('users.api')->post('users/company_image', ['uses' => 'UserController@avatar']);
 
     Route::resources([
 //        'users' => 'UserController',
