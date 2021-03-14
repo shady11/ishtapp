@@ -104,9 +104,7 @@ class ForgotPasswordController extends Controller
             if ($new_password) {
                 $new_password = Hash::make($new_password);
             }
-            $user ->update([
-                'password' => $new_password,
-            ]);
+            $user ->password = $new_password;
             $user->save();
             return response()->json([
                 'token' => $user->password,
