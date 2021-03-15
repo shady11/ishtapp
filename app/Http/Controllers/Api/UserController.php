@@ -275,6 +275,13 @@ class UserController extends Controller
                 'active' => true,
                 'phone_number' => $request->phone_number,
             ]);
+            // create empty cv
+            if($user && $user->type == 'USER') {
+                UserCV::create([
+                    'job_title' => 'EMPTY',
+                    'user_id' => $request->user_id
+                ]);
+            }
             if ($request->hasFile('avatar')) {
                 $file = $request->file('avatar');
                 $path = '/storage/avatars/'. Carbon::now()->format('YmdHms') . $file->getClientOriginalName();

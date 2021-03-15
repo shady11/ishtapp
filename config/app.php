@@ -161,7 +161,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        L5Swagger\L5SwaggerServiceProvider::class,
         Jenssegers\Date\DateServiceProvider::class,
 
         /*
@@ -172,7 +171,6 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider::class,
-        Yajra\DataTables\DataTablesServiceProvider::class,
         Harimayco\Menu\MenuServiceProvider::class,
 
         /*
@@ -183,7 +181,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\PermissionsServiceProvider::class,
+//        App\Providers\PermissionsServiceProvider::class,
 
     ],
 
@@ -243,7 +241,6 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'LaravelLocalization' => Mcamara\LaravelLocalization\Facades\LaravelLocalization::class,
-        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Date' => Jenssegers\Date\Date::class,
     ],
 

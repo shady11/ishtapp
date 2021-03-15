@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Support\Facades\Schema;
@@ -25,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         Carbon::setLocale('ky');
-        $this->app->register(\L5Swagger\L5SwaggerServiceProvider::class);
+        //$this->app->register(\L5Swagger\L5SwaggerServiceProvider::class);
 
         view()->composer('*', function ($view) {
             $view->with('current_first', Request::capture()->segment(1));
