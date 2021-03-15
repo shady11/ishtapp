@@ -32,6 +32,7 @@ Route::group([
     Route::name('vacancy.api')->post('user_vacancy', ['uses' => 'VacancyController@likeOrSubmit']);
     Route::name('vacancy.api')->get('user_vacancy/{type}', ['uses' => 'VacancyController@getVacanciesByType']);
     Route::name('vacancy.api')->get('num_of/{type}', ['uses' => 'VacancyController@getNumberOfLikedVacancies']);
+    Route::name('vacancy.api')->get('company_vacancy', ['uses' => 'VacancyController@getVacanciesByCompany']);
     Route::name('user.api.avatar')->get('/users/avatar/{user_id}', ['uses' => 'UserController@avatar']);
     Route::name('users.api')->get('user', ['uses' => 'UserController@show']);
     Route::name('users.api')->post('users/update/{user_id}', ['uses' => 'UserController@update1']);
@@ -41,6 +42,8 @@ Route::group([
     Route::name('users.api')->post('users/validate_code', ['uses' => 'ForgotPasswordController@validateCode']);
     Route::name('users.api')->post('users/reset_password', ['uses' => 'ForgotPasswordController@resetPassword']);
     Route::name('users.api')->post('users/company_image', ['uses' => 'UserController@avatar']);
+    Route::name('users.api')->post('company/submitted_users/{company_id}', ['uses' => 'UserController@getCompanySubmittedUserCvs']);
+    Route::name('users.api')->post('users/full_info/{user_id}', ['uses' => 'UserController@getUserFullInfo']);
 
     Route::resources([
 //        'users' => 'UserController',

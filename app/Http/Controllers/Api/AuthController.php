@@ -88,6 +88,7 @@ class AuthController extends Controller
                 return response([
                     'id' => $user->value('id'),
                     'avatar' => $user->value('avatar'),
+                    'user_type' => $user->value('type'),
                     'token' => $user->value('password')
                 ]);
 

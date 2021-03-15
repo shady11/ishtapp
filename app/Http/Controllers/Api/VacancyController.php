@@ -76,7 +76,7 @@ class VacancyController extends Controller
         if($token!="null") {
             $user = User::where("password", $token)->firstOrFail();
             if($user)
-                $banned_ones = UserVacancy::where("user_id", $user->id)->pluck('vacancy_id')->toArray();
+                $banned_ones = UserVacancy::where("user_id", $user->id)->where("type",'!=', 'LIKED_THEN_DELETED')->pluck('vacancy_id')->toArray();
         }
         foreach (Vacancy::whereIn('job_type_id', $job_type_ids)
                      ->whereIn('schedule_id', $schedule_ids)
@@ -301,6 +301,41 @@ class VacancyController extends Controller
         }
         else{
             return 'FALSE';
+        }
+
+    }
+    public function getVacanciesByCompany(Request $request)
+    {
+
+        $token = $request->header('Authorization');
+
+        $user = User::where("password", $token)->firstOrFail();
+        if($user){
+            $result1 = [];
+            foreach (Vacancy::where('company_id', $user->id)
+                        ->where('is_active', true)
+                         ->get() as $item){
+                array_push($result1, [
+                    'id'=> $item->id,
+                    'name'=> $item->name,
+                    'title'=> $item->title,
+                    'address'=> $item->address,
+                    'description'=> $item->description,
+                    'salary'=> $item->salary,
+                    'company_name'=> User::findOrFail($item->company_id)->name,
+                    'company_logo'=> User::findOrFail($item->company_id)->avatar,
+                    'busyness'=> Busyness::findOrFail($item->busyness_id)->name,
+                    'job_type'=> JobType::findOrFail($item->job_type_id)->name,
+                    'schedule'=> Schedule::findOrFail($item->schedule_id)->name,
+                    'type'=> VacancyType::findOrFail($item->vacancy_type_id)->name,
+                    'region'=> Region::findOrFail($item->region_id)->name,
+                    'company'=> User::findOrFail($item->company_id)->id
+                ]);
+            }
+            return $result1;
+        }
+        else{
+            return 'ERROR';
         }
 
     }
