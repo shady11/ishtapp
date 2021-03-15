@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\EducationType;
 use App\Models\User;
+use App\Models\UserCourse;
 use App\Models\UserCV;
+use App\Models\UserEducation;
+use App\Models\UserExperience;
+use App\Models\UserVacancy;
 use App\Models\Vacancy;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
@@ -117,6 +122,111 @@ class UserController extends Controller
             return 'user_id not found';
     }
 
+    protected function getCompanySubmittedUserCvs(Request $request, $company_id)
+    {
+        if($company_id){
+            $vacancy_ids =Vacancy::where('company_id', $company_id)->pluck('id')->toArray();
+//            dd($vacancy_ids);
+            $submitted_user_ids = UserVacancy::wherein("vacancy_id", $vacancy_ids)->where("type", 'SUBMITTED')->pluck('user_id')->toArray();
+            $result =[];
+            foreach (User::whereIn('id', $submitted_user_ids)
+                        ->where('type','USER')
+                        ->get() as $item) {
+                $user_vacancy_id = UserVacancy::where("user_id", $item->id)->where("type", 'SUBMITTED')->firstOrFail()->vacancy_id;
+                $user_vacancy_name = Vacancy::where('id', $user_vacancy_id)->first()->name;
+
+                array_push($result, [
+                    'vacancy_name' => $user_vacancy_name,
+                    'id' => $item->id,
+                    'surname_name' => $item->surname,
+                    'email' => $item->email,
+                    'phone_number' => $item->phone_number,
+                    'avatar' => $item->avatar,
+                    'birth_date' => $item->birth_date,
+                    'job_title' => UserCv::where('user_id',$item->id)->first()->job_title,
+                    'experience_year' => UserCv::where('user_id',$item->id)->first()->experience_year
+                ]);
+            }
+            return $result;
+        }
+        else{
+            return 'company id doesnt exist';
+        }
+    }
+
+    protected function getUserFullInfo(Request $request, $user_id)
+    {
+        if($user_id){
+            $user = User::where('id', $user_id)
+                ->where('type','USER')
+                ->first();
+            if($user){
+                $user_cv = UserCV::where('user_ id', $user_id)->first();
+                if($user_cv){
+
+                    $user_experiences = [];
+                    foreach (UserExperience::where('user_cv_id', $user_cv->id)->get() as $model) {
+                        array_push($user_experiences, [
+                            'id' => $model->id,
+                            'job_title' => $model->job_title,
+                            'start_date' => $model->start_date,
+                            'end_date' => $model->end_date,
+                            'organization_name' => $model->organization_name,
+                            'description' => $model->description,
+                        ]);
+                    }
+
+                    $user_courses = [];
+                    foreach (UserCourse::where('user_cv_id', $user_cv->id)->get() as $model) {
+                        array_push($user_courses, [
+                            'id' => $model->id,
+                            'name' => $model->name,
+                            'organization_name' => $model->organization_name,
+                            'end_year' => $model->end_year,
+                            'duration' => $model->duration,
+                        ]);
+                    }
+
+                    $user_educations = [];
+                    foreach (UserEducation::where('user_cv_id', $user_cv->id)->get() as $model) {
+                        array_push($user_educations, [
+                            'id' => $model->id,
+                            'title' => $model->title,
+                            'faculty' => $model->faculty,
+                            'speciality' => $model->speciality,
+                            'type' => EducationType::findOrFail($model->type_id)->name,
+                            'end_year' => $model->end_year,
+                        ]);
+                    }
+
+                    return response()->json([
+                        'id' => $user->id,
+                        'surname_name' => $user->surname,
+                        'email' => $user->email,
+                        'phone_number' => $user->phone_number,
+                        'avatar' => $user->avatar,
+                        'birth_date' => $user->birth_date,
+                        'job_title' => $user_cv->job_title,
+                        'experience_year' => $user_cv->experience_year,
+                        'attachment' => $user_cv->attachment,
+                        'educations' => $user_educations,
+                        'courses' => $user_courses,
+                        'experiences' => $user_experiences,
+                    ]);
+                }
+                else{
+                    return 'user doesnt have cv';
+                }
+            }
+            else{
+                return 'user doesnt exist';
+            }
+        }
+        else{
+            return 'company id doesnt exist';
+        }
+    }
+
     /**
      * @OA\Post(
      *     path="/users",
@@ -181,6 +291,7 @@ class UserController extends Controller
                     'token' => $user->password,
                     'email' => $user->email,
                     'avatar' => $user->avatar,
+                    'user_type' => $user->type,
                     'message' => 'Successfully created user!',
                     'status' => 200
                 ], 200);

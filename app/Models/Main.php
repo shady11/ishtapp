@@ -4,14 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Spatie\MediaLibrary\Models\Media;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-
-class Main extends Model implements HasMedia
+class Main extends Model
+//class Main extends Model implements HasMedia
 {
 
-    use HasMediaTrait;
+//    use HasMediaTrait;
 
     protected $table = 'main';
 
@@ -50,20 +47,20 @@ class Main extends Model implements HasMedia
     {
         return $this->socials;
     }
-    public function getLogo()
-    {
-        return $this->getMedia('main_logo')->last()->getUrl('logo_middle');
-    }
+//    public function getLogo()
+//    {
+//        return $this->getMedia('main_logo')->last()->getUrl('logo_middle');
+//    }
 
-    public function registerMediaCollections()
-    {
-        $this->addMediaCollection('main_logo')
-            ->registerMediaConversions(function (Media $media) {
-                $this->addMediaConversion('logo_original');
-                $this->addMediaConversion('logo_middle')
-                    ->height(60);
-                $this->addMediaConversion('logo_big')
-                    ->crop('crop-center', 60, 54);
-            });
-    }
+//    public function registerMediaCollections()
+//    {
+//        $this->addMediaCollection('main_logo')
+//            ->registerMediaConversions(function (Media $media) {
+//                $this->addMediaConversion('logo_original');
+//                $this->addMediaConversion('logo_middle')
+//                    ->height(60);
+//                $this->addMediaConversion('logo_big')
+//                    ->crop('crop-center', 60, 54);
+//            });
+//    }
 }
