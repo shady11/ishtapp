@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -13,9 +14,7 @@ class UpdateUserVacancyTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('type', ['LIKED', 'DISLIKED', 'SUBMITTED','LIKED_THEN_DELETED']);
-        });
+        DB::statement("ALTER TABLE user_vacancy MODIFY COLUMN type ENUM('LIKED', 'DISLIKED', 'SUBMITTED','LIKED_THEN_DELETED')");
     }
 
     /**

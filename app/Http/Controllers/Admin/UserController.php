@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User as User;
+use App\Models\UserCV;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -41,6 +42,13 @@ class UserController extends Controller
             $user->password = Hash::make($request->password);
         }
         $user->save();
+
+        if($user) {
+            UserCV::create([
+                'job_title' => 'EMPTY',
+                'user_id' => $user->id
+            ]);
+        }
 
         return redirect()->route('users.show', $user);
     }
