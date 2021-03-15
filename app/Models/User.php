@@ -11,11 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
-use App\Permissions\HasPermissionsTrait;
-
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
-    use Authenticatable, CanResetPassword, SearchableTrait, HasPermissionsTrait, Notifiable;
+    use Authenticatable, CanResetPassword, SearchableTrait, Notifiable;
 
     protected $connection = 'mysql';
 
