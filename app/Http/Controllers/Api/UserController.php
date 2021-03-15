@@ -159,11 +159,11 @@ class UserController extends Controller
         if($user_id){
             $user = User::where('id', $user_id)
                 ->where('type','USER')
-                ->first();
+                ->firstOrFail();
             if($user){
-                $user_cv = UserCV::where('user_ id', $user_id)->first();
+                $user_cv = UserCV::where('user_id', $user_id)->firstOrFail();
+//                dd($user_cv);
                 if($user_cv){
-
                     $user_experiences = [];
                     foreach (UserExperience::where('user_cv_id', $user_cv->id)->get() as $model) {
                         array_push($user_experiences, [
@@ -201,7 +201,7 @@ class UserController extends Controller
 
                     return response()->json([
                         'id' => $user->id,
-                        'surname_name' => $user->surname,
+                        'surname_name' => $user->lastname,
                         'email' => $user->email,
                         'phone_number' => $user->phone_number,
                         'avatar' => $user->avatar,
