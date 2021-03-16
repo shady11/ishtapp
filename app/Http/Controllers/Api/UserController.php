@@ -138,7 +138,7 @@ class UserController extends Controller
                 array_push($result, [
                     'vacancy_name' => $user_vacancy_name,
                     'id' => $item->id,
-                    'lastname' => $item->surname,
+                    'lastname' => $item->lastname,
                     'email' => $item->email,
                     'phone_number' => $item->phone_number,
                     'avatar' => $item->avatar,
