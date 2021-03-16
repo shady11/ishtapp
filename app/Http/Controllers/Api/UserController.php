@@ -112,8 +112,8 @@ class UserController extends Controller
     {
         $user_id = $request->user_id;
         if($user_id){
-            $count = UserCV::where('user_id', $user_id)->count();
-            if($count>0)
+            $user_cv = UserCV::where('user_id', $user_id)->firstOrFail();
+            if($user_cv->job_title)
                 return "true";
             else
                 return "false";
@@ -138,7 +138,7 @@ class UserController extends Controller
                 array_push($result, [
                     'vacancy_name' => $user_vacancy_name,
                     'id' => $item->id,
-                    'surname_name' => $item->surname,
+                    'lastname' => $item->lastname,
                     'email' => $item->email,
                     'phone_number' => $item->phone_number,
                     'avatar' => $item->avatar,
@@ -159,11 +159,11 @@ class UserController extends Controller
         if($user_id){
             $user = User::where('id', $user_id)
                 ->where('type','USER')
-                ->first();
+                ->firstOrFail();
             if($user){
-                $user_cv = UserCV::where('user_ id', $user_id)->first();
+                $user_cv = UserCV::where('user_id', $user_id)->firstOrFail();
+//                dd($user_cv);
                 if($user_cv){
-
                     $user_experiences = [];
                     foreach (UserExperience::where('user_cv_id', $user_cv->id)->get() as $model) {
                         array_push($user_experiences, [
@@ -201,7 +201,7 @@ class UserController extends Controller
 
                     return response()->json([
                         'id' => $user->id,
-                        'surname_name' => $user->surname,
+                        'surname_name' => $user->lastname,
                         'email' => $user->email,
                         'phone_number' => $user->phone_number,
                         'avatar' => $user->avatar,

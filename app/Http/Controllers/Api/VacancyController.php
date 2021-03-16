@@ -339,4 +339,131 @@ class VacancyController extends Controller
         }
 
     }
+    public function getActiveVacanciesNumber(Request $request)
+    {
+
+        $token = $request->header('Authorization');
+
+        $user = User::where("password", $token)->firstOrFail();
+        if($user){
+            $count = 0;
+            foreach (Vacancy::where('company_id', $user->id)
+                         ->where('is_active', true)
+                         ->get() as $item){
+                $count=$count+1;
+            }
+            return $count;
+        }
+        else{
+            return 'ERROR';
+        }
+
+    }
+    public function getInactiveVacanciesNumber(Request $request)
+    {
+
+        $token = $request->header('Authorization');
+
+        $user = User::where("password", $token)->firstOrFail();
+        if($user){
+            $count = 0;
+            foreach (Vacancy::where('company_id', $user->id)
+                         ->where('is_active', false)
+                         ->get() as $item){
+                $count=$count+1;
+            }
+            return $count;
+        }
+        else{
+            return 'ERROR';
+        }
+
+    }
+    public function getInactiveVacanciesByCompany(Request $request)
+    {
+
+        $token = $request->header('Authorization');
+
+        $user = User::where("password", $token)->firstOrFail();
+        if($user){
+            $result1 = [];
+            foreach (Vacancy::where('company_id', $user->id)
+                         ->where('is_active', false)
+                         ->get() as $item){
+                array_push($result1, [
+                    'id'=> $item->id,
+                    'name'=> $item->name,
+                    'title'=> $item->title,
+                    'address'=> $item->address,
+                    'description'=> $item->description,
+                    'salary'=> $item->salary,
+                    'company_name'=> User::findOrFail($item->company_id)->name,
+                    'company_logo'=> User::findOrFail($item->company_id)->avatar,
+                    'busyness'=> Busyness::findOrFail($item->busyness_id)->name,
+                    'job_type'=> JobType::findOrFail($item->job_type_id)->name,
+                    'schedule'=> Schedule::findOrFail($item->schedule_id)->name,
+                    'type'=> VacancyType::findOrFail($item->vacancy_type_id)->name,
+                    'region'=> Region::findOrFail($item->region_id)->name,
+                    'company'=> User::findOrFail($item->company_id)->id
+                ]);
+            }
+            return $result1;
+        }
+        else{
+            return 'ERROR';
+        }
+
+    }
+    public function deleteCompanyVacancy(Request $request)
+    {
+
+        $token = $request->header('Authorization');
+
+        $user = User::where("password", $token)->firstOrFail();
+        if($user){
+            $result1 = [];
+            $vacancy = Vacancy::where('id', $request->vacancy_id)
+                ->firstOrFail();
+            if($vacancy){
+                $user->delete();
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'successfully deleted',
+                ]);
+            }
+            else{
+                return 'ERROR';
+            }
+        }
+        else{
+            return 'ERROR';
+        }
+
+    }
+    public function activateDeactivateCompanyVacancy(Request $request)
+    {
+
+        $token = $request->header('Authorization');
+
+        $user = User::where("password", $token)->firstOrFail();
+        if($user){
+            $vacancy = Vacancy::where('id', $request->vacancy_id)
+                ->firstOrFail();
+            if($vacancy){
+                $vacancy->is_active = $request->active;
+                $vacancy->save();
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'successfully deac',
+                ]);
+            }
+            else{
+                return 'ERROR';
+            }
+        }
+        else{
+            return 'ERROR';
+        }
+
+    }
 }
