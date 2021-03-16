@@ -112,8 +112,8 @@ class UserController extends Controller
     {
         $user_id = $request->user_id;
         if($user_id){
-            $count = UserCV::where('user_id', $user_id)->count();
-            if($count>0)
+            $user_cv = UserCV::where('user_id', $user_id)->firstOrFail();
+            if($user_cv->job_title)
                 return "true";
             else
                 return "false";
