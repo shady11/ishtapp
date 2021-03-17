@@ -11,10 +11,10 @@
 |
 */
 
-//Route::group([
-//    'prefix' => LaravelLocalization::setLocale(),
-//    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'web']], function(){
-//
-//    Route::get('/', 'WebController@index')->name('web');
-//
-//});
+Route::group([
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'web']], function(){
+
+    Route::get('/', 'WebController@index')->name('web');
+
+});
