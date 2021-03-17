@@ -11,7 +11,7 @@ class Vacancy extends Model
 
     protected $connection = 'mysql';
 
-    protected $table = 'vacancy';
+    protected $table = 'vacancies';
     protected $fillable = [
         'name',
         'title',
