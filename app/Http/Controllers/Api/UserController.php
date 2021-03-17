@@ -278,8 +278,8 @@ class UserController extends Controller
             // create empty cv
             if($user && $user->type == 'USER') {
                 UserCV::create([
-                    'job_title' => 'EMPTY',
-                    'user_id' => $request->user_id
+                    'job_title' => null,
+                    'user_id' => $user->id
                 ]);
             }
             if ($request->hasFile('avatar')) {
