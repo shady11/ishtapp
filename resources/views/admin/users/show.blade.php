@@ -2,100 +2,82 @@
 
 @section('content')
 
-    @subheader
-        Пользователи
-    @endsubheader
+    @include('admin.partials.subheader')
 
-    @content
-    <div class="row">
-        <div class="col-lg-12">
-            <!--begin::Portlet-->
-            <div class="m-portlet">
-                <div class="m-portlet__head">
-                    <div class="m-portlet__head-caption">
-                        <div class="m-portlet__head-title">
-                            <h3 class="m-portlet__head-text">
-                                {{$user->getFullName()}}
-                            </h3>
-                        </div>
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <div class="card card-custom">
+                <!--begin::Header-->
+                <div class="card-header py-3">
+                    <div class="card-title">
+                        <h3 class="card-label font-weight-bolder text-dark">{{$user->getFullName()}}</h3>
+                    </div>
+                    <div class="card-toolbar">
+                        <a href="{{route('users.edit', $user)}}" class="btn btn-success mr-2">Редактировать</a>
+                        <a href="{{route('users.delete', $user)}}" class="btn btn-danger">Удалить</a>
                     </div>
                 </div>
-                <div class="m-portlet__body">
-                    <div class="m-widget13">
-{{--                        <div class="m-widget13__item">--}}
-{{--                            <span class="m-widget13__desc m--align-right">--}}
-{{--                                Аватар--}}
-{{--                            </span>--}}
-{{--                            <span class="m-widget13__text text-dark m--font-bolder">--}}
-{{--                                <img src="{{asset('/storage/'.$user->avatar)}}" alt="{{$user->getFullName()}}">--}}
-{{--                            </span>--}}
-{{--                        </div>--}}
-                        <div class="m-widget13__item">
-                            <span class="m-widget13__desc m--align-right">
-                                Имя
-                            </span>
-                            <span class="m-widget13__text text-dark m--font-bolder">
-                                {{$user->name}}
-                            </span>
+                <!--end::Header-->
+                <!--begin::Form-->
+                <form class="form">
+                    <div class="card-body">
+
+                        <div class="form-group row align-items-center">
+                            <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">Имя:</label>
+                            <div class="col-lg-9 col-xl-6">
+                                <p class="font-weight-bold mb-0">{{$user->name}}</p>
+                            </div>
                         </div>
-                        <div class="m-widget13__item">
-                            <span class="m-widget13__desc m--align-right">
-                                Фамилия
-                            </span>
-                            <span class="m-widget13__text text-dark m--font-bolder">
-                                {{$user->lastname}}
-                            </span>
+                        <div class="form-group row align-items-center">
+                            <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">Фамилия:</label>
+                            <div class="col-lg-9 col-xl-6">
+                                <p class="font-weight-bold mb-0">{{$user->lastname}}</p>
+                            </div>
                         </div>
-                        <div class="m-widget13__item">
-                            <span class="m-widget13__desc m--align-right">
-                                Логин
-                            </span>
-                            <span class="m-widget13__text text-dark m--font-bolder">
-                                {{$user->login}}
-                            </span>
+
+                        <div class="separator separator-dashed my-10"></div>
+
+                        <div class="form-group row align-items-center">
+                            <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">Логин:</label>
+                            <div class="col-lg-9 col-xl-6">
+                                <p class="font-weight-bold mb-0">{{$user->login}}</p>
+                            </div>
                         </div>
-                        <div class="m-widget13__item">
-                            <span class="m-widget13__desc m--align-right">
-                                Эл.адрес
-                            </span>
-                            <span class="m-widget13__text text-dark m--font-bolder">
-                                {{$user->email}}
-                            </span>
+                        <div class="form-group row align-items-center">
+                            <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">Email:</label>
+                            <div class="col-lg-9 col-xl-6">
+                                <p class="font-weight-bold mb-0">{{$user->email}}</p>
+                            </div>
                         </div>
-                        <div class="m-widget13__item">
-                            <span class="m-widget13__desc m--align-right">
-                                Статус
-                            </span>
-                            <span class="m-widget13__text text-dark m--font-bolder">
-                                {!! $user->getStatus() !!}
-                            </span>
+
+                        <div class="form-group row align-items-center">
+                            <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">Телефон:</label>
+                            <div class="col-lg-9 col-xl-6">
+                                <p class="font-weight-bold mb-0">{{$user->phone_number}}</p>
+                            </div>
                         </div>
-                        <div class="m-widget13__item">
-                            <span class="m-widget13__desc m--align-right">
-                                Дата добавления
-                            </span>
-                            <span class="m-widget13__text text-dark m--font-bolder">
-                                {{$user->getCreatedDate()}} {{$user->getCreatedTime()}}
-                            </span>
+
+                        <div class="form-group row align-items-center">
+                            <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">Статус:</label>
+                            <div class="col-lg-9 col-xl-6">
+                                <p class="font-weight-bold mb-0">{!! $user->getStatus() !!}</p>
+                            </div>
                         </div>
-                        <div class="m-widget13__action m--align-right">
-                            <a href="{{route('users.index')}}" class="m-widget__detalis btn btn-secondary">
-                                Назад
-                            </a>
-                            <a href="{{route('users.edit', $user)}}" class="m-widget__detalis btn btn-info">
-                                Редактировать
-                            </a>
-{{--                            <a href="#" class="btn btn-danger">--}}
-{{--                                Удалить--}}
-{{--                            </a>--}}
+
+                        <div class="form-group row align-items-center">
+                            <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">Дата добавления:</label>
+                            <div class="col-lg-9 col-xl-6">
+                                <p class="font-weight-bold mb-0">{!! $user->getCreatedDate() !!}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
+                <!--end::Form-->
             </div>
-            <!--end::Portlet-->
         </div>
+        <!--end::Container-->
     </div>
-    @endcontent
 
 @endsection
 

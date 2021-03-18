@@ -55,12 +55,12 @@
 <div class="d-flex flex-column flex-root">
     <div class="d-flex flex-row flex-column-fluid page">
         <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
-        <!-- BEGIN: Header -->
+            <!-- BEGIN: Header -->
         @include('admin.partials.header')
         <!-- END: Header -->
             <!-- begin::Body -->
             <div class="d-flex flex-row flex-column-fluid container">
-    {{--            @include('admin.partials.nav')--}}
+                {{--            @include('admin.partials.nav')--}}
                 <div class="main d-flex flex-column flex-row-fluid">
 
                     @yield('content')
