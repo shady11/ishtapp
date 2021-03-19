@@ -19,9 +19,10 @@ use function GuzzleHttp\Psr7\str;
 
 class HomeController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        return view('admin.main.index');
+        $title = 'Главная';
+        return view('admin.index', compact('title'));
     }
 
     public function nav_toggle(Request $request)

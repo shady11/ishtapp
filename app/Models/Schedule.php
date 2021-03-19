@@ -14,6 +14,7 @@ class Schedule extends Model
     protected $table = 'schedules';
     protected $fillable = [
         'name',
+        'name_ru',
     ];
 
     protected $searchable = [

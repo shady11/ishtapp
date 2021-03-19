@@ -11,7 +11,7 @@ class Vacancy extends Model
 
     protected $connection = 'mysql';
 
-    protected $table = 'vacancy';
+    protected $table = 'vacancies';
     protected $fillable = [
         'name',
         'title',
@@ -34,15 +34,19 @@ class Vacancy extends Model
         ],
     ];
 
+    public function company()
+    {
+        return $this->belongsTo(User::class, 'company_id');
+    }
+
     public function vacancytypes()
     {
         return VacancyType::all();
     }
 
-
-    public function vacancytype($id)
+    public function vacancytype()
     {
-        return VacancyType::findOrFail($id);
+        return $this->belongsTo(VacancyType::class, 'vacancy_type_id');
     }
 
     public function jobtypes()
@@ -50,10 +54,9 @@ class Vacancy extends Model
         return JobType::all();
     }
 
-
-    public function jobtype($id)
+    public function jobtype()
     {
-        return JobType::findOrFail($id);
+        return $this->belongsTo(JobType::class, 'job_type_id');
     }
 
     public function busynesses()
@@ -62,9 +65,9 @@ class Vacancy extends Model
     }
 
 
-    public function busyness($id)
+    public function busyness()
     {
-        return Busyness::findOrFail($id);
+        return $this->belongsTo(Region::class, 'busyness_id');
     }
 
     public function schedules()
@@ -73,9 +76,9 @@ class Vacancy extends Model
     }
 
 
-    public function schedule($id)
+    public function schedule()
     {
-        return Schedule::findOrFail($id);
+        return $this->belongsTo(Schedule::class, 'schedule_id');
     }
 
     public function regions()
@@ -84,9 +87,9 @@ class Vacancy extends Model
     }
 
 
-    public function region($id)
+    public function region()
     {
-        return Region::findOrFail($id);
+        return $this->belongsTo(Region::class, 'region_id');
     }
 
     public function getCreatedDate()

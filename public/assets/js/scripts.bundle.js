@@ -9137,6 +9137,8 @@ KTUtil.ready(function() {
     //////////////////////////////////////////////
     // Layout Extended Partials(optional to use)//
     //////////////////////////////////////////////
+    // Init Quick User Panel
+    KTLayoutQuickUser.init('kt_quick_user');
 
     // Init Scrolltop
     KTLayoutScrolltop.init('kt_scrolltop');
@@ -9168,11 +9170,11 @@ KTUtil.ready(function() {
     // Init Quick Search Panel
     KTLayoutQuickSearch.init('kt_quick_search');
 
-    // Init Quick User Panel
-    KTLayoutQuickUser.init('kt_quick_user');
+    // Init Search For Quick Search Dropdown
+    KTLayoutSearch().init('kt_quick_search_dropdown');
 
-    // Init Quick Search Handle
-    KTLayoutSearchInline().init('kt_quick_search_inline');
+    // Init Search For Quick Search Offcanvas Panel
+    KTLayoutSearchOffcanvas().init('kt_quick_search_offcanvas');
 });
 
 "use strict";
@@ -9216,6 +9218,13 @@ var KTLayoutAsideMenu = function() {
 				expandAll: false // allow having multiple expanded accordions in the menu
 			}
 		});
+
+		 // Close aside offcanvas panel before page reload On tablet and mobile
+        _menuObject.on('linkClick', function(menu) {
+            if (KTUtil.isBreakpointDown('lg')) { // Tablet and mobile mode
+                KTLayoutAside.getOffcanvas().hide(); // Hide offcanvas after general link click
+            }
+        });
 	}
 
     // Public methods
@@ -9426,6 +9435,13 @@ var KTLayoutHeaderMenu = function() {
 				expandAll: false // allow having multiple expanded accordions in the menu
 			}
 		});
+
+		// Close aside offcanvas panel before page reload On tablet and mobile
+        _menuObject.on('linkClick', function(menu) {
+            if (KTUtil.isBreakpointDown('lg')) { // Tablet and mobile mode
+                _offcanvasObject.hide(); // Hide offcanvas after general link click
+            }
+        });
 	}
 
     // Public methods
@@ -9519,12 +9535,12 @@ if (typeof module !== 'undefined') {
 "use strict";
 
 var KTLayoutHeader = function() {
-    // Private properties
+    // Private Properties
     var _element;
     var _elementForMobile;
     var _object;
 
-	// Private functions
+	// Private Functions
 	var _init = function() {
 		var options = {
             offset: {
@@ -9536,7 +9552,7 @@ var KTLayoutHeader = function() {
 		_object = new KTHeader(_element, options);
 	}
 
-    // Get height
+    // Get Height
     var _getHeight = function() {
         var height = 0;
 
@@ -9547,7 +9563,7 @@ var KTLayoutHeader = function() {
         return height;
     }
 
-    // Get height
+    // Get Height
     var _getHeightForMobile = function() {
         var height;
 
@@ -9556,7 +9572,7 @@ var KTLayoutHeader = function() {
         return height;
     }
 
-    // Public methods
+    // Public Methods
 	return {
 		init: function(id, idForMobile) {
             _element = KTUtil.getById(id);

@@ -15,7 +15,8 @@ class CreateEducationTypeTable extends Migration
     {
         Schema::create('education_types', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('name', 200);
+            $table->string('name')->nullable();
+            $table->string('name_ru')->nullable();
             $table->timestamps();
         });
     }
