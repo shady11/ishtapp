@@ -16,6 +16,7 @@ class EducationType extends Model
     protected $table = 'education_types';
     protected $fillable = [
         'name',
+        'name_ru',
     ];
 
     protected $searchable = [

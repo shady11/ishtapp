@@ -29,23 +29,33 @@ Route::middleware('auth')->group( function () {
 
     // DELETE ROUTES
     Route::name('users.delete')->get('users/delete/{user}', ['uses' => 'UserController@destroy']);
+    Route::name('vacancy_types.delete')->get('vacancy_types/delete/{vacancy_type}', ['uses' => 'VacancyTypeController@destroy']);
+    Route::name('busynesses.delete')->get('busynesses/delete/{busyness}', ['uses' => 'BusynessController@destroy']);
+    Route::name('schedules.delete')->get('schedules/delete/{busyness}', ['uses' => 'ScheduleController@destroy']);
+    Route::name('regions.delete')->get('regions/delete/{region}', ['uses' => 'RegionController@destroy']);
+    Route::name('job_types.delete')->get('job_types/delete/{job_type}', ['uses' => 'JobTypeController@destroy']);
+    Route::name('education_types.delete')->get('education_types/delete/{education_type}', ['uses' => 'EducationTypeController@destroy']);
+
+    Route::name('vacancies.delete')->get('vacancies/delete/{vacancy}', ['uses' => 'VacancyController@destroy']);
 
     Route::post('/main/removethumb', 'MainController@removethumb')->name('main.removethumb');
 
     // Api Datatable
 
-    Route::name('users.api')->get('users_api', ['uses' => 'UserController@api']);
-    Route::name('admin.menus')->get('menus','HomeController@menu');
-    Route::name('vacancy_types.api')->get('vacancy_type', ['uses' => 'VacancyTypeController@api']);
-    Route::name('busynesses.api')->get('busyness', ['uses' => 'BusynessController@api']);
-    Route::name('permissions.api')->get('permission', ['uses' => 'PermissionController@api']);
-    Route::name('roles.api')->get('role', ['uses' => 'RoleController@api']);
-    Route::name('regions.api')->get('region', ['uses' => 'RegionController@api']);
-    Route::name('schedules.api')->get('schedule', ['uses' => 'ScheduleController@api']);
-    Route::name('job_types.api')->get('job_type', ['uses' => 'JobTypeController@api']);
-    Route::name('education_types.api')->get('education_type', ['uses' => 'EducationTypeController@api']);
-    Route::name('vacancies.api')->get('vacancy', ['uses' => 'VacancyController@api']);
-    Route::name('roll')->get('roll', ['uses' => 'PermissionController@Permission']);
+    Route::prefix('api')->group( function () {
+        Route::name('users.api')->get('users_api', ['uses' => 'UserController@api']);
+        Route::name('admin.menus')->get('menus','HomeController@menu');
+        Route::name('vacancy_types.api')->get('vacancy_types', ['uses' => 'VacancyTypeController@api']);
+        Route::name('busynesses.api')->get('busynesses', ['uses' => 'BusynessController@api']);
+        Route::name('permissions.api')->get('permissions', ['uses' => 'PermissionController@api']);
+        Route::name('roles.api')->get('roles', ['uses' => 'RoleController@api']);
+        Route::name('regions.api')->get('regions', ['uses' => 'RegionController@api']);
+        Route::name('schedules.api')->get('schedules', ['uses' => 'ScheduleController@api']);
+        Route::name('job_types.api')->get('job_types', ['uses' => 'JobTypeController@api']);
+        Route::name('education_types.api')->get('education_types', ['uses' => 'EducationTypeController@api']);
+        Route::name('vacancies.api')->get('vacancies', ['uses' => 'VacancyController@api']);
+        Route::name('roll')->get('roll', ['uses' => 'PermissionController@Permission']);
+    });
 });
 
 //Route::group([

@@ -4,7 +4,7 @@
     <div id="kt_header_menu" class="header-menu header-menu-left header-menu-mobile header-menu-layout-default">
         <!--begin::Header Nav-->
         <ul class="menu-nav">
-            <li class="menu-item menu-item-here" data-menu-toggle="click" aria-haspopup="true">
+            <li class="menu-item" data-menu-toggle="click" aria-haspopup="true">
                 <a href="javascript:;" class="menu-link menu-toggle">
                     <span class="menu-text">Главная</span>
                 </a>
@@ -19,12 +19,12 @@
                     <ul class="menu-subnav">
                         <li class="menu-item" aria-haspopup="true">
                             <a href="{{route('users.index', ['type' => 'USER'])}}" class="menu-link">
-                                <span class="menu-text">Соискатель</span>
+                                <span class="menu-text">Соискатели</span>
                             </a>
                         </li>
                         <li class="menu-item" aria-haspopup="true">
                             <a href="{{route('users.index', ['type' => 'COMPANY'])}}" class="menu-link">
-                                <span class="menu-text">Работодатель</span>
+                                <span class="menu-text">Работодатели</span>
                             </a>
                         </li>
                         <li class="menu-item" aria-haspopup="true">
@@ -44,37 +44,42 @@
                 <div class="menu-submenu menu-submenu-classic menu-submenu-left">
                     <ul class="menu-subnav">
                         <li class="menu-item" aria-haspopup="true">
-                            <a target="_blank" href="https://preview.keenthemes.com/metronic/demo2/builder.html" class="menu-link">
-                                <span class="menu-text">Виды вакансий</span>
+                            <a href="{{route('vacancy_types.index')}}" class="menu-link">
+                                <span class="menu-text">Типы вакансий</span>
                             </a>
                         </li>
                         <li class="menu-item" aria-haspopup="true">
-                            <a target="_blank" href="https://preview.keenthemes.com/metronic/demo2/builder.html" class="menu-link">
+                            <a href="{{route('busynesses.index')}}" class="menu-link">
                                 <span class="menu-text">Виды занятости</span>
                             </a>
                         </li>
                         <li class="menu-item" aria-haspopup="true">
-                            <a target="_blank" href="https://preview.keenthemes.com/metronic/demo2/builder.html" class="menu-link">
+                            <a href="{{route('schedules.index')}}" class="menu-link">
                                 <span class="menu-text">Графики работы</span>
                             </a>
                         </li>
                         <li class="menu-item" aria-haspopup="true">
-                            <a target="_blank" href="https://preview.keenthemes.com/metronic/demo2/builder.html" class="menu-link">
+                            <a href="{{route('regions.index')}}" class="menu-link">
                                 <span class="menu-text">Регионы</span>
                             </a>
                         </li>
                         <li class="menu-item" aria-haspopup="true">
-                            <a target="_blank" href="https://preview.keenthemes.com/metronic/demo2/builder.html" class="menu-link">
-                                <span class="menu-text">Виды работ</span>
+                            <a href="{{route('job_types.index')}}" class="menu-link">
+                                <span class="menu-text">Сферы работ</span>
                             </a>
                         </li>
                         <li class="menu-item" aria-haspopup="true">
-                            <a target="_blank" href="https://preview.keenthemes.com/metronic/demo2/builder.html" class="menu-link">
-                                <span class="menu-text">Виды обучения</span>
+                            <a href="{{route('education_types.index')}}" class="menu-link">
+                                <span class="menu-text">Виды образования</span>
                             </a>
                         </li>
                     </ul>
                 </div>
+            </li>
+            <li class="menu-item">
+                <a href="{{route('vacancies.index')}}" class="menu-link">
+                    <span class="menu-text">Вакансии</span>
+                </a>
             </li>
         </ul>
         <!--end::Header Nav-->

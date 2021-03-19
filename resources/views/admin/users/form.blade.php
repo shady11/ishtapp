@@ -60,6 +60,12 @@
                 @endif
             </div>
         </div>
+        <div class="form-group row">
+            <label class="col-lg-3 col-form-label">Адрес:</label>
+            <div class="col-lg-4">
+                {!! Form::text('address', null, ['class' => 'form-control']) !!}
+            </div>
+        </div>
         <div class="form-group row align-items-center">
             <label class="col-lg-3 col-form-label">Статус:</label>
             <div class="col-lg-4">

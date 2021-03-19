@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\User as User;
+use App\Models\User;
 use App\Models\UserCV;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,7 +15,16 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $title = 'Соискатели';
+        if($request->type == 'USER'){
+            $title = 'Соискатели';
+        } elseif ($request->type == 'COMPANY'){
+            $title = 'Работодатели';
+        } elseif($request->type == 'ADMIN') {
+            $title = 'Администраторы';
+        } else {
+            abort(403);
+        }
+
         return view('admin.users.index', compact('title'));
     }
 
@@ -36,13 +45,13 @@ class UserController extends Controller
 
         $this->validate($request, [
             'name' => ['required', 'min:3', 'max:255'],
-            'lastname' => ['required', 'min:3', 'max:255'],
+//            'lastname' => ['required', 'min:3', 'max:255'],
             'login' => ['required', 'unique:users', 'min:6', 'max:255'],
             'email' => ['required', 'email'],
             'password' => ['required', 'min:5'],
 //            'linkedin' => ['required'],
             'phone_number' => ['required'],
-//            'type' => ['required'],
+            'type' => ['required'],
         ]);
         $user = User::create($request->except( 'password'));
         if($request->password){
@@ -82,20 +91,19 @@ class UserController extends Controller
         if ($user->login!=$request->login){
             $this->validate($request, [
                 'name' => ['required', 'min:3', 'max:255'],
-                'lastname' => ['required', 'min:3', 'max:255'],
+//                'lastname' => ['required', 'min:3', 'max:255'],
                 'login' => ['required', 'unique:users', 'min:6', 'max:255'],
                 'email' => ['required', 'email'],
             ]);
         } else {
             $this->validate($request, [
                 'name' => ['required', 'min:3', 'max:255'],
-                'lastname' => ['required', 'min:3', 'max:255'],
+//                'lastname' => ['required', 'min:3', 'max:255'],
                 'email' => ['required', 'email'],
             ]);
         }
         $user->update($request->except( 'password'));
         $user->password = Hash::make($request->password);
-
         $user->save();
 
         return redirect()->route('users.show', $user);
@@ -103,14 +111,10 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        $user->delete();
+        $type = $user->type;
         if($user->avatar) @unlink($user->avatar);
-        return response('Success', 200);
-    }
-
-    public function uploadAvatar(Request $request)
-    {
-        dd($request);
+        $user->delete();
+        return redirect()->route('users.index', ['type' => $type]);
     }
 
     public function api(Request $request)
@@ -134,7 +138,7 @@ class UserController extends Controller
         if($type == 'USER'){
             $resultPaginated = User::where('type', 'USER');
         } else if($type == 'COMPANY') {
-            $resultPaginated = User::where('type', 'COMAPNY');
+            $resultPaginated = User::where('type', 'COMPANY');
         } else {
             $resultPaginated = User::where('type', 'ADMIN');
         }

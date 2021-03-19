@@ -15,24 +15,28 @@ class CreateSomeTables extends Migration
     {
         Schema::create('bussynesses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('name', 200);
+            $table->string('name')->nullable();
+            $table->string('name_ru')->nullable();
             $table->timestamps();
         });
 
         Schema::create('schedules', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('name', 200);
+            $table->string('name')->nullable();
+            $table->string('name_ru')->nullable();
             $table->timestamps();
         });
         Schema::create('job_types', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('name', 200);
+            $table->string('name')->nullable();
+            $table->string('name_ru')->nullable();
             $table->timestamps();
         });
 
         Schema::create('vacancy_types', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('name', 200);
+            $table->string('name')->nullable();
+            $table->string('name_ru')->nullable();
             $table->timestamps();
         });
     }

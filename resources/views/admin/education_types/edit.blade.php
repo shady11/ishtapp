@@ -2,34 +2,24 @@
 
 @section('content')
 
-    @subheader
-    Виды обучения
-    @endsubheader
+    @include('admin.partials.subheader')
 
-    @content
-    <div class="row">
-        <div class="col-lg-12">
-            <!--begin::Portlet-->
-            <div class="m-portlet">
-                <div class="m-portlet__head">
-                    <div class="m-portlet__head-caption">
-                        <div class="m-portlet__head-title">
-                            <h3 class="m-portlet__head-text">
-                                Редактировать
-                            </h3>
-                        </div>
-                    </div>
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <div class="card card-custom gutter-b example example-compact">
+                <div class="card-header">
+                    <h3 class="card-title">Редактировать</h3>
                 </div>
                 <!--begin::Form-->
-            {!! Form::model($education_type, ['route' => ['education_types.update', $education_type], 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'class' => 'm-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed']) !!}
+            {!! Form::model($education_type, ['route' => ['education_types.update', $education_type], 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'class' => 'form']) !!}
             @include('admin.education_types.form', $education_type)
             {!! Form::close() !!}
             <!--end::Form-->
             </div>
-            <!--end::Portlet-->
         </div>
+        <!--end::Container-->
     </div>
-    @endcontent
 
 @endsection
 

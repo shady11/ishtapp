@@ -39,8 +39,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'lastname',
         'birth_date',
         'phone_number',
+        'address',
         'type',
         'avatar',
+        'active'
     ];
 
     public function getFullName()

@@ -14,12 +14,14 @@ class JobType extends Model
     protected $table = 'job_types';
     protected $fillable = [
         'name',
+        'name_ru',
     ];
 
     protected $searchable = [
         'columns' => [
             'id' => 10,
             'name' => 10,
+            'name_ru' => 10,
         ],
     ];
 
