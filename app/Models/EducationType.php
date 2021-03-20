@@ -25,6 +25,12 @@ class EducationType extends Model
         ],
     ];
 
+    public function getName($lang)
+    {
+        if($lang == 'ru') return $this->name_ru;
+        return $this->name;
+    }
+
     public function getCreatedDate()
     {
         return date('d-m-Y', strtotime($this->created_at));

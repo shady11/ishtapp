@@ -16,6 +16,12 @@ class Region extends Model
         'name',
     ];
 
+    public function getName($lang)
+    {
+        if($lang == 'ru') return $this->name_ru;
+        return $this->name;
+    }
+
     protected $searchable = [
         'columns' => [
             'id' => 10,

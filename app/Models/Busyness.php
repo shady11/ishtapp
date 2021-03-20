@@ -24,6 +24,12 @@ class Busyness extends Model
         ],
     ];
 
+    public function getName($lang)
+    {
+        if($lang == 'ru') return $this->name_ru;
+        return $this->name;
+    }
+
     public function busynesses(){
         return Busyness::all();
     }

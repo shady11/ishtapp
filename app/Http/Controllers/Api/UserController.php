@@ -272,6 +272,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'birth_date' => $request->birth_date,
                 'type' => $request->type,
+                'address' => $request->address,
                 'active' => true,
                 'phone_number' => $request->phone_number,
             ]);
@@ -334,6 +335,7 @@ class UserController extends Controller
                 'lastname' => $request->lastname,
                 'email' => $request->email,
                 'birth_date' => $request->birth_date,
+                'address' => $request->address,
                 'phone_number' => $request->phone_number,
             ]);
             try {

@@ -1,3 +1,1 @@
-{"command":"message","from":"9","to":"1","message":"Hello"}{"command":"message","from":"9","to":"1","message":"Hello"}Connection 529 has disconnected
-{"command":"message","from":"9","to":"1","message":"Hello"}Connection 497 has disconnected
-{"command":"message","from":"9","to":"1","message":"Hello"}
+"{command: \"register\", userId: 9}""{command: \"register\", userId: 1}""{command: \"message\", from:\"1\", to: \"9\", message: \"22\"}"Connection 626 has disconnected

@@ -15,7 +15,7 @@ class VacancyTypeController extends Controller
         foreach (VacancyType::all() as $item){
             array_push($result, [
                 'id'=> $item->id,
-                'name'=> $item->name
+                'name'=> $item->getName($request->lang)
             ]);
         }
         return $result;
