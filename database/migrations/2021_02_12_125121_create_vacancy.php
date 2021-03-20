@@ -16,9 +16,7 @@ class CreateVacancy extends Migration
         Schema::create('vacancies', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('title');
-            $table->string('address');
-            $table->string('description');
+            $table->text('description')->nullable();
             $table->string('salary');
             $table->boolean('is_active')->default(true);
             $table->bigInteger('busyness_id')->unsigned();

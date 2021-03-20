@@ -14,6 +14,7 @@ class Region extends Model
     protected $table = 'regions';
     protected $fillable = [
         'name',
+        'name_ru',
     ];
 
     public function getName($lang)

@@ -17,7 +17,7 @@ class WebController extends Controller
 
     public function index()
     {
-        return 'it is work';
+        return view('web.index');
     }
 
 

@@ -94,17 +94,17 @@ class VacancyController extends Controller
                 'id' => $item->id,
                 'name' => $item->name,
                 'title' => $item->title,
-                'address' => User::findOrFail($item->company_id)->address,
+                'address' => $item->company->address,
                 'description' => $item->description,
                 'salary' => $item->salary,
-                'company_name' => User::findOrFail($item->company_id)->name,
-                'company_logo'=> User::findOrFail($item->company_id)->avatar,
-                'busyness' => Busyness::findOrFail($item->busyness_id)->get,
-                'job_type' => JobType::findOrFail($item->job_type_id)->name,
-                'schedule' => Schedule::findOrFail($item->schedule_id)->name,
-                'type' => VacancyType::findOrFail($item->vacancy_type_id)->name,
-                'region' => Region::findOrFail($item->region_id)->name,
-                'company' => User::findOrFail($item->company_id)->id
+                'company_name' => $item->company->name,
+                'company_logo'=> $item->company->avatar,
+                'busyness' => $item->busyness->getName($request->lang),
+                'job_type' => $item->jobtype->getName($request->lang),
+                'schedule' => $item->schedule->getName($request->lang),
+                'type' => $item->vacancytype->getName($request->lang),
+                'region' => $item->region->getName($request->lang),
+                'company' => $item->company->id
             ]);
         }
         return $result;
@@ -264,17 +264,17 @@ class VacancyController extends Controller
                             'id'=> $item->id,
                             'name'=> $item->name,
                             'title'=> $item->title,
-                            'address'=> $item->address,
+                            'address'=> $item->company->address,
                             'description'=> $item->description,
                             'salary'=> $item->salary,
-                            'company_name'=> User::findOrFail($item->company_id)->name,
-                            'company_logo'=> User::findOrFail($item->company_id)->avatar,
-                            'busyness'=> Busyness::findOrFail($item->busyness_id)->name,
-                            'job_type'=> JobType::findOrFail($item->job_type_id)->name,
-                            'schedule'=> Schedule::findOrFail($item->schedule_id)->name,
-                            'type'=> VacancyType::findOrFail($item->vacancy_type_id)->name,
-                            'region'=> Region::findOrFail($item->region_id)->name,
-                            'company'=> User::findOrFail($item->company_id)->id
+                            'company_name' => $item->company->name,
+                            'company_logo'=> $item->company->avatar,
+                            'busyness' => $item->busyness->getName($request->lang),
+                            'job_type' => $item->jobtype->getName($request->lang),
+                            'schedule' => $item->schedule->getName($request->lang),
+                            'type' => $item->vacancytype->getName($request->lang),
+                            'region' => $item->region->getName($request->lang),
+                            'company' => $item->company->id
                         ]);
                     }
 //            $vacancies = Vacancy::where('id', 3)->get();
@@ -319,17 +319,17 @@ class VacancyController extends Controller
                     'id'=> $item->id,
                     'name'=> $item->name,
                     'title'=> $item->title,
-                    'address'=> $item->address,
+                    'address'=> $item->company->address,
                     'description'=> $item->description,
                     'salary'=> $item->salary,
-                    'company_name'=> User::findOrFail($item->company_id)->name,
-                    'company_logo'=> User::findOrFail($item->company_id)->avatar,
-                    'busyness'=> Busyness::findOrFail($item->busyness_id)->name,
-                    'job_type'=> JobType::findOrFail($item->job_type_id)->name,
-                    'schedule'=> Schedule::findOrFail($item->schedule_id)->name,
-                    'type'=> VacancyType::findOrFail($item->vacancy_type_id)->name,
-                    'region'=> Region::findOrFail($item->region_id)->name,
-                    'company'=> User::findOrFail($item->company_id)->id
+                    'company_name' => $item->company->name,
+                    'company_logo'=> $item->company->avatar,
+                    'busyness' => $item->busyness->getName($request->lang),
+                    'job_type' => $item->jobtype->getName($request->lang),
+                    'schedule' => $item->schedule->getName($request->lang),
+                    'type' => $item->vacancytype->getName($request->lang),
+                    'region' => $item->region->getName($request->lang),
+                    'company' => $item->company->id
                 ]);
             }
             return $result1;
@@ -394,17 +394,17 @@ class VacancyController extends Controller
                     'id'=> $item->id,
                     'name'=> $item->name,
                     'title'=> $item->title,
-                    'address'=> $item->address,
+                    'address'=> $item->company->address,
                     'description'=> $item->description,
                     'salary'=> $item->salary,
-                    'company_name'=> User::findOrFail($item->company_id)->name,
-                    'company_logo'=> User::findOrFail($item->company_id)->avatar,
-                    'busyness'=> Busyness::findOrFail($item->busyness_id)->name,
-                    'job_type'=> JobType::findOrFail($item->job_type_id)->name,
-                    'schedule'=> Schedule::findOrFail($item->schedule_id)->name,
-                    'type'=> VacancyType::findOrFail($item->vacancy_type_id)->name,
-                    'region'=> Region::findOrFail($item->region_id)->name,
-                    'company'=> User::findOrFail($item->company_id)->id
+                    'company_name' => $item->company->name,
+                    'company_logo'=> $item->company->avatar,
+                    'busyness' => $item->busyness->getName($request->lang),
+                    'job_type' => $item->jobtype->getName($request->lang),
+                    'schedule' => $item->schedule->getName($request->lang),
+                    'type' => $item->vacancytype->getName($request->lang),
+                    'region' => $item->region->getName($request->lang),
+                    'company' => $item->company->id
                 ]);
             }
             return $result1;

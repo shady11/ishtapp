@@ -14,6 +14,7 @@ class VacancyType extends Model
     protected $table = 'vacancy_types';
     protected $fillable = [
         'name',
+        'name_ru',
     ];
 
     public function getName($lang)

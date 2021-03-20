@@ -2,34 +2,24 @@
 
 @section('content')
 
-    @subheader
-        Пользователи
-    @endsubheader
+    @include('admin.partials.subheader')
 
-    @content
-        <div class="row">
-            <div class="col-lg-12">
-                <!--begin::Portlet-->
-                <div class="m-portlet">
-                    <div class="m-portlet__head">
-                        <div class="m-portlet__head-caption">
-                            <div class="m-portlet__head-title">
-                                <h3 class="m-portlet__head-text">
-                                    Создать
-                                </h3>
-                            </div>
-                        </div>
-                    </div>
-                    <!--begin::Form-->
-                    {!! Form::model($user, ['route' => 'users.store', 'enctype' => 'multipart/form-data', 'class' => 'm-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed']) !!}
-                        @include('admin.users.form', $user)
-                    {!! Form::close() !!}
-                    <!--end::Form-->
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <div class="card card-custom gutter-b example example-compact">
+                <div class="card-header">
+                    <h3 class="card-title">Добавить</h3>
                 </div>
-                <!--end::Portlet-->
+                <!--begin::Form-->
+                {!! Form::model($user, ['route' => 'users.store', 'enctype' => 'multipart/form-data', 'class' => 'form']) !!}
+                @include('admin.users.form', $user)
+                {!! Form::close() !!}
+                <!--end::Form-->
             </div>
         </div>
-    @endcontent
+        <!--end::Container-->
+    </div>
 
 @endsection
 

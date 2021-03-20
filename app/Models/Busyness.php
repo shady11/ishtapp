@@ -11,10 +11,11 @@ class Busyness extends Model
 
     protected $connection = 'mysql';
 
-    protected $table = 'busynesses';
+    protected $table = 'bussynesses';
     protected $guarded = ['id'];
     protected $fillable = [
         'name',
+        'name_ru',
     ];
 
     protected $searchable = [

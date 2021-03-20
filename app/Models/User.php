@@ -39,8 +39,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'lastname',
         'birth_date',
         'phone_number',
+        'address',
         'type',
         'avatar',
+        'active'
     ];
 
     public function getFullName()
@@ -54,10 +56,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             $class = 'success';
             $status = 'активный';
         } else {
-            $class = 'metal';
+            $class = 'dark';
             $status = 'неактивный';
         }
-        return '<span class="m-badge m-badge--'.$class.' m-badge--wide">'.$status.'</span>';
+        return '<span class="label label-inline font-weight-bold label-light-'.$class.' label-lg">'.$status.'</span>';
     }
 
     public function getCreatedDate()

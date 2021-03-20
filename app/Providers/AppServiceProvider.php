@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Support\Facades\Schema;
@@ -10,10 +9,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Blade;
 
-use Harimayco\Menu\Facades\Menu;
 use App\Models\Main;
-use Jenssegers\Date\Date;
-Date::setLocale('ru');
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,7 +22,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         Carbon::setLocale('ky');
-        //$this->app->register(\L5Swagger\L5SwaggerServiceProvider::class);
 
         view()->composer('*', function ($view) {
             $view->with('current_first', Request::capture()->segment(1));
@@ -34,7 +29,6 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('locale', app()->getLocale());
 
-            $view->with('top_menus', Menu::getByName('MainMenu'));
             $view->with('main', Main::first());
         });
     }
@@ -48,6 +42,5 @@ class AppServiceProvider extends ServiceProvider
     {
         Blade::component('admin.components.subheader', 'subheader');
         Blade::component('admin.components.content', 'content');
-        Date::setlocale(config('app.locale'));
     }
 }

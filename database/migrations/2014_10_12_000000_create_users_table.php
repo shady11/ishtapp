@@ -29,7 +29,9 @@ class CreateUsersTable extends Migration
 
             $table->enum('type', ['ADMIN', 'COMPANY', 'USER']);
             $table->string('linkedin')->nullable();
+
             $table->string('phone_number')->nullable();
+            $table->string('address')->nullable();
 
             $table->boolean('active')->default(0);
 
