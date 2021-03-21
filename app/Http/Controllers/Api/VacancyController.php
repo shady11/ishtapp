@@ -111,104 +111,47 @@ class VacancyController extends Controller
 
     }
 
-    /*public function store(Request $request)
+    public function storeCompanyVacancy(Request $request)
     {
         $token = $request->header('Authorization');
 
         $user = User::where("password", $token)->firstOrFail();
 
-        if ($user){
-            $this->validate($request, [
-                'name' => ['required'],
-                'user_id' => ['required'],
-                'title' => ['required'],
-                'address' => ['required'],
-                'description' => ['required'],
-                'busyness_id' => ['required'],
-                'job_type_id' => ['required'],
-                'schedule_id' => ['required'],
-                'type_id' => ['required'],
-                'region_id' => ['required'],
-                'company_id' => ['required'],
-            ]);
-            if($request->user_cv_id){
+        if ($user && $user->type =='COMPANY'){
 
+            if($request->id){
+                $vacancy = Vacancy::update([
+                    'name' => $request->name,
+                    'salary' => $request->salary,
+                    'description' => $request->description,
+                    'busyness_id' => $request->busyness,
+                    'schedule_id' => $request->schedule,
+                    'job_type_id' => $request->job_type,
+                    'region_id' => $request->region,
+                    'vacancy_type_id' => $request->type,
+                    'is_active' => true,
+                ]);
             }
-            $user_cv = UserCV::create([
-                'name' => $request->name,
-                'lastname' => $request->lastname,
-                'job_title' => $request->job_title,
-                'email' => $request->email,
-                'birth_date' => $request->birth_date,
-                'phone_number' => $request->phone_number,
-                'user_id' => $request->user_id,
-                'experience_year' => $request->experience_year,
-            ]);
-            if ($request->hasFile('attachment')) {
-                $file = $request->file('attachment');
-                $path = '/storage/attachments/'. Carbon::now()->format('YmdHms') . $file->getClientOriginalName();
-                $file->move(public_path() . '/storage/attachments/',  Carbon::now()->format('YmdHms').$file->getClientOriginalName());
-                $user_cv->attachment = $path;
+            else{
+                $vacancy = Vacancy::create([
+                    'name' => $request->name,
+                    'salary' => $request->salary,
+                    'description' => $request->description,
+                    'busyness_id' => $request->busyness,
+                    'schedule_id' => $request->schedule,
+                    'job_type_id' => $request->job_type,
+                    'region_id' => $request->region,
+                    'company_id' => $request->company_id,
+                    'vacancy_type_id' => $request->type,
+                    'is_active' => true,
+                ]);
             }
-            $user_cv->save();
-
-            $experiences = $request->experiences;
-            $educations = $request->educations;
-            $courses = $request->courses;
-
-
-            if($experiences){
-                foreach ($experiences as $experience) {
-                    $user_experience = UserExperience::create([
-                        'job_title' => $experience['job_title'],
-                        'start_date' => $experience['start_date'],
-                        'end_date' => $experience['end_date'],
-                        'organization_name' => $experience['organization_name'],
-                        'description' => $experience['description'],
-                        'user_cv_id' => $user_cv->id,
-                    ]);
-                    $user_experience->save();
-                    dd($user_experience);
-                }
-            }
-
-            if ($educations){
-                foreach ($educations as $education) {
-                    $user_education = UserEducation::create([
-                        'title' => $education['title'],
-                        'faculty' => $education['faculty'],
-                        'speciality' => $education['speciality'],
-                        'type_id' => $education['type_id'],
-                        'end_year' => $education['end_year'],
-                        'user_cv_id' => $user_cv->id,
-                    ]);
-                    $user_education->save();
-                }
-            }
-
-            if ($courses){
-                foreach ($courses as $course) {
-                    $user_course = UserCourse::create([
-                        'name' => $course['name'],
-                        'organization_name' => $course['organization_name'],
-                        'duration' => $course['duration'],
-                        'end_year' => $course['end_year'],
-                        'user_cv_id' => $user_cv->id,
-                    ]);
-                    $user_course->save();
-                }
-            }
-
-
-            dd($request->experiences);
-
-
             return "OK";
         }
         else{
             return "token is not valid";
         }
-    }*/
+    }
 
     public function likeOrSubmit(Request $request)
     {
