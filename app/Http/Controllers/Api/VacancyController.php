@@ -368,7 +368,7 @@ class VacancyController extends Controller
             $vacancy = Vacancy::where('id', $request->vacancy_id)
                 ->firstOrFail();
             if($vacancy){
-                $user->delete();
+                $vacancy->delete();
                 return response()->json([
                     'status' => 200,
                     'message' => 'successfully deleted',
