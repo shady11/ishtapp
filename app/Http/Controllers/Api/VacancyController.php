@@ -144,6 +144,7 @@ class VacancyController extends Controller
                     'company_id' => $request->company_id,
                     'vacancy_type_id' => $request->type,
                     'is_active' => true,
+                    'created_at' => date('Y-m-d H:i:s'),
                 ]);
             }
             return "OK";
