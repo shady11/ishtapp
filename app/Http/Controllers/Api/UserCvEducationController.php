@@ -27,9 +27,6 @@ class UserCvEducationController extends Controller
         if ($user) {
             $this->validate($request, [
                 'title' => ['required'],
-                'faculty' => ['required'],
-                'speciality' => ['required'],
-                'end_year' => ['required']
             ]);
 
             $user_education = UserEducation::create([

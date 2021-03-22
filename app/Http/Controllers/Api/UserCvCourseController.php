@@ -27,9 +27,6 @@ class UserCvCourseController extends Controller
         if ($user) {
             $this->validate($request, [
                 'name' => ['required'],
-                'organization_name' => ['required'],
-                'duration' => ['required'],
-                'end_year' => ['required']
             ]);
 
             $user_course = UserCourse::create([
@@ -56,9 +53,6 @@ class UserCvCourseController extends Controller
         if ($user) {
             $this->validate($request, [
                 'name' => ['required'],
-                'organization_name' => ['required'],
-                'duration' => ['required'],
-                'end_year' => ['required']
             ]);
 
             $user_course = UserCourse::findOrFail($id);

@@ -27,9 +27,6 @@ class UserCvExperienceController extends Controller
         if ($user) {
             $this->validate($request, [
                 'job_title' => ['required'],
-                'start_date' => ['required'],
-                'end_date' => ['required'],
-                'organization_name' => ['required']
             ]);
 
             $user_experience = UserExperience::create([
