@@ -38,6 +38,7 @@ Route::group([
     Route::name('vacancy.api')->get('num_of_inactive_vacancies', ['uses' => 'VacancyController@getInactiveVacanciesNumber']);
     Route::name('vacancy.api')->post('company/vacancy_delete', ['uses' => 'VacancyController@deleteCompanyVacancy']);
     Route::name('vacancy.api')->post('company/activate_deactivate', ['uses' => 'VacancyController@activateDeactivateCompanyVacancy']);
+    Route::name('vacancy.api')->post('vacancy/save', ['uses' => 'VacancyController@storeCompanyVacancy']);
     Route::name('user.api.avatar')->get('/users/avatar/{user_id}', ['uses' => 'UserController@avatar']);
     Route::name('users.api')->get('user', ['uses' => 'UserController@show']);
     Route::name('users.api')->post('users/update/{user_id}', ['uses' => 'UserController@update1']);

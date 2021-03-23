@@ -17,6 +17,12 @@ class JobType extends Model
         'name_ru',
     ];
 
+    public function getName($lang)
+    {
+        if($lang == 'ru') return $this->name_ru;
+        return $this->name;
+    }
+
     protected $searchable = [
         'columns' => [
             'id' => 10,

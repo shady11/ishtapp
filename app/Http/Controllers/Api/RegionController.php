@@ -14,7 +14,7 @@ class RegionController extends Controller
         foreach (Region::all() as $item){
             array_push($result, [
                 'id'=> $item->id,
-                'name'=> $item->name
+                'name'=> $item->getName($request->lang)
             ]);
         }
         return $result;
