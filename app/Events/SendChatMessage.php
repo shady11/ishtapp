@@ -18,6 +18,7 @@ class SendChatMessage extends Command
         Region::create([
             'name' => '$message',
         ]);
+        return $server;
         $server->on('connection', function($socket) use($server) {
             $socket->on('chat message', function($message) use($server) {
                 Region::create([
