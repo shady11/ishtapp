@@ -25,26 +25,24 @@
                     <div class="card-body">
 
                         <div class="form-group row align-items-center">
-                            <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">Имя:</label>
+                            <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">Изображение:</label>
                             <div class="col-lg-9 col-xl-6">
-                                <p class="font-weight-bold mb-0">{{$user->name}}</p>
+                                <div class="symbol symbol-150 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">
+                                    <div class="symbol-label" style="background-image:url({{asset($user->avatar)}})"></div>
+                                    <i class="symbol-badge bg-success"></i>
+                                </div>
                             </div>
                         </div>
+
                         <div class="form-group row align-items-center">
-                            <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">Фамилия:</label>
+                            <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">ФИО или Название:</label>
                             <div class="col-lg-9 col-xl-6">
-                                <p class="font-weight-bold mb-0">{{$user->lastname}}</p>
+                                <p class="font-weight-bold mb-0">{{$user->name}}</p>
                             </div>
                         </div>
 
                         <div class="separator separator-dashed my-10"></div>
 
-                        <div class="form-group row align-items-center">
-                            <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">Логин:</label>
-                            <div class="col-lg-9 col-xl-6">
-                                <p class="font-weight-bold mb-0">{{$user->login}}</p>
-                            </div>
-                        </div>
                         <div class="form-group row align-items-center">
                             <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">Email:</label>
                             <div class="col-lg-9 col-xl-6">

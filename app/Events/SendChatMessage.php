@@ -15,10 +15,10 @@ class SendChatMessage extends Command
      */
     public function __construct($server)
     {
-        Region::create([
-            'name' => '$message',
-        ]);
-        return $server;
+//        Region::create([
+//            'name' => '$message',
+//        ]);
+//        return $server;
         $server->on('connection', function($socket) use($server) {
             $socket->on('chat message', function($message) use($server) {
                 Region::create([
@@ -28,10 +28,7 @@ class SendChatMessage extends Command
 
             });
             $socket->on('event', function() use($server) {
-                Region::create([
-                    'name' => '$message1',
-                ]);
-                $server->emit('chat message', '$message1');
+                return $server;
             });
         });
     }

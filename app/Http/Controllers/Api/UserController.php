@@ -20,18 +20,6 @@ use Intervention\Image\Facades\Image;
 
 class UserController extends Controller
 {
-    /**
-     * * @OA\Get(
-     *     path="/users",
-     *     operationId="usersAll",
-     *     tags={"Users"},
-     *     summary="Display a listing of the resource",
-     *      @OA\Response(
-     *         response="200",
-     *         description="Everything is fine",
-     *     )
-     * )
-     */
     public function index()
     {
         $model = User::query()->get();
@@ -39,34 +27,6 @@ class UserController extends Controller
 //        return response('false');
     }
 
-    /**
-     * @OA\Get(
-     *     path="/users/{id}",
-     *     operationId="userGet",
-     *     tags={"Users"},
-     *     summary="Show user by ID",
-     *     @OA\Parameter(
-     *         name="token",
-     *         in="header",
-     *         description="token for auth",
-     *     ),
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="The ID of example",
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Everything is fine",
-     *     ),
-     * )
-     *
-     * Display a listing of the resource.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
-     */
     public function show(Request $request)
     {
         $token = $request->header('Authorization');
@@ -75,7 +35,6 @@ class UserController extends Controller
             return response($user);
         }
         return response('token is not valid');
-
     }
 
     protected function avatar(Request  $request)
@@ -227,48 +186,14 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * @OA\Post(
-     *     path="/users",
-     *     operationId="userCreate",
-     *     tags={"Users"},
-     *     summary="Create yet another user record",
-     * @OA\RequestBody(
-     *    required=true,
-     *    description="Pass user credentials",
-     *    @OA\JsonContent(
-     *       required={"username","password","question_id1","question_id2","answer1","answer2","sex_id","intersex","gender_id","year_of_birth"},
-     *       @OA\Property(property="username", type="string", format="string", example="user"),
-     *       @OA\Property(property="password", type="string", format="password", example="user123"),
-     *       @OA\Property(property="question_id1", type="integer", example="11"),
-     *       @OA\Property(property="question_id2", type="integer", example="3"),
-     *       @OA\Property(property="answer1", type="string", format="string", example="a1"),
-     *       @OA\Property(property="answer2", type="string", format="string", example="a2"),
-     *       @OA\Property(property="sex_id", type="integer", example="8"),
-     *       @OA\Property(property="intersex", type="boolean", example="1"),
-     *       @OA\Property(property="gender_id", type="integer", example="2"),
-     *       @OA\Property(property="year_of_birth", type="string", format="date-time", example="2000"),
-     *    )
-     *     ),
-     *    @OA\Response(
-     *    response=422,
-     *    description="Wrong credentials response",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
-     *        )
-     *     )
-     * ),
-     * Store a newly created resource in storage.
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function store(Request $request)
     {
-//        dd('$request');
+//        var_dump($request->all());
+//        die();
         if (User::where('email', $request->email)->count() == 0) {
             $user = User::create([
                 'name' => $request->name,
-                'lastname' => $request->lastname,
+//                'lastname' => $request->lastname,
                 'email' => $request->email,
                 'birth_date' => $request->birth_date,
                 'type' => $request->type,
@@ -279,7 +204,6 @@ class UserController extends Controller
             // create empty cv
             if($user && $user->type == 'USER') {
                 UserCV::create([
-                    'job_title' => null,
                     'user_id' => $user->id
                 ]);
             }
@@ -332,7 +256,7 @@ class UserController extends Controller
             }
             $user ->update([
                 'name' => $request->name,
-                'lastname' => $request->lastname,
+//                'lastname' => $request->lastname,
                 'email' => $request->email,
                 'birth_date' => $request->birth_date,
                 'address' => $request->address,
@@ -364,44 +288,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Put(
-     *     path="/users/{id}",
-     *     operationId="userUpdate",
-     *     tags={"Users"},
-     *     summary="Create yet another user record",
-     *     @OA\Parameter(
-     *         name="token",
-     *         in="header",
-     *         description="token for auth",
-     *     ),
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="The ID of example",
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         description="Pass user credentials",
-     *         @OA\JsonContent(
-     *            required={"username","password","pin_kod"},
-     *            @OA\Property(property="username", type="string", format="string", example="user"),
-     *            @OA\Property(property="password", type="string", format="password", example="user123"),
-     *            @OA\Property(property="pin_kod", type="integer", example="1111"),
-     *            )
-     *         ),
-     *      @OA\Response(
-     *          response=422,
-     *          description="Wrong credentials response",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
-     *          )
-     *      )
-     * ),
-     * Store a newly created resource in storage.
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
-     */
     /*public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -425,31 +311,6 @@ class UserController extends Controller
         return response('false');
     }*/
 
-
-    /**
-     * @OA\Delete(
-     *     path="/users/{id}",
-     *     operationId="userDelete",
-     *     tags={"Users"},
-     *     summary="Create yet another user record",
-     *     @OA\Parameter(
-     *         name="token",
-     *         in="header",
-     *         description="token for auth",
-     *     ),
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="The ID of example",
-     *     ),
-     *     @OA\Response(
-     *         response="202",
-     *         description="Deleted",
-     *     )
-     * ),
-     * Store a newly created resource in storage.
-     * @param \Illuminate\Http\Request $request
-     */
     public function destroy(Request $request, $id)
     {
         $user = Patient::findOrFail($id);

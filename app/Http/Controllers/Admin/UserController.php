@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class UserController extends Controller
@@ -42,7 +43,6 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-
         $this->validate($request, [
             'name' => ['required', 'min:3', 'max:255'],
 //            'lastname' => ['required', 'min:3', 'max:255'],
@@ -53,15 +53,29 @@ class UserController extends Controller
             'phone_number' => ['required'],
             'type' => ['required'],
         ]);
-        $user = User::create($request->except( 'password'));
+        $user = User::create($request->except( 'password', 'avatar', 'avatar_remove'));
         if($request->password){
             $user->password = Hash::make($request->password);
         }
+        if($request->file('image')){
+
+            $file = $request->file('image');
+
+            $dir  = 'assets/media/users/';
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+
+            $name = Str::slug($user->name, '-').'.'.$file->getClientOriginalExtension();
+
+            Image::make($file)->fit(400, 400)->save($dir.$name, 75);
+
+            $user->avatar = $dir.$name;
+        }
         $user->save();
 
-        if($user) {
+        if($user && $user->type == 'USER') {
             UserCV::create([
-                'job_title' => 'EMPTY',
                 'user_id' => $user->id
             ]);
         }
@@ -92,7 +106,7 @@ class UserController extends Controller
             $this->validate($request, [
                 'name' => ['required', 'min:3', 'max:255'],
 //                'lastname' => ['required', 'min:3', 'max:255'],
-                'login' => ['required', 'unique:users', 'min:6', 'max:255'],
+//                'login' => ['required', 'unique:users', 'min:6', 'max:255'],
                 'email' => ['required', 'email'],
             ]);
         } else {
@@ -102,8 +116,26 @@ class UserController extends Controller
                 'email' => ['required', 'email'],
             ]);
         }
-        $user->update($request->except( 'password'));
+        $user->update($request->except( 'password', 'image', 'image_remove'));
         $user->password = Hash::make($request->password);
+
+        if($request->file('image')){
+
+            if($user->avatar) @unlink($user->avatar);
+            $file = $request->file('image');
+
+            $dir  = 'assets/media/users/';
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+
+            $name = Str::slug($user->name, '-').'.'.$file->getClientOriginalExtension();
+
+            Image::make($file)->fit(400, 400)->save($dir.$name, 75);
+
+            $user->avatar = $dir.$name;
+        }
+
         $user->save();
 
         return redirect()->route('users.show', $user);

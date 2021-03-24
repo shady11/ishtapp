@@ -24,5 +24,8 @@
 @endsection
 
 @section('scripts')
+    <script>
+        var avatar2 = new KTImageInput('kt_image_2');
+    </script>
 @endsection
 
