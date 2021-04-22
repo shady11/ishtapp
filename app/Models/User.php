@@ -62,6 +62,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return '<span class="label label-inline font-weight-bold label-light-'.$class.' label-lg">'.$status.'</span>';
     }
 
+    public function cv()
+    {
+        return $this->hasOne(UserCV::class, 'user_id');
+    }
+
     public function getCreatedDate()
     {
         return date('d-m-Y', strtotime($this->created_at));

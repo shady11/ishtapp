@@ -16,7 +16,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Str;
+
+use Intervention\Image\ImageManagerStatic as Image;
 
 class UserController extends Controller
 {
@@ -37,7 +39,7 @@ class UserController extends Controller
         return response('token is not valid');
     }
 
-    protected function avatar(Request  $request)
+    protected function avatar(Request $request)
     {
         $vacancy_id = $request->vacancy_id;
         $vacancy = Vacancy:: findOrFail($vacancy_id);
@@ -85,26 +87,38 @@ class UserController extends Controller
     {
         if($company_id){
             $vacancy_ids =Vacancy::where('company_id', $company_id)->pluck('id')->toArray();
-//            dd($vacancy_ids);
-            $submitted_user_ids = UserVacancy::wherein("vacancy_id", $vacancy_ids)->where("type", 'SUBMITTED')->pluck('user_id')->toArray();
-            $result =[];
-            foreach (User::whereIn('id', $submitted_user_ids)
-                        ->where('type','USER')
-                        ->get() as $item) {
-                $user_vacancy_id = UserVacancy::where("user_id", $item->id)->where("type", 'SUBMITTED')->firstOrFail()->vacancy_id;
-                $user_vacancy_name = Vacancy::where('id', $user_vacancy_id)->first()->name;
+            $submitted_user_vacancies = UserVacancy::whereIn("vacancy_id", $vacancy_ids)->where("type", 'SUBMITTED')->orderBy('id', 'desc')->get();
+//            return $submitted_user_ids;
+            $result = [];
+            foreach ($submitted_user_vacancies as $submitted_user_vacancy) {
 
                 array_push($result, [
-                    'vacancy_name' => $user_vacancy_name,
-                    'id' => $item->id,
-                    'lastname' => $item->lastname,
-                    'email' => $item->email,
-                    'phone_number' => $item->phone_number,
-                    'avatar' => $item->avatar,
-                    'birth_date' => $item->birth_date,
-                    'job_title' => UserCv::where('user_id',$item->id)->first()->job_title,
-                    'experience_year' => UserCv::where('user_id',$item->id)->first()->experience_year
+                    'vacancy_name' => $submitted_user_vacancy->vacancy->name,
+                    'id' => $submitted_user_vacancy->user->id,
+                    'name' => $submitted_user_vacancy->user->name,
+                    'lastname' => $submitted_user_vacancy->user->lastname,
+                    'email' => $submitted_user_vacancy->user->email,
+                    'phone_number' => $submitted_user_vacancy->user->phone_number,
+                    'avatar' => $submitted_user_vacancy->user->avatar,
+                    'birth_date' => $submitted_user_vacancy->user->birth_date,
+                    'job_title' => UserCv::where('user_id',$submitted_user_vacancy->user->id)->first()->job_title,
+                    'experience_year' => UserCv::where('user_id',$submitted_user_vacancy->user->id)->first()->experience_year
                 ]);
+
+//                $user_vacancy_id = UserVacancy::where("user_id", $item->id)->whereIn('vacancy_id', $vacancy_ids)->where("type", 'SUBMITTED')->firstOrFail()->vacancy_id;
+//                $user_vacancy_name = Vacancy::where('id', $user_vacancy_id)->first()->name;
+//
+//                array_push($result, [
+//                    'vacancy_name' => $user_vacancy_name,
+//                    'id' => $item->id,
+//                    'lastname' => $item->lastname,
+//                    'email' => $item->email,
+//                    'phone_number' => $item->phone_number,
+//                    'avatar' => $item->avatar,
+//                    'birth_date' => $item->birth_date,
+//                    'job_title' => UserCv::where('user_id',$item->id)->first()->job_title,
+//                    'experience_year' => UserCv::where('user_id',$item->id)->first()->experience_year
+//                ]);
             }
             return $result;
         }
@@ -160,6 +174,7 @@ class UserController extends Controller
 
                     return response()->json([
                         'id' => $user->id,
+                        'name' => $user->name,
                         'surname_name' => $user->lastname,
                         'email' => $user->email,
                         'phone_number' => $user->phone_number,
@@ -207,12 +222,30 @@ class UserController extends Controller
                     'user_id' => $user->id
                 ]);
             }
-            if ($request->hasFile('avatar')) {
+
+//            if ($request->hasFile('avatar')) {
+//                $file = $request->file('avatar');
+//                $path = '/storage/avatars/'. Carbon::now()->format('YmdHms') . $file->getClientOriginalName();
+//                $file->move(public_path() . '/storage/avatars/',  Carbon::now()->format('YmdHms').$file->getClientOriginalName());
+//                $user->avatar = $path;
+//            }
+
+            if($request->hasFile('avatar')){
+
                 $file = $request->file('avatar');
-                $path = '/storage/avatars/'. Carbon::now()->format('YmdHms') . $file->getClientOriginalName();
-                $file->move(public_path() . '/storage/avatars/',  Carbon::now()->format('YmdHms').$file->getClientOriginalName());
-                $user->avatar = $path;
+
+                $dir  = 'assets/media/users/';
+                if (!file_exists($dir)) {
+                    mkdir($dir, 0777, true);
+                }
+
+                $name = Str::slug($user->name, '-').'.'.$file->getClientOriginalExtension();
+
+                Image::make($file)->fit(400, 400)->save($dir.$name, 75);
+
+                $user->avatar = $dir.$name;
             }
+
             if ($request->password) {
                 $user->password = Hash::make($request->password);
             }
@@ -248,12 +281,32 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 //        dd($request);
         if ($user) {
-            if ($request->hasFile('avatar')) {
+
+            if($request->hasFile('avatar')){
+
+                if($user->avatar) @unlink($user->avatar);
+
                 $file = $request->file('avatar');
-                $path = '/storage/avatars/'. Carbon::now()->format('YmdHms') . $file->getClientOriginalName();
-                $file->move(public_path() . '/storage/avatars/',  Carbon::now()->format('YmdHms').$file->getClientOriginalName());
-                $user->avatar = $path;
+
+                $dir  = 'assets/media/users/';
+                if (!file_exists($dir)) {
+                    mkdir($dir, 0777, true);
+                }
+
+                $name = Str::slug($user->name, '-').'.'.$file->getClientOriginalExtension();
+
+                Image::make($file)->fit(400, 400)->save($dir.$name, 75);
+
+                $user->avatar = $dir.$name;
             }
+
+//            if ($request->hasFile('avatar')) {
+//                $file = $request->file('avatar');
+//                $path = '/storage/avatars/'. Carbon::now()->format('YmdHms') . $file->getClientOriginalName();
+//                $file->move(public_path() . '/storage/avatars/',  Carbon::now()->format('YmdHms').$file->getClientOriginalName());
+//                $user->avatar = $path;
+//            }
+
             $user ->update([
                 'name' => $request->name,
 //                'lastname' => $request->lastname,

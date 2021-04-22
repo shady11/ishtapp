@@ -17,7 +17,6 @@ class VacancyController extends Controller
 {
     public function index(Request $request)
     {
-
         $limit = $request->limit;
         $offset = $request->offset;
         $job_type_ids = $request->job_type_ids;
@@ -27,30 +26,38 @@ class VacancyController extends Controller
         $region_ids = $request->region_ids;
         $time_type = $request->type;
 
-        if ($job_type_ids == []) {
+        if (!$job_type_ids) {
+            $job_type_ids = [];
             foreach (JobType::all() as $model) {
                 array_push($job_type_ids, $model->id);
             }
         }
-        if ($busyness_ids == []) {
+        if (!$busyness_ids) {
+            $busyness_ids = [];
             foreach (Busyness::all() as $model) {
                 array_push($busyness_ids, $model->id);
             }
         }
-        if ($schedule_ids == []) {
+        if (!$schedule_ids) {
+            $schedule_ids = [];
             foreach (Schedule::all() as $model) {
                 array_push($schedule_ids, $model->id);
             }
         }
-        if ($type_ids == []) {
+        if (!$type_ids) {
+            $type_ids = [];
             foreach (VacancyType::all() as $model) {
                 array_push($type_ids, $model->id);
             }
         }
-        if ($region_ids == []) {
+        if (!$region_ids) {
+            $region_ids = [];
             foreach (Region::all() as $model) {
                 array_push($region_ids, $model->id);
             }
+        }
+        if(!$offset){
+            $offset = 0;
         }
 
         $specificDate = strtotime('2000-1-1');
@@ -78,18 +85,28 @@ class VacancyController extends Controller
             if($user)
                 $banned_ones = UserVacancy::where("user_id", $user->id)->where("type",'!=', 'LIKED_THEN_DELETED')->pluck('vacancy_id')->toArray();
         }
-        foreach (Vacancy::whereIn('job_type_id', $job_type_ids)
-                     ->whereIn('schedule_id', $schedule_ids)
-                     ->whereIn('busyness_id', $busyness_ids)
-                     ->whereIn('vacancy_type_id', $type_ids)
-                     ->whereIn('region_id', $region_ids)
-                     ->whereNotIn("id", $banned_ones)
-                     ->where('is_active',true)
-                     ->whereDate('created_at','>', $specificDate)
-                     ->skip($offset)
-                     ->take($limit)
-                     ->get() as $item) {
-//            dd($item);
+
+        $vacancies = Vacancy::whereIn('job_type_id', $job_type_ids)
+            ->whereIn('schedule_id', $schedule_ids)
+            ->whereIn('busyness_id', $busyness_ids)
+            ->whereIn('vacancy_type_id', $type_ids)
+            ->whereIn('region_id', $region_ids)
+            ->whereNotIn("id", $banned_ones)
+            ->where('is_active',true)
+            ->whereDate('created_at','>', $specificDate)
+            ->orderBy('created_at', 'desc');
+
+        if ($offset) {
+            $vacancies = $vacancies->skip($offset);
+        }
+
+        if($limit) {
+            $vacancies = $vacancies->take($limit);
+        }
+
+        $vacancies = $vacancies->get();
+
+        foreach ($vacancies->reverse() as $item) {
             array_push($result, [
                 'id' => $item->id,
                 'name' => $item->name,
@@ -114,6 +131,14 @@ class VacancyController extends Controller
     public function storeCompanyVacancy(Request $request)
     {
         $token = $request->header('Authorization');
+
+//        $busyness = $schedule = $job_type = $region = $type = 0;
+//
+//        if($request->busyness && $request->busyness != "null") $busyness = $request->busyness;
+//        if($request->schedule && $request->schedule != "null") $schedule = $request->schedule;
+//        if($request->job_type && $request->job_type != "null") $job_type = $request->job_type;
+//        if($request->region && $request->region != "null") $region = $request->region;
+//        if($request->type && $request->type != "null") $type = $request->type;
 
         $user = User::where("password", $token)->firstOrFail();
 
@@ -141,11 +166,19 @@ class VacancyController extends Controller
                     'schedule_id' => $request->schedule,
                     'job_type_id' => $request->job_type,
                     'region_id' => $request->region,
-                    'company_id' => $request->company_id,
                     'vacancy_type_id' => $request->type,
+                    'company_id' => $request->company_id,
                     'is_active' => true,
                     'created_at' => date('Y-m-d H:i:s'),
                 ]);
+//                if($request->busyness){
+//                    echo $request->busyness;
+//                    $vacancy->busyness_id = $request->busyness;
+//                } else {
+//                    echo 111;
+//                }
+//                die();
+//                $vacancy->save();
             }
             return "OK";
         }
@@ -256,9 +289,8 @@ class VacancyController extends Controller
         $user = User::where("password", $token)->firstOrFail();
         if($user){
             $result1 = [];
-            foreach (Vacancy::where('company_id', $user->id)
-                        ->where('is_active', true)
-                         ->get() as $item){
+            $vacancies = Vacancy::where('company_id', $user->id)->where('is_active', true)->orderBy('created_at', 'desc')->get();
+            foreach ($vacancies as $item){
                 array_push($result1, [
                     'id'=> $item->id,
                     'name'=> $item->name,
@@ -285,21 +317,13 @@ class VacancyController extends Controller
     }
     public function getActiveVacanciesNumber(Request $request)
     {
-
         $token = $request->header('Authorization');
 
-        $user = User::where("password", $token)->firstOrFail();
-        if($user){
-            $count = 0;
-            foreach (Vacancy::where('company_id', $user->id)
-                         ->where('is_active', true)
-                         ->get() as $item){
-                $count=$count+1;
-            }
-            return $count;
-        }
-        else{
-            return 'ERROR';
+        if($token && $token != 'null'){
+            $user = User::where("password", $token)->firstOrFail();
+            return Vacancy::where('company_id', $user->id)->where('is_active', true)->count();
+        } else {
+            return Vacancy::where('is_active', true)->count();
         }
 
     }

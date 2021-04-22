@@ -31,6 +31,11 @@ class UserEducation extends Model
         ],
     ];
 
+    public function type()
+    {
+        return $this->belongsTo(EducationType::class, 'type_id');
+    }
+
     public function getCreatedDate()
     {
         return date('d-m-Y', strtotime($this->created_at));

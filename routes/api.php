@@ -69,7 +69,10 @@ Route::group([
     Route::name('user.course.delete')->post('user/course/delete/{user_cv_course}', ['uses' => 'UserCvCourseController@delete']);
 
     Route::get('chats', ['uses' => 'ChatController@index']);
-    Route::post('chats/store', ['uses' => 'ChatController@store']);
+    Route::post('chats/delete', ['uses' => 'ChatController@destroyChat']);
+
+    Route::get('messages/{receiver_id}', ['uses' => 'ChatController@messages']);
+    Route::post('messages', ['uses' => 'ChatController@saveMessage']);
 });
 
 //Route::middleware('api')->get('/users', ['uses' => 'UserController@index'])->name('users.api');

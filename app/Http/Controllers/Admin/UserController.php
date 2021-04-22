@@ -117,7 +117,10 @@ class UserController extends Controller
             ]);
         }
         $user->update($request->except( 'password', 'image', 'image_remove'));
-        $user->password = Hash::make($request->password);
+
+        if($request->password){
+            $user->password = Hash::make($request->password);
+        }
 
         if($request->file('image')){
 
@@ -138,6 +141,9 @@ class UserController extends Controller
 
         $user->save();
 
+        if(auth()->user()->type == 'COMPANY'){
+            return redirect()->route('admin.profile');
+        }
         return redirect()->route('users.show', $user);
     }
 
@@ -188,7 +194,7 @@ class UserController extends Controller
         foreach ($resultPaginated as $key => $row) {
             $row->date = date('d/m/y H:i', strtotime($row->created_at));
             $row->order = ($page - 1) * $perpage + $key + 1;
-            $row->name = $row->name.' '.$row->lastname;
+            $row->name = $row->name;
 
             $row->actions = '
                 <a href="'.route('users.show', $row).'" class="btn btn-sm btn-clean btn-icon mr-2" title="Просмотр">

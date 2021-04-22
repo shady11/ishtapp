@@ -20,5 +20,10 @@ class WebController extends Controller
         return view('web.index');
     }
 
+    public function privacy()
+    {
+        return view('web.privacy');
+    }
+
 
 }

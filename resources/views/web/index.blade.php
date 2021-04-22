@@ -74,7 +74,6 @@
                 <h3>То чего искали</h3>
             </div>
 
-
             <div class="row">
                 <div class="col-12 col-lg-4">
                     <div class="card features">
@@ -118,8 +117,6 @@
             </div>
 
         </div>
-
-
 
     </div>
     <!-- // end .section -->
@@ -297,10 +294,15 @@
                 <h2>Загрузка приложения</h2>
                 <p class="tagline text-white">Наше приложение доступно на следующих платформах. Выберите тот, который вам подходит. </p>
                 <div class="my-4">
-
-                    <a href="#" class="btn btn-light"><img src="{{asset('images/appleicon.png')}}" alt="icon"> App Store</a>
-                    <a href="#" class="btn btn-light"><img src="{{asset('images/playicon.png')}}" alt="icon"> Google play</a>
-                    <a href="#" class="btn btn-light"><img src="{{asset('images/galleryicon.png')}}" alt="icon"> App Gallery</a>
+                    <a target="_blank" href="https://apps.apple.com/kg/app/ishtapp/id1561101479" class="btn btn-light">
+                        <img src="{{asset('images/appleicon.png')}}" alt="icon"> App Store
+                    </a>
+                    <a target="_blank" href="https://play.google.com/store/apps/details?id=ulut.kg.ishapp" class="btn btn-light">
+                        <img src="{{asset('images/playicon.png')}}" alt="icon"> Google play
+                    </a>
+                    <a target="_blank" href="https://appgallery.huawei.com/#/app/C104077717" class="btn btn-light">
+                        <img src="{{asset('images/galleryicon.png')}}" alt="icon"> App Gallery
+                    </a>
                 </div>
                 <p class="text-white"><small><i>Работает на платформах *iOS 10.0.5+, Android Kitkat и выше </i></small></p>
             </div>
@@ -341,12 +343,12 @@
     <!-- // end .section -->
     <footer class="my-5 text-center">
         <!-- Copyright removal is not prohibited! -->
-        <p class="mb-2"><small>COPYRIGHT © 2021. ALL RIGHTS RESERVED. ISHTAPP</small></p>
+        <p class="mb-2"><small>© 2021. Бардык укуктар корголгон. ISHTAPP</small></p>
 
         <small>
             <a href="#" class="m-2">PRESS</a>
             <a href="#" class="m-2">TERMS</a>
-            <a href="#" class="m-2">PRIVACY</a>
+            <a href="{{route('web.privacy')}}" class="m-2">PRIVACY</a>
         </small>
     </footer>
 
@@ -617,9 +619,15 @@
                 <p class="tagline text-white">Колдонмобуз төмөнкү платформаларда жеткиликтүү. Сизге тийиштүүсүн тандаңыз. </p>
                 <div class="my-4">
 
-                    <a href="#" class="btn btn-light"><img src="{{asset('images/appleicon.png')}}" alt="icon"> App Store</a>
-                    <a href="#" class="btn btn-light"><img src="{{asset('images/playicon.png')}}" alt="icon"> Google play</a>
-                    <a href="#" class="btn btn-light"><img src="{{asset('images/galleryicon.png')}}" alt="icon"> App Gallery</a>
+                    <a target="_blank" href="https://apps.apple.com/kg/app/ishtapp/id1561101479" class="btn btn-light">
+                        <img src="{{asset('images/appleicon.png')}}" alt="icon"> App Store
+                    </a>
+                    <a target="_blank" href="https://play.google.com/store/apps/details?id=ulut.kg.ishapp" class="btn btn-light">
+                        <img src="{{asset('images/playicon.png')}}" alt="icon"> Google play
+                    </a>
+                    <a target="_blank" href="https://appgallery.huawei.com/#/app/C104077717" class="btn btn-light">
+                        <img src="{{asset('images/galleryicon.png')}}" alt="icon"> App Gallery
+                    </a>
                 </div>
                 <p class="text-white"><small><i>*iOS 10.0.5+, Android Kitkat жана андан жогорку үлгүдөгү платформаларда иштейт. </i></small></p>
             </div>
@@ -665,7 +673,7 @@
         <small>
             <a href="#" class="m-2">PRESS</a>
             <a href="#" class="m-2">TERMS</a>
-            <a href="#" class="m-2">PRIVACY</a>
+            <a href="{{route('web.privacy')}}" class="m-2">PRIVACY</a>
         </small>
     </footer>
 

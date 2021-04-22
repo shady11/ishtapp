@@ -27,7 +27,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-3 col-xl-4 mt-5 mt-lg-0 text-right">
-                                <a href="{{route('job_types.create')}}" class="btn btn-primary font-weight-bold">
+                                <a href="{{route('user_cv.create')}}" class="btn btn-primary font-weight-bold">
                                     <span class="svg-icon svg-icon-md">
                                         <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -68,7 +68,7 @@
                 source: {
                     read: {
                         method: 'GET',
-                        url: '{{route("job_types.api")}}',
+                        url: '{{route("user_cv.api")}}',
                         params: {
                             type: '{{request()->type}}'
                         },
@@ -88,10 +88,7 @@
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true,
-                saveState: false
             },
-
-            // stateSave: false,
 
             // layout definition
             layout: {
@@ -114,16 +111,21 @@
                 field: 'order',
                 title: '#',
                 sortable: 'asc',
-                width: 30,
+                width: 40,
                 type: 'number',
                 selector: false,
                 textAlign: 'center',
             }, {
                 field: 'name',
-                title: 'Название (на кыргызском)',
+                title: 'Название вакансии',
             }, {
-                field: 'name_ru',
-                title: 'Название (на русском)',
+                field: 'user_name',
+                title: 'Соискатель',
+            }, {
+                field: 'date',
+                title: 'Дата добавления',
+                type: 'date',
+                format: 'MM/DD/YYYY',
             }, {
                 field: 'acts',
                 title: 'Actions',
@@ -136,6 +138,14 @@
                 },
             }],
 
+        });
+
+        $('#kt_datatable_search_status').on('change', function() {
+            datatable.search($(this).val().toLowerCase(), 'Status');
+        });
+
+        $('#kt_datatable_search_type').on('change', function() {
+            datatable.search($(this).val().toLowerCase(), 'Type');
         });
 
         $('#kt_datatable_search_status, #kt_datatable_search_type').selectpicker();

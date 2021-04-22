@@ -100,6 +100,10 @@ class VacancyController extends Controller
 
         $resultPaginated = Vacancy::orderBy('name', 'asc');
 
+        if(auth()->user()->type == 'COMPANY'){
+            $resultPaginated = $resultPaginated->where('company_id', auth()->user()->id);
+        }
+
         if($query){
             if(array_key_exists('generalSearch', $query)){
                 $resultPaginated = $resultPaginated->search($query['generalSearch'], null, true, true);

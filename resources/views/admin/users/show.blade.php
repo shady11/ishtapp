@@ -11,7 +11,7 @@
                 <!--begin::Header-->
                 <div class="card-header py-3">
                     <div class="card-title">
-                        <h3 class="card-label font-weight-bolder text-dark">{{$user->getFullName()}}</h3>
+                        <h3 class="card-label font-weight-bolder text-dark">{{$user->name}}</h3>
                     </div>
                     <div class="card-toolbar">
                         <a href="{{route('users.index', ['type' => $user->type])}}" class="btn btn-secondary mr-2">Назад</a>

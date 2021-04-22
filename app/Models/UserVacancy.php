@@ -25,6 +25,16 @@ class UserVacancy extends Model
         ],
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function vacancy()
+    {
+        return $this->belongsTo(Vacancy::class, 'vacancy_id');
+    }
+
     public function getCreatedDate()
     {
         return date('d-m-Y', strtotime($this->created_at));

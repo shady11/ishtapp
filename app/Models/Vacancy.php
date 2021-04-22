@@ -12,6 +12,7 @@ class Vacancy extends Model
     protected $connection = 'mysql';
 
     protected $table = 'vacancies';
+
     protected $fillable = [
         'name',
         'title',
@@ -67,7 +68,7 @@ class Vacancy extends Model
 
     public function busyness()
     {
-        return $this->belongsTo(Region::class, 'busyness_id');
+        return $this->belongsTo(Busyness::class, 'busyness_id');
     }
 
     public function schedules()

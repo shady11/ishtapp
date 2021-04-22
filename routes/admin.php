@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-
 Auth::routes();
 
 Route::middleware('auth')->group( function () {
@@ -12,6 +11,11 @@ Route::middleware('auth')->group( function () {
 
     Route::name('admin.index')->get('/', ['uses' => 'HomeController@index']);
     Route::name('nav_toggle')->post('/nav_toggle', 'HomeController@nav_toggle');
+
+    Route::name('admin.profile')->get('/profile', ['uses' => 'HomeController@profile']);
+    Route::name('admin.chat')->get('/chat', ['uses' => 'HomeController@chat']);
+    Route::name('admin.chat.delete')->get('/chat/{chat}/delete', ['uses' => 'HomeController@chat']);
+    Route::name('admin.chat.message')->post('/chat/{chat}/message', ['uses' => 'HomeController@message']);
 
     // Resources
     Route::resources([
@@ -25,7 +29,11 @@ Route::middleware('auth')->group( function () {
         'regions' => 'RegionController',
         'vacancies' => 'VacancyController',
         'education_types' => 'EducationTypeController',
+        'user_cv' => 'UserCvController',
     ]);
+
+    // CUSTOM ROUTES
+    Route::name('user_cv.show')->get('user_cv/{user_vacancy}', ['uses' => 'UserCvController@show']);
 
     // DELETE ROUTES
     Route::name('users.delete')->get('users/delete/{user}', ['uses' => 'UserController@destroy']);
@@ -37,8 +45,7 @@ Route::middleware('auth')->group( function () {
     Route::name('education_types.delete')->get('education_types/delete/{education_type}', ['uses' => 'EducationTypeController@destroy']);
 
     Route::name('vacancies.delete')->get('vacancies/delete/{vacancy}', ['uses' => 'VacancyController@destroy']);
-
-    Route::post('/main/removethumb', 'MainController@removethumb')->name('main.removethumb');
+    Route::name('user_cv.delete')->get('user_cv/delete/{user_cv}', ['uses' => 'UserCvController@destroy']);
 
     // Api Datatable
 
@@ -54,6 +61,7 @@ Route::middleware('auth')->group( function () {
         Route::name('job_types.api')->get('job_types', ['uses' => 'JobTypeController@api']);
         Route::name('education_types.api')->get('education_types', ['uses' => 'EducationTypeController@api']);
         Route::name('vacancies.api')->get('vacancies', ['uses' => 'VacancyController@api']);
+        Route::name('user_cv.api')->get('user_cv', ['uses' => 'UserCvController@api']);
         Route::name('roll')->get('roll', ['uses' => 'PermissionController@Permission']);
     });
 });

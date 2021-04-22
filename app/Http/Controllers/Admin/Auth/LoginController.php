@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -56,12 +57,16 @@ class LoginController extends Controller
             return redirect()->back()->withErrors($validator, 'login');
         } else {
             $credentials = $request->only('email', 'password');
-            // $remember = ($request->remember) ? true : false;
 
-            if (auth()->attempt($credentials, true)) {
-                return redirect()->intended('/');
+            $user = User::where('email', $request->email)->first();
+            if($user->type == 'USER') {
+                return redirect()->back()->with('login', 'Нет доступа!');
             } else {
-                return redirect()->back()->with('login_failed', trans('auth.failed'));
+                if (auth()->attempt($credentials, true)) {
+                    return redirect()->intended(route('admin.index'));
+                } else {
+                    return redirect()->back()->with('login_failed', trans('auth.failed'));
+                }
             }
         }
 
@@ -69,7 +74,6 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        $user = auth()->user();
         Auth::logout();
         return redirect()->away('login');
     }

@@ -30,7 +30,7 @@ class JobTypeController extends Controller
         ]);
         $job_type = JobType::create($request->all());
 
-        return redirect()->route('job_types.index', $job_type);
+        return redirect()->route('job_types.index');
     }
 
     public function edit(JobType $job_type)
@@ -47,13 +47,14 @@ class JobTypeController extends Controller
         ]);
         $job_type->update($request->all());
 
-        return redirect()->route('job_types.index', $job_type);
+        return redirect()->route('job_types.index');
     }
 
     public function destroy(JobType $job_type)
     {
         $job_type->delete();
-        return response('Success', 200);
+
+        return redirect()->route('job_types.index');
     }
 
     public function api(Request $request)
@@ -72,7 +73,7 @@ class JobTypeController extends Controller
             return $page;
         });
 
-        $resultPaginated = JobType::orderBy('name', 'asc')->orderBy('name', 'asc');
+        $resultPaginated = JobType::orderBy('name', 'asc');
 
         if($query){
             if(array_key_exists('generalSearch', $query)){

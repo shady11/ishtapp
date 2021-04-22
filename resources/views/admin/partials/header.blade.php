@@ -29,8 +29,9 @@
             </div>
             <!--end::User-->
             <div class="topbar-item">
-                <div class="btn btn-icon btn-hover-transparent-white btn-lg mr-1" id="kt_quick_panel_toggle">
-                    <span class="svg-icon svg-icon-xl">
+                <div class="btn btn-icon btn-hover-transparent-white btn-lg mr-1">
+                    <a href="{{route('logout')}}">
+                        <span class="svg-icon svg-icon-xl">
                         <!--begin::Svg Icon | path:assets/media/svg/icons/Layout/Layout-4-blocks.svg-->
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -39,8 +40,9 @@
                                 <rect fill="#000000" opacity="0.3" x="11" y="3" width="2" height="10" rx="1"/>
                             </g>
                         </svg>
-                        <!--end::Svg Icon-->
+                            <!--end::Svg Icon-->
                     </span>
+                    </a>
                 </div>
             </div>
         </div>

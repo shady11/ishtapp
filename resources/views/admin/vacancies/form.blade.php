@@ -17,15 +17,19 @@
             @endif
         </div>
     </div>
-    <div class="form-group row">
-        <label class="col-lg-3 col-form-label">Компания:</label>
-        <div class="col-lg-4">
-            {!! Form::select('company_id', $companies, null, ['class' => 'selectpicker', 'title' => 'Выбрать', 'data-width' => '100%', 'data-live-search' => 'true', 'data-size' => '6']) !!}
-            @if ($errors->has('company_id'))
-                <div class="invalid-feedback">{{ $errors->first('company_id') }}</div>
-            @endif
+    @if(auth()->user()->type == 'ADMIN')
+        <div class="form-group row">
+            <label class="col-lg-3 col-form-label">Компания:</label>
+            <div class="col-lg-4">
+                {!! Form::select('company_id', $companies, auth()->user()->type == 'COMPANY' ? auth()->user()->id : null, ['class' => 'selectpicker', 'title' => 'Выбрать', 'data-width' => '100%', 'data-live-search' => 'true', 'data-size' => '6']) !!}
+                @if ($errors->has('company_id'))
+                    <div class="invalid-feedback">{{ $errors->first('company_id') }}</div>
+                @endif
+            </div>
         </div>
-    </div>
+    @else
+        {!! Form::hidden('company_id', auth()->user()->id) !!}
+    @endif
     <div class="form-group row">
         <label class="col-lg-3 col-form-label">Описание:</label>
         <div class="col-lg-4">
