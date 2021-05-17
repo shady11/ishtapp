@@ -22,6 +22,7 @@ class Vacancy extends Model
         'busyness_id',
         'schedule_id',
         'job_type_id',
+        'is_disability_person_vacancy',
         'vacancy_type_id',
         'region_id',
         'company_id',

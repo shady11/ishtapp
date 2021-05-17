@@ -10,12 +10,10 @@ use App\Models\UserEducation;
 use App\Models\UserExperience;
 use App\Models\UserVacancy;
 use App\Models\Vacancy;
-use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 use Intervention\Image\ImageManagerStatic as Image;
@@ -26,7 +24,6 @@ class UserController extends Controller
     {
         $model = User::query()->get();
         return response()->json($model);
-//        return response('false');
     }
 
     public function show(Request $request)
@@ -104,21 +101,6 @@ class UserController extends Controller
                     'job_title' => UserCv::where('user_id',$submitted_user_vacancy->user->id)->first()->job_title,
                     'experience_year' => UserCv::where('user_id',$submitted_user_vacancy->user->id)->first()->experience_year
                 ]);
-
-//                $user_vacancy_id = UserVacancy::where("user_id", $item->id)->whereIn('vacancy_id', $vacancy_ids)->where("type", 'SUBMITTED')->firstOrFail()->vacancy_id;
-//                $user_vacancy_name = Vacancy::where('id', $user_vacancy_id)->first()->name;
-//
-//                array_push($result, [
-//                    'vacancy_name' => $user_vacancy_name,
-//                    'id' => $item->id,
-//                    'lastname' => $item->lastname,
-//                    'email' => $item->email,
-//                    'phone_number' => $item->phone_number,
-//                    'avatar' => $item->avatar,
-//                    'birth_date' => $item->birth_date,
-//                    'job_title' => UserCv::where('user_id',$item->id)->first()->job_title,
-//                    'experience_year' => UserCv::where('user_id',$item->id)->first()->experience_year
-//                ]);
             }
             return $result;
         }
@@ -135,7 +117,6 @@ class UserController extends Controller
                 ->firstOrFail();
             if($user){
                 $user_cv = UserCV::where('user_id', $user_id)->firstOrFail();
-//                dd($user_cv);
                 if($user_cv){
                     $user_experiences = [];
                     foreach (UserExperience::where('user_cv_id', $user_cv->id)->get() as $model) {
@@ -203,18 +184,17 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-//        var_dump($request->all());
-//        die();
         if (User::where('email', $request->email)->count() == 0) {
             $user = User::create([
                 'name' => $request->name,
-//                'lastname' => $request->lastname,
                 'email' => $request->email,
                 'birth_date' => $request->birth_date,
                 'type' => $request->type,
                 'address' => $request->address,
                 'active' => true,
                 'phone_number' => $request->phone_number,
+                'linkedin' => $request->linkedin,
+                'is_migrant' => $request->is_migrant == '1',
             ]);
             // create empty cv
             if($user && $user->type == 'USER') {
@@ -222,13 +202,6 @@ class UserController extends Controller
                     'user_id' => $user->id
                 ]);
             }
-
-//            if ($request->hasFile('avatar')) {
-//                $file = $request->file('avatar');
-//                $path = '/storage/avatars/'. Carbon::now()->format('YmdHms') . $file->getClientOriginalName();
-//                $file->move(public_path() . '/storage/avatars/',  Carbon::now()->format('YmdHms').$file->getClientOriginalName());
-//                $user->avatar = $path;
-//            }
 
             if($request->hasFile('avatar')){
 
@@ -276,10 +249,9 @@ class UserController extends Controller
             'status' => 999,
         ]);
     }
-    public function update1(Request $request,$id)
+    public function update1(Request $request, $id)
     {
         $user = User::findOrFail($id);
-//        dd($request);
         if ($user) {
 
             if($request->hasFile('avatar')){
@@ -300,24 +272,17 @@ class UserController extends Controller
                 $user->avatar = $dir.$name;
             }
 
-//            if ($request->hasFile('avatar')) {
-//                $file = $request->file('avatar');
-//                $path = '/storage/avatars/'. Carbon::now()->format('YmdHms') . $file->getClientOriginalName();
-//                $file->move(public_path() . '/storage/avatars/',  Carbon::now()->format('YmdHms').$file->getClientOriginalName());
-//                $user->avatar = $path;
-//            }
-
             $user ->update([
                 'name' => $request->name,
-//                'lastname' => $request->lastname,
                 'email' => $request->email,
                 'birth_date' => $request->birth_date,
                 'address' => $request->address,
                 'phone_number' => $request->phone_number,
+                'linkedin' => $request->linkedin,
+                'is_migrant' => $request -> is_migrant,
             ]);
             try {
                 $user->save();
-//                dd($request);
                 return response()->json([
                     'id' => $user->id,
                     'token' => $user->password,
@@ -340,29 +305,6 @@ class UserController extends Controller
             'status' => 999,
         ]);
     }
-
-    /*public function update(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-        if ($request->header('token') == $user->password) {
-            $user->update([
-                'username' => $request->username,
-                'pin_kod' => $request->pin_kod,
-            ]);
-            $user->password = Hash::make($request->password);
-            try {
-                $user->save();
-            } catch (QueryException $exception) {
-                return response('false');
-            }
-            return response()->json([
-                'id' => $user->id,
-                'token' => $user->password,
-                'message' => 'Successfully created user!'
-            ], 201);
-        }
-        return response('false');
-    }*/
 
     public function destroy(Request $request, $id)
     {

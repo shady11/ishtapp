@@ -114,6 +114,7 @@ class VacancyController extends Controller
                 'address' => $item->company->address,
                 'description' => $item->description,
                 'salary' => $item->salary,
+                'is_disability_person_vacancy' => $item->is_disability_person_vacancy,
                 'company_name' => $item->company->name,
                 'company_logo'=> $item->company->avatar,
                 'busyness' => $item->busyness->getName($request->lang),
@@ -121,24 +122,15 @@ class VacancyController extends Controller
                 'schedule' => $item->schedule->getName($request->lang),
                 'type' => $item->vacancytype->getName($request->lang),
                 'region' => $item->region->getName($request->lang),
-                'company' => $item->company->id
+                'company' => $item->company->id,
             ]);
         }
         return $result;
-
     }
 
     public function storeCompanyVacancy(Request $request)
     {
         $token = $request->header('Authorization');
-
-//        $busyness = $schedule = $job_type = $region = $type = 0;
-//
-//        if($request->busyness && $request->busyness != "null") $busyness = $request->busyness;
-//        if($request->schedule && $request->schedule != "null") $schedule = $request->schedule;
-//        if($request->job_type && $request->job_type != "null") $job_type = $request->job_type;
-//        if($request->region && $request->region != "null") $region = $request->region;
-//        if($request->type && $request->type != "null") $type = $request->type;
 
         $user = User::where("password", $token)->firstOrFail();
 
@@ -155,6 +147,7 @@ class VacancyController extends Controller
                     'region_id' => $request->region,
                     'vacancy_type_id' => $request->type,
                     'is_active' => true,
+                    'is_disability_person_vacancy' => $request->is_disability_person_vacancy,
                 ]);
             }
             else{
@@ -169,16 +162,9 @@ class VacancyController extends Controller
                     'vacancy_type_id' => $request->type,
                     'company_id' => $request->company_id,
                     'is_active' => true,
+                    'is_disability_person_vacancy' => $request->is_disability_person_vacancy,
                     'created_at' => date('Y-m-d H:i:s'),
                 ]);
-//                if($request->busyness){
-//                    echo $request->busyness;
-//                    $vacancy->busyness_id = $request->busyness;
-//                } else {
-//                    echo 111;
-//                }
-//                die();
-//                $vacancy->save();
             }
             return "OK";
         }
