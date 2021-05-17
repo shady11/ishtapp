@@ -187,14 +187,18 @@ class UserController extends Controller
             }
         }
 
-        $resultPaginated->orderBy('name', 'asc')->orderBy('lastname', 'asc');
+        if($sort && $sort['field'] != 'order'){
+            $resultPaginated = $resultPaginated->orderBy($sort['field'], $sort['sort']);
+        } else {
+            $resultPaginated = $resultPaginated->orderBy('name', 'asc')->orderBy('lastname', 'asc');
+        }
 
         $resultPaginated = $resultPaginated->paginate($perpage);
 
         foreach ($resultPaginated as $key => $row) {
             $row->date = date('d/m/y H:i', strtotime($row->created_at));
             $row->order = ($page - 1) * $perpage + $key + 1;
-            $row->name = $row->name;
+//            $row->name = $row->name;
 
             $row->actions = '
                 <a href="'.route('users.show', $row).'" class="btn btn-sm btn-clean btn-icon mr-2" title="Просмотр">

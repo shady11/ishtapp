@@ -55,6 +55,7 @@ class UserController extends Controller
         else
             return "vacancy doesn't exists";
     }
+
     protected function checkUserEmail(Request $request)
     {
         $email = $request->email;
@@ -276,8 +277,10 @@ class UserController extends Controller
             'status' => 999,
         ]);
     }
-    public function update1(Request $request,$id)
+
+    public function update1(Request $request, $id)
     {
+//        dd($id);
         $user = User::findOrFail($id);
 //        dd($request);
         if ($user) {

@@ -98,10 +98,10 @@ class VacancyController extends Controller
             return $page;
         });
 
-        $resultPaginated = Vacancy::orderBy('name', 'asc');
-
         if(auth()->user()->type == 'COMPANY'){
-            $resultPaginated = $resultPaginated->where('company_id', auth()->user()->id);
+            $resultPaginated = Vacancy::where('company_id', auth()->user()->id);
+        } else {
+            $resultPaginated = Vacancy::whereNotNull('company_id');
         }
 
         if($query){
@@ -110,10 +110,16 @@ class VacancyController extends Controller
             }
         }
 
+        if($sort && $sort['field'] != 'order'){
+            $resultPaginated = $resultPaginated->orderBy($sort['field'], $sort['sort']);
+        } else {
+            $resultPaginated = $resultPaginated->orderBy('name', 'asc');
+        }
+
         $resultPaginated = $resultPaginated->paginate($perpage);
 
         foreach ($resultPaginated as $key => $row) {
-            $row->date = date('d/m/y H:i', strtotime($row->created_at));
+//            $row->date = date('d/m/y H:i', strtotime($row->created_at));
             $row->order = ($page - 1) * $perpage + $key + 1;
 
             $row->company_name = $row->company->name;

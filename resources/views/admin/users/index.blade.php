@@ -10,7 +10,6 @@
             <!--begin::Card-->
             <div class="card card-custom">
                 <div class="card-body">
-                    <!--begin: Search Form-->
                     <!--begin::Search Form-->
                     <div class="mb-7">
                         <div class="row align-items-center">
@@ -45,7 +44,6 @@
                         </div>
                     </div>
                     <!--end::Search Form-->
-                    <!--end: Search Form-->
                     <!--begin: Datatable-->
                     <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable"></div>
                     <!--end: Datatable-->
@@ -88,6 +86,7 @@
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true,
+                saveState: false
             },
 
             // layout definition
@@ -110,7 +109,7 @@
             columns: [{
                 field: 'order',
                 title: '#',
-                sortable: 'asc',
+                sortable: false,
                 width: 30,
                 type: 'number',
                 selector: false,
@@ -122,10 +121,8 @@
                 field: 'email',
                 title: 'Email',
             }, {
-                field: 'date',
+                field: 'created_at',
                 title: 'Дата добавления',
-                type: 'date',
-                format: 'MM/DD/YYYY',
             }, {
                 field: 'active',
                 title: 'Статус',
@@ -155,14 +152,6 @@
                 },
             }],
 
-        });
-
-        $('#kt_datatable_search_status').on('change', function() {
-            datatable.search($(this).val().toLowerCase(), 'Status');
-        });
-
-        $('#kt_datatable_search_type').on('change', function() {
-            datatable.search($(this).val().toLowerCase(), 'Type');
         });
 
         $('#kt_datatable_search_status, #kt_datatable_search_type').selectpicker();
