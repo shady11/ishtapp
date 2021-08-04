@@ -92,6 +92,7 @@ class UserCvController extends Controller
         $user = User::where("password", $token)->firstOrFail();
 
         $user_cv = new UserCV();
+
         if ($user) {
             $this->validate($request, [
                 'job_title' => ['required'],
@@ -121,7 +122,6 @@ class UserCvController extends Controller
             $experiences = $request->user_experiences;
             $educations = $request->user_educations;
             $courses = $request->user_courses;
-
 
             if ($experiences) {
                 foreach (json_decode($experiences) as $experience) {

@@ -95,6 +95,6 @@ class Kernel extends HttpKernel
     ];
 
     protected $commands = [
-        \App\Console\Commands\WebSocketServer::class
+//        \App\Console\Commands\WebSocketServer::class
     ];
 }

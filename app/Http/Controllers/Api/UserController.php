@@ -162,6 +162,8 @@ class UserController extends Controller
                         'phone_number' => $user->phone_number,
                         'avatar' => $user->avatar,
                         'birth_date' => $user->birth_date,
+                        'linkedin' => $user->linkedin,
+                        'is_migrant' => $user->is_migrant,
                         'job_title' => $user_cv->job_title,
                         'experience_year' => $user_cv->experience_year,
                         'attachment' => $user_cv->attachment,

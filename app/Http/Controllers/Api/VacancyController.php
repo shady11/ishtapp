@@ -269,13 +269,12 @@ class VacancyController extends Controller
     }
     public function getVacanciesByCompany(Request $request)
     {
-
         $token = $request->header('Authorization');
 
         $user = User::where("password", $token)->firstOrFail();
         if($user){
             $result1 = [];
-            $vacancies = Vacancy::where('company_id', $user->id)->where('is_active', true)->orderBy('created_at', 'desc')->get();
+            $vacancies = Vacancy::where('company_id', $user->id)->where('is_active', true)->orderBy('created_at', 'desc')->take(10)->get();
             foreach ($vacancies as $item){
                 array_push($result1, [
                     'id'=> $item->id,
