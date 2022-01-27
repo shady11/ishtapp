@@ -206,10 +206,10 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        
         $lang = $request->lang ? $request->lang : 'ru';
-
         if (User::where('email', $request->email)->count() == 0) {
-
+            
             if($lang == 'ru'){
                 $region = Region::where('nameRu', $request->region)->first();
                 $district = District::where('nameRu', $request->district)->first();
@@ -219,7 +219,7 @@ class UserController extends Controller
                 $district = District::where('nameKg', $request->district)->first();
                 $job_type = JobType::where('name', $request->job_type)->first();
             }
-
+            
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -231,10 +231,11 @@ class UserController extends Controller
                 'linkedin' => $request->linkedin,
                 'is_migrant' => $request->is_migrant == '1',
                 'gender' => $request->gender == '1',
-                'region' => $region->id,
-                'district' => $district->id,
+                'region' => $region ? $region->id : null,
+                'district' => $district ? $district->id : null,
                 'job_type' => $job_type ? $job_type->id : null,
             ]);
+            
             // create empty cv
             if($user && $user->type == 'USER') {
                 UserCV::create([
@@ -272,9 +273,9 @@ class UserController extends Controller
                     'message' => 'Successfully created user!',
                     'status' => 200,
                     'gender' => $user->gender,
-                    'region' => $region->getName($lang),
-                    'district' => $region->getName($lang),
-                    'job_type' => $region->getName($lang),
+                    'region' => $region ? $region->getName($lang) : 0,
+                    'district' => $district ? $district->getName($lang) : 0,
+                    'job_type' => $job_type ? $job_type->getName($lang) : 0,
                 ], 200);
             } catch (QueryException $e) {
                 return response()->json([
@@ -316,8 +317,8 @@ class UserController extends Controller
                 $user->avatar = $dir.$name;
             }
 
-            $region = Region::where('nameRu', $request->region)->first();
-            $district = District::where('nameRu', $request->district)->first();
+            $region = Region::where('nameRu', $request->region)->orWhere('nameKg', $request->region)->first();
+            $district = District::where('nameRu', $request->district)->orWhere('nameKg', $request->district)->first();
 
             $user ->update([
                 'name' => $request->name,
@@ -328,8 +329,8 @@ class UserController extends Controller
                 'linkedin' => $request->linkedin,
                 'is_migrant' => $request->is_migrant,
                 'gender' => $request->gender == '1',
-                'region' => $region->id,
-                'district' => $district->id,
+                'region' => $region ? $region->id : null,
+                'district' => $district ? $district->id : null,
             ]);
             try {
                 $user->save();

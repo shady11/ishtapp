@@ -24,7 +24,7 @@ class RegionController extends Controller
     {
         $result = [];
 
-        if($request->region){
+        if($request->region && $request->region != ''){
 
             $region = Region::where('nameRu', $request->region)->orWhere('nameKg', $request->region)->first();
 
@@ -48,9 +48,13 @@ class RegionController extends Controller
     {
         $result = [];
 
+        return $request->region;
+
         if($request->region){
 
-            foreach (District::where('region', $request->region)->orderBy('nameRu', 'asc')->get() as $item){
+            $region = Region::where('nameRu', $request->region)->orWhere('nameKg', $request->region)->first();
+
+            foreach (District::where('region', $region->id)->orderBy('nameRu', 'asc')->get() as $item){
                 array_push($result, [
                     'id'=> $item->id,
                     'name'=> $item->getName($request->lang)
