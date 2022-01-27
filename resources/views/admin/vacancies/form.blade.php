@@ -40,9 +40,15 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-lg-3 col-form-label">Выберите регион:</label>
+        <label class="col-lg-3 col-form-label">Выберите область:</label>
         <div class="col-lg-4">
             {!! Form::select('region_id', $regions, null, ['class' => 'selectpicker', 'title' => 'Выбрать', 'data-width' => '100%', 'data-live-search' => 'true', 'data-size' => '6']) !!}
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-lg-3 col-form-label">Выберите район:</label>
+        <div class="col-lg-4">
+            {!! Form::select('district_id', $districts, null, ['class' => 'selectpicker', 'title' => 'Выбрать', 'data-width' => '100%', 'data-live-search' => 'true', 'data-size' => '6']) !!}
         </div>
     </div>
     <div class="form-group row">

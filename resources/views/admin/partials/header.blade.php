@@ -22,7 +22,7 @@
                 <!--begin::Toggle-->
                 <div class="topbar-item">
                     <div class="btn btn-icon btn-hover-transparent-white d-flex align-items-center btn-lg px-md-2 w-md-auto">
-                        <span class="text-white opacity-90 font-weight-bolder font-size-base d-none d-md-inline px-2">{{auth()->user()->getFullName()}}</span>
+                        <span class="text-white opacity-90 font-weight-bolder font-size-base d-none d-md-inline px-2">{{auth()->user()->name}}</span>
                     </div>
                 </div>
                 <!--end::Toggle-->

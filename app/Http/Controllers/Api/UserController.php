@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\District;
 use App\Models\EducationType;
+use App\Models\JobType;
+use App\Models\Region;
 use App\Models\User;
 use App\Models\UserCourse;
 use App\Models\UserCV;
@@ -30,7 +33,23 @@ class UserController extends Controller
     {
         $token = $request->header('Authorization');
         $user = User::where("password", $token)->firstOrFail();
+
         if ($user) {
+            if($user->region && $user->district) {
+                $region = Region::find($user->region);
+                $district = District::find($user->district);
+                $user->region = $region->getName($request->lang);
+                $user->district = $district->getName($request->lang);
+            } else {
+                $user->region = '';
+                $user->district = '';
+            }
+            if($user->job_type) {
+                $job_type = JobType::find($user->job_type);
+                $user->job_type = $job_type->getName($request->lang);
+            } else {
+                $user->job_type = '';
+            }
             return response($user);
         }
         return response('token is not valid');
@@ -187,7 +206,20 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $lang = $request->lang ? $request->lang : 'ru';
+
         if (User::where('email', $request->email)->count() == 0) {
+
+            if($lang == 'ru'){
+                $region = Region::where('nameRu', $request->region)->first();
+                $district = District::where('nameRu', $request->district)->first();
+                $job_type = JobType::where('name_ru', $request->job_type)->first();
+            } else {
+                $region = Region::where('nameKg', $request->region)->first();
+                $district = District::where('nameKg', $request->district)->first();
+                $job_type = JobType::where('name', $request->job_type)->first();
+            }
+
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -198,6 +230,10 @@ class UserController extends Controller
                 'phone_number' => $request->phone_number,
                 'linkedin' => $request->linkedin,
                 'is_migrant' => $request->is_migrant == '1',
+                'gender' => $request->gender == '1',
+                'region' => $region->id,
+                'district' => $district->id,
+                'job_type' => $job_type ? $job_type->id : null,
             ]);
             // create empty cv
             if($user && $user->type == 'USER') {
@@ -234,7 +270,11 @@ class UserController extends Controller
                     'avatar' => $user->avatar,
                     'user_type' => $user->type,
                     'message' => 'Successfully created user!',
-                    'status' => 200
+                    'status' => 200,
+                    'gender' => $user->gender,
+                    'region' => $region->getName($lang),
+                    'district' => $region->getName($lang),
+                    'job_type' => $region->getName($lang),
                 ], 200);
             } catch (QueryException $e) {
                 return response()->json([
@@ -255,7 +295,6 @@ class UserController extends Controller
 
     public function update1(Request $request, $id)
     {
-//        dd($id);
         $user = User::findOrFail($id);
         if ($user) {
 
@@ -277,6 +316,9 @@ class UserController extends Controller
                 $user->avatar = $dir.$name;
             }
 
+            $region = Region::where('nameRu', $request->region)->first();
+            $district = District::where('nameRu', $request->district)->first();
+
             $user ->update([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -284,7 +326,10 @@ class UserController extends Controller
                 'address' => $request->address,
                 'phone_number' => $request->phone_number,
                 'linkedin' => $request->linkedin,
-                'is_migrant' => $request -> is_migrant,
+                'is_migrant' => $request->is_migrant,
+                'gender' => $request->gender == '1',
+                'region' => $region->id,
+                'district' => $district->id,
             ]);
             try {
                 $user->save();
@@ -311,6 +356,42 @@ class UserController extends Controller
         ]);
     }
 
+    public function saveFilters(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        if ($user) {
+
+            $user ->update([
+                'filter_region' => $request->regions,
+                'filter_activity' => $request->activities,
+                'filter_type' => $request->types,
+                'filter_busyness' => $request->busyness,
+                'filter_schedule' => $request->schedules,
+            ]);
+            try {
+                $user->save();
+                return response()->json([
+                    'id' => $user->id,
+                    'token' => $user->password,
+                    'message' => 'Successfully saved filters!'
+                ], 201);
+            } catch (QueryException $e) {
+                return response()->json([
+                    'id' => null,
+                    'token' => null,
+                    'message' => 'error!',
+                    'status' => 999,
+                ]);
+            }
+        }
+        return response()->json([
+            'id' => null,
+            'token' => null,
+            'message' => 'user doesn\'t exists!',
+            'status' => 999,
+        ]);
+    }
+
     public function destroy(Request $request, $id)
     {
         $user = Patient::findOrFail($id);
@@ -318,6 +399,41 @@ class UserController extends Controller
             $user->delete();
         }
         return response('deleted');
+    }
+
+    public function getFilters(Request $request, $id, $model)
+    {
+        $result = [];
+
+        $user = User::findOrFail($id);
+        if($user) {
+            if($model == 'regions') $result = $user->filter_region;
+            if($model == 'activities') $result = $user->filter_activity;
+            if($model == 'types') $result = $user->filter_type;
+            if($model == 'busyness') $result = $user->filter_busyness;
+            if($model == 'schedules') $result = $user->filter_schedule;
+            if($model == 'districts') $result = $user->filter_district;
+        }
+
+        return $result;
+    }
+
+    public function resetSettings(Request $request)
+    {
+        $user = User::where('email', $request->email)->firstOrFail();
+        if ($user) {
+            $user->filter_region = null;
+            $user->filter_district = null;
+            $user->filter_activity = null;
+            $user->filter_type = null;
+            $user->filter_busyness = null;
+            $user->filter_schedule = null;
+
+            $user_vacancies = UserVacancy::where('user_id', $user->id)->where('type', '<>', 'SUBMITTED')->delete();
+
+            return "OK";
+        }
+        return response()->json('user id does not exist');
     }
 
 }

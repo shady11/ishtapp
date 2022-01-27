@@ -74,8 +74,18 @@
                                     <span class="menu-text">Виды образования</span>
                                 </a>
                             </li>
+                            <li class="menu-item" aria-haspopup="true">
+                                <a href="{{route('currencies.index')}}" class="menu-link">
+                                    <span class="menu-text">Валюты</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
+                </li>
+                <li class="menu-item">
+                    <a href="{{route('chats.index')}}" class="menu-link">
+                        <span class="menu-text">Чаты</span>
+                    </a>
                 </li>
             @endif
             <li class="menu-item">
@@ -87,11 +97,6 @@
                 <li class="menu-item">
                     <a href="{{route('user_cv.index')}}" class="menu-link">
                         <span class="menu-text">Резюме</span>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{{route('admin.chat')}}" class="menu-link">
-                        <span class="menu-text">Чат</span>
                     </a>
                 </li>
             @endif

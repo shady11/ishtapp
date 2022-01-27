@@ -13,20 +13,20 @@ class Region extends Model
 
     protected $table = 'regions';
     protected $fillable = [
-        'name',
-        'name_ru',
+        'nameKg',
+        'nameRu',
     ];
 
     public function getName($lang)
     {
-        if($lang == 'ru') return $this->name_ru;
-        return $this->name;
+        if($lang == 'ru') return $this->nameRu;
+        return $this->nameKg;
     }
 
     protected $searchable = [
         'columns' => [
             'id' => 10,
-            'name' => 10,
+            'nameRu' => 10,
         ],
     ];
 

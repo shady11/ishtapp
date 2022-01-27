@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
 
+@section('title', $title.' - ')
+
 @section('content')
 
     @include('admin.partials.subheader')
@@ -12,20 +14,41 @@
                 <div class="card-body">
                     <!--begin::Search Form-->
                     <div class="mb-7">
-                        <div class="row align-items-center">
-                            <div class="col-lg-9 col-xl-8">
-                                <div class="row align-items-center">
-                                    <div class="col-md-4 my-2 my-md-0">
-                                        <div class="input-icon">
-                                            <input type="text" class="form-control" placeholder="Поиск..." id="kt_datatable_search_query" />
-                                            <span>
-                                                <i class="la la-search"></i>
-                                            </span>
-                                        </div>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="row">
+
+                                    @if(request()->type == 'USER')
+                                    <div class="col-md-2">
+                                        <label for="region">Пол</label>
+                                        {!! Form::select('gender', $genders, null, ['class' => 'selectpicker form-control', 'placeholder' => 'Любой', 'data-width' => '100%', 'data-size' => '6', 'id' => 'kt_datatable_search_gender']) !!}
                                     </div>
+                                    @endif
+
+                                    @if(request()->type != 'ADMIN')
+                                    <div class="col-md-2">
+                                        <label for="region">Регион</label>
+                                        {!! Form::select('region', $regions, null, ['class' => 'selectpicker form-control', 'placeholder' => 'Любой', 'data-width' => '100%', 'data-size' => '6', 'id' => 'kt_datatable_search_region']) !!}
+                                    </div>
+                                    @endif
+
+                                    @if(request()->type == 'USER')
+                                    <div class="col-md-2">
+                                        <label for="region">Возраст</label>
+                                        {!! Form::select('age', $ages, null, ['class' => 'selectpicker form-control', 'placeholder' => 'Любой', 'data-width' => '100%', 'data-size' => '6', 'id' => 'kt_datatable_search_age']) !!}
+                                    </div>
+                                    @endif
+
+                                    @if(request()->type == 'COMPANY')
+                                    <div class="col-md-3">
+                                        <label for="region">Сфера деятельности</label>
+                                        {!! Form::select('job_type', $job_types, null, ['class' => 'selectpicker form-control', 'placeholder' => 'Любой', 'data-width' => '100%', 'data-size' => '6', 'id' => 'kt_datatable_search_job_type']) !!}
+                                    </div>
+                                    @endif
+
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-xl-4 mt-5 mt-lg-0 text-right">
+                            <div class="col-md-2 text-right">
                                 <a href="{{route('users.create')}}" class="btn btn-primary font-weight-bold">
                                     <span class="svg-icon svg-icon-md">
                                         <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
@@ -45,7 +68,20 @@
                     </div>
                     <!--end::Search Form-->
                     <!--begin: Datatable-->
-                    <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable"></div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th width="200px">ИМЯ, ФАМИЛИЯ</th>
+                                <th>EMAIL</th>
+                                <th>РЕГИОН</th>
+                                <th>ДАТА РЕГИСТРАЦИИ</th>
+                                <th>ДЕЙСТВИЯ</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
                     <!--end: Datatable-->
                 </div>
             </div>
@@ -59,103 +95,197 @@
 @section('scripts')
 
     <script>
-        var datatable = $('#kt_datatable').KTDatatable({
-            // datasource definition
-            data: {
-                type: 'remote',
-                source: {
-                    read: {
-                        method: 'GET',
-                        url: '{{route("users.api")}}',
-                        params: {
-                            type: '{{request()->type}}'
-                        },
-                        // sample custom headers
-                        // headers: {'x-my-custom-header': 'some value', 'x-test-header': 'the value'},
-                        map: function(raw) {
-                            // sample data mapping
-                            var dataSet = raw;
-                            if (typeof raw.data !== 'undefined') {
-                                dataSet = raw.data;
-                            }
-                            return dataSet;
-                        },
-                    },
+        let table = $('#dataTable').DataTable({
+            buttons: [
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: [0,1,2,3,4]
+                    }
                 },
-                pageSize: 10,
-                serverPaging: true,
-                serverFiltering: true,
-                serverSorting: true,
-                saveState: false
-            },
-
-            // layout definition
-            layout: {
-                scroll: false,
-                footer: false,
-            },
-
-            // column sorting
-            sortable: true,
-
-            pagination: true,
-
-            search: {
-                input: $('#kt_datatable_search_query'),
-                key: 'generalSearch'
-            },
-
-            // columns definition
-            columns: [{
-                field: 'order',
-                title: '#',
-                sortable: false,
-                width: 30,
-                type: 'number',
-                selector: false,
-                textAlign: 'center',
-            }, {
-                field: 'name',
-                title: 'Имя, фамилия',
-            }, {
-                field: 'email',
-                title: 'Email',
-            }, {
-                field: 'created_at',
-                title: 'Дата добавления',
-            }, {
-                field: 'active',
-                title: 'Статус',
-                // callback function support for column rendering
-                template: function(row) {
-                    var status = {
-                        1: {
-                            'title': 'active',
-                            'class': ' label-light-success'
-                        },
-                        0: {
-                            'title': 'inactive',
-                            'class': ' label-light-danger'
-                        }
-                    };
-                    return '<span class="label font-weight-bold label-lg ' + status[row.active].class + ' label-inline">' + status[row.active].title + '</span>';
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [0,1,2,3,4]
+                    }
                 },
-            }, {
-                field: 'acts',
-                title: 'Actions',
-                sortable: false,
-                overflow: 'visible',
-                autoHide: false,
-                textAlign: 'right',
-                template: function(row) {
-                    return row.actions;
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [0,1,2,3,4 ]
+                    }
                 },
-            }],
-
+            ],
+            dom: `<'row'<'col-sm-6 text-left'f><'col-sm-6 text-right'B>>
+			<'row'<'col-sm-12'tr>>
+			<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>`,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ route('users.index') }}',
+                data: function(d) {
+                    d.type = "{{request()->type}}";
+                    d.region = $('select[name=region]').val();
+                    d.gender = $('select[name=gender]').val();
+                    d.age = $('select[name=age]').val();
+                    d.job_type = $('select[name=job_type]').val();
+                }
+            },
+            columns: [
+                { data: 'id'},
+                { data: 'name'},
+                { data: 'email'},
+                { data: 'region'},
+                { data: 'created_at'},
+                { data: 'acts'},
+            ],
+            order: [[ 0, "asc" ]],
+            pageLength: 10,
+            language: {
+                "url": "{{asset('js/russian.json')}}"
+            },
         });
 
-        $('#kt_datatable_search_status, #kt_datatable_search_type').selectpicker();
+        $("select[name=region]").on("change", function() {
+            table.draw();
+        });
+
+        $("select[name=gender]").on("change", function() {
+            table.draw();
+        });
+
+        $("select[name=age]").on("change", function() {
+            table.draw();
+        });
+
+        $("select[name=job_type]").on("change", function() {
+            table.draw();
+        });
+
     </script>
+
+
+    {{--    <script>--}}
+{{--        var datatable = $('#kt_datatable').KTDatatable({--}}
+{{--            // datasource definition--}}
+{{--            data: {--}}
+{{--                type: 'remote',--}}
+{{--                source: {--}}
+{{--                    read: {--}}
+{{--                        method: 'GET',--}}
+{{--                        url: '{{route("users.api")}}',--}}
+{{--                        params: {--}}
+{{--                            type: '{{request()->type}}'--}}
+{{--                        },--}}
+{{--                        // sample custom headers--}}
+{{--                        // headers: {'x-my-custom-header': 'some value', 'x-test-header': 'the value'},--}}
+{{--                        map: function(raw) {--}}
+{{--                            // sample data mapping--}}
+{{--                            var dataSet = raw;--}}
+{{--                            if (typeof raw.data !== 'undefined') {--}}
+{{--                                dataSet = raw.data;--}}
+{{--                            }--}}
+{{--                            return dataSet;--}}
+{{--                        },--}}
+{{--                    },--}}
+{{--                },--}}
+{{--                pageSize: 10,--}}
+{{--                serverPaging: true,--}}
+{{--                serverFiltering: true,--}}
+{{--                serverSorting: true,--}}
+{{--                saveState: false--}}
+{{--            },--}}
+
+{{--            // layout definition--}}
+{{--            layout: {--}}
+{{--                scroll: false,--}}
+{{--                footer: false,--}}
+{{--            },--}}
+
+{{--            // column sorting--}}
+{{--            sortable: true,--}}
+
+{{--            pagination: true,--}}
+
+{{--            search: {--}}
+{{--                input: $('#kt_datatable_search_query'),--}}
+{{--                key: 'generalSearch'--}}
+{{--            },--}}
+
+{{--            // columns definition--}}
+{{--            columns: [{--}}
+{{--                field: 'order',--}}
+{{--                title: '#',--}}
+{{--                sortable: false,--}}
+{{--                width: 30,--}}
+{{--                type: 'number',--}}
+{{--                selector: false,--}}
+{{--                textAlign: 'center',--}}
+{{--            }, {--}}
+{{--                field: 'name',--}}
+{{--                title: 'Имя, фамилия',--}}
+{{--            }, {--}}
+{{--                field: 'email',--}}
+{{--                title: 'Email',--}}
+{{--            }, {--}}
+{{--                field: 'region',--}}
+{{--                title: 'Регион',--}}
+{{--            }, {--}}
+{{--                field: 'active',--}}
+{{--                title: 'Статус',--}}
+{{--                // callback function support for column rendering--}}
+{{--                template: function(row) {--}}
+{{--                    var status = {--}}
+{{--                        1: {--}}
+{{--                            'title': 'active',--}}
+{{--                            'class': ' label-light-success'--}}
+{{--                        },--}}
+{{--                        0: {--}}
+{{--                            'title': 'inactive',--}}
+{{--                            'class': ' label-light-danger'--}}
+{{--                        }--}}
+{{--                    };--}}
+{{--                    return '<span class="label font-weight-bold label-lg ' + status[row.active].class + ' label-inline">' + status[row.active].title + '</span>';--}}
+{{--                },--}}
+{{--            }, {--}}
+{{--                field: 'created_at',--}}
+{{--                title: 'Дата регистрации',--}}
+{{--            }, {--}}
+{{--                field: 'acts',--}}
+{{--                title: 'Actions',--}}
+{{--                sortable: false,--}}
+{{--                overflow: 'visible',--}}
+{{--                autoHide: false,--}}
+{{--                textAlign: 'right',--}}
+{{--                template: function(row) {--}}
+{{--                    return row.actions;--}}
+{{--                },--}}
+{{--            }],--}}
+
+{{--        });--}}
+
+{{--        $('#kt_datatable_search_gender').on('change', function() {--}}
+{{--            datatable.search($(this).val().toLowerCase(), 'gender');--}}
+{{--            datatable.ajax.reload();--}}
+{{--        });--}}
+
+{{--        $('#kt_datatable_search_region').on('change', function() {--}}
+{{--            datatable.search($(this).val().toLowerCase(), 'region');--}}
+{{--            datatable.ajax.reload();--}}
+{{--        });--}}
+
+{{--        $('#kt_datatable_search_job_type').on('change', function() {--}}
+{{--            datatable.search($(this).val().toLowerCase(), 'job_type');--}}
+{{--            datatable.ajax.reload();--}}
+{{--        });--}}
+
+{{--        $('#kt_datatable_search_age').on('change', function() {--}}
+{{--            datatable.search($(this).val().toLowerCase(), 'age');--}}
+{{--            datatable.ajax.reload();--}}
+{{--        });--}}
+
+{{--        $('#kt_datatable_search_gender, #kt_datatable_search_region, #kt_datatable_search_age, #kt_datatable_search_job_type').selectpicker();--}}
+{{--    </script>--}}
 
 @endsection
 

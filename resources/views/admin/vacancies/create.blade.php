@@ -24,5 +24,28 @@
 @endsection
 
 @section('scripts')
+    <script>
+        $('[name=region_id]').on('change', function() {
+            var url = "{{ route('districts.region') }}";
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                cache: false,
+                type: 'POST',
+                url: url,
+                data: {
+                    'region': $(this).val(),
+                },
+                success: function (data) {
+                    if(data) {
+                        $('[name=district_id]').html(data);
+                        $('[name=district_id]').selectpicker('refresh');
+                    }
+                }
+
+            });
+        });
+    </script>
 @endsection
 

@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
+use App\Models\Currency;
+use App\Models\District;
 use App\Models\Region;
 use App\Models\UserVacancy;
 use App\Models\Vacancy;
@@ -24,6 +26,7 @@ class VacancyController extends Controller
         $busyness_ids = $request->busyness_ids;
         $type_ids = $request->type_ids;
         $region_ids = $request->region_ids;
+        $district_ids = $request->district_ids;
         $time_type = $request->type;
 
         if (!$job_type_ids) {
@@ -50,10 +53,16 @@ class VacancyController extends Controller
                 array_push($type_ids, $model->id);
             }
         }
-        if (!$region_ids) {
+        if (!$region_ids || $region_ids[0] == null) {
             $region_ids = [];
             foreach (Region::all() as $model) {
                 array_push($region_ids, $model->id);
+            }
+        }
+        if (!$district_ids) {
+            $district_ids = [];
+            foreach (District::all() as $model) {
+                array_push($district_ids, $model->id);
             }
         }
         if(!$offset){
@@ -79,7 +88,6 @@ class VacancyController extends Controller
         $banned_ones = [];
 
         $token = $request->header('Authorization');
-//        dd($token);
         if($token!="null") {
             $user = User::where("password", $token)->firstOrFail();
             if($user)
@@ -91,6 +99,7 @@ class VacancyController extends Controller
             ->whereIn('busyness_id', $busyness_ids)
             ->whereIn('vacancy_type_id', $type_ids)
             ->whereIn('region_id', $region_ids)
+//            ->whereIn('district_id', $district_ids)
             ->whereNotIn("id", $banned_ones)
             ->where('is_active',true)
             ->whereDate('created_at','>', $specificDate)
@@ -107,6 +116,7 @@ class VacancyController extends Controller
         $vacancies = $vacancies->get();
 
         foreach ($vacancies->reverse() as $item) {
+
             array_push($result, [
                 'id' => $item->id,
                 'name' => $item->name,
@@ -121,10 +131,13 @@ class VacancyController extends Controller
                 'job_type' => $item->jobtype->getName($request->lang),
                 'schedule' => $item->schedule->getName($request->lang),
                 'type' => $item->vacancytype->getName($request->lang),
-                'region' => $item->region->getName($request->lang),
+                'region' => $item->region ? $item->region->getName($request->lang) : null,
+                'district' => $item->district ? $item->district->getName($request->lang) : null,
+                'currency' => $item->currency ? $item->getcurrency->getName($request->lang) : null,
                 'company' => $item->company->id,
             ]);
         }
+
         return $result;
     }
 
@@ -136,16 +149,44 @@ class VacancyController extends Controller
 
         if ($user && $user->type =='COMPANY'){
 
+            if($request->salary){
+                $salary = $request->salary;
+            } else {
+                if($request->salary_from){
+                    if($request->salary_to){
+                        if($request->currency){
+                            $currency = Currency::find($request->currency);
+                            $salary = $request->salary_from.'-'.$request->salary_to.' '.$currency->getName($request->lang);
+                        } else {
+                            $salary = $request->salary_from.'-'.$request->salary_to;
+                        }
+                    } else {
+                        if($request->getcurrency){
+                            $currency = Currency::find($request->currency);
+                            $salary = $request->salary_from.' '.$currency->getName($request->lang);
+                        } else {
+                            $salary = $request->salary_from;
+                        }
+                    }
+                } else {
+                    $salary = '';
+                }
+            }
+
             if($request->id){
                 $vacancy = Vacancy::update([
                     'name' => $request->name,
-                    'salary' => $request->salary,
+                    'salary' => $salary,
+                    'salary_from' => $request->salary_from,
+                    'salary_to' => $request->salary_to,
                     'description' => $request->description,
                     'busyness_id' => $request->busyness,
                     'schedule_id' => $request->schedule,
                     'job_type_id' => $request->job_type,
                     'region_id' => $request->region,
+                    'district_id' => $request->district,
                     'vacancy_type_id' => $request->type,
+                    'currency' => $request->currency,
                     'is_active' => true,
                     'is_disability_person_vacancy' => $request->is_disability_person_vacancy,
                 ]);
@@ -153,13 +194,17 @@ class VacancyController extends Controller
             else{
                 $vacancy = Vacancy::create([
                     'name' => $request->name,
-                    'salary' => $request->salary,
+                    'salary' => $salary,
+                    'salary_from' => $request->salary_from,
+                    'salary_to' => $request->salary_to,
                     'description' => $request->description,
                     'busyness_id' => $request->busyness,
                     'schedule_id' => $request->schedule,
                     'job_type_id' => $request->job_type,
                     'region_id' => $request->region,
+                    'district_id' => $request->district,
                     'vacancy_type_id' => $request->type,
+                    'currency' => $request->currency,
                     'company_id' => $request->company_id,
                     'is_active' => true,
                     'is_disability_person_vacancy' => $request->is_disability_person_vacancy,

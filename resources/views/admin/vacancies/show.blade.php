@@ -54,7 +54,7 @@
                         <div class="form-group row align-items-center">
                             <label class="col-xl-3 col-lg-3 col-form-label font-weight-bolder text-left text-lg-right text-uppercase">Регион:</label>
                             <div class="col-lg-9 col-xl-6">
-                                <p class="font-weight-bold mb-0">{{$vacancy->region->name_ru}}</p>
+                                <p class="font-weight-bold mb-0">{{$vacancy->region ? $vacancy->region->nameRu : '-'}}</p>
                             </div>
                         </div>
                         <div class="form-group row align-items-center">

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -45,7 +46,27 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'active',
         'linkedin',
         'is_migrant',
+        'gender',
+        'region',
+        'filter_region',
+        'filter_district',
+        'filter_activity',
+        'filter_type',
+        'filter_busyness',
+        'filter_schedule',
+        'district',
+        'job_type',
     ];
+
+    protected $casts = [
+        'filter_region' => 'array',
+        'filter_activity' => 'array',
+        'filter_type' => 'array',
+        'filter_busyness' => 'array',
+        'filter_schedule' => 'array',
+    ];
+
+    protected $appends = ['age'];
 
     public function getFullName()
     {
@@ -83,5 +104,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function scopePublished($query)
     {
         return $query->where('published', true);
+    }
+    public function scopeOlderOrYoungerThan($query, $from, $to)
+    {
+        return $query->whereBetween('birth_date', [$from, $to]);
+    }
+
+    // Attributes
+    public function getAgeAttribute()
+    {
+        return Carbon::parse($this->birth_date)->diff(Carbon::now())->format('%y');
     }
 }

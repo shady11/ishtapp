@@ -3,7 +3,7 @@
 <!--begin::Head-->
 <head><base href="">
     <meta charset="utf-8" />
-    <title>Админ Панель - ishtapp</title>
+    <title>@yield('title') Админ Панель - ishtapp</title>
     <meta name="description" content="Updates and statistics" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="canonical" href="https://keenthemes.com/metronic" />
@@ -27,7 +27,12 @@
         body{
             font-family: 'Ubuntu', sans-serif;
         }
+        .dropdown-item{
+            white-space: normal;
+        }
     </style>
+
+    <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css">
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -91,6 +96,8 @@
 <!--begin::Page Scripts(used by this page)-->
 <script src="{{asset('assets/js/pages/widgets.js')}}"></script>
 <!--end::Page Scripts-->
+
+<script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 
 @yield('scripts')
 

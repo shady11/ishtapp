@@ -47,15 +47,14 @@ class ForgotPasswordController extends Controller
             $body_text = 'Код для сброса пароля: ';
             if($request->language =='ky') {
                 $subject1 = 'Сырсөз жаңыртуу';
-                $body_text = 'Сырсөзүңүздү жаңыртуу үчүн код ';
+                $body_text = 'Сырсөзүңүздү жаңыртуу үчүн код: ';
             }
-            Mail::raw("{$body_text}.{$six_digit_random_number}", function ($m) use ($user,$subject1) {
-                $m->from('service@ishtapp.kg', 'ISHTAPP');
 
-                if ($user->type == "COMPANY")
-                    $m->to($user->email, $user->name)->subject($subject1);
-                else/* if ($user->type == "USER")*/
-                    $m->to($user->email, $user->surname)->subject($subject1);
+//            Mail::to($email->email)->send(new ForgotPasswordMail($subject1, $body_text));
+
+            Mail::raw("{$body_text} {$six_digit_random_number}", function ($m) use ($user, $subject1) {
+                $m->from('info@ishtapp.kg', 'ishtapp');
+                $m->to($user->email, $user->name)->subject($subject1);
             });
 
             $code = UserResetCode::create([

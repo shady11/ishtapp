@@ -27,10 +27,17 @@ Route::middleware('auth')->group( function () {
         'schedules' => 'ScheduleController',
         'job_types' => 'JobTypeController',
         'regions' => 'RegionController',
+        'regions.districts' => 'DistrictController',
+        'regions.districts.villages' => 'VillageController',
         'vacancies' => 'VacancyController',
         'education_types' => 'EducationTypeController',
         'user_cv' => 'UserCvController',
+        'chats' => 'ChatController',
+        'currencies' => 'CurrencyController',
     ]);
+
+    // EXPORT
+    Route::post('vacancies/export', 'VacancyController@index');
 
     // CUSTOM ROUTES
     Route::name('user_cv.show')->get('user_cv/{user_vacancy}', ['uses' => 'UserCvController@show']);
@@ -41,11 +48,19 @@ Route::middleware('auth')->group( function () {
     Route::name('busynesses.delete')->get('busynesses/delete/{busyness}', ['uses' => 'BusynessController@destroy']);
     Route::name('schedules.delete')->get('schedules/delete/{busyness}', ['uses' => 'ScheduleController@destroy']);
     Route::name('regions.delete')->get('regions/delete/{region}', ['uses' => 'RegionController@destroy']);
+    Route::name('regions.districts.delete')->get('regions/{region}/districts/delete/{district}', ['uses' => 'DistrictController@destroy']);
+    Route::name('regions.districts.villages.delete')->get('regions/{region}/districts/{district}/villages/delete/{village}', ['uses' => 'VillageController@destroy']);
     Route::name('job_types.delete')->get('job_types/delete/{job_type}', ['uses' => 'JobTypeController@destroy']);
     Route::name('education_types.delete')->get('education_types/delete/{education_type}', ['uses' => 'EducationTypeController@destroy']);
 
     Route::name('vacancies.delete')->get('vacancies/delete/{vacancy}', ['uses' => 'VacancyController@destroy']);
     Route::name('user_cv.delete')->get('user_cv/delete/{user_cv}', ['uses' => 'UserCvController@destroy']);
+    Route::name('chats.delete')->get('chats/delete/{chat}', ['uses' => 'ChatController@destroy']);
+    Route::name('currencies.delete')->get('currencies/delete/{currency}', ['uses' => 'CurrencyController@destroy']);
+
+    // Ajax
+    Route::name('districts.region')->post('region/districts', ['uses' => 'VacancyController@districts']);
+
 
     // Api Datatable
 
@@ -57,11 +72,15 @@ Route::middleware('auth')->group( function () {
         Route::name('permissions.api')->get('permissions', ['uses' => 'PermissionController@api']);
         Route::name('roles.api')->get('roles', ['uses' => 'RoleController@api']);
         Route::name('regions.api')->get('regions', ['uses' => 'RegionController@api']);
+        Route::name('regions.districts.api')->get('regions/{region}/districts', ['uses' => 'DistrictController@api']);
+        Route::name('regions.districts.villages.api')->get('regions/{region}/districts/{district}/villages', ['uses' => 'VillageController@api']);
         Route::name('schedules.api')->get('schedules', ['uses' => 'ScheduleController@api']);
         Route::name('job_types.api')->get('job_types', ['uses' => 'JobTypeController@api']);
         Route::name('education_types.api')->get('education_types', ['uses' => 'EducationTypeController@api']);
         Route::name('vacancies.api')->get('vacancies', ['uses' => 'VacancyController@api']);
         Route::name('user_cv.api')->get('user_cv', ['uses' => 'UserCvController@api']);
+        Route::name('chats.api')->get('chats', ['uses' => 'ChatController@api']);
+        Route::name('currencies.api')->get('currencies', ['uses' => 'CurrencyController@api']);
         Route::name('roll')->get('roll', ['uses' => 'PermissionController@Permission']);
     });
 });

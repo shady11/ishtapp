@@ -88,6 +88,7 @@
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true,
+                saveState: false
             },
 
             // layout definition
@@ -115,10 +116,10 @@
                 type: 'number',
                 selector: false,
             }, {
-                field: 'name',
+                field: 'nameKg',
                 title: 'Название (на кыргызском)',
             }, {
-                field: 'name_ru',
+                field: 'nameRu',
                 title: 'Название (на русском)',
             }, {
                 field: 'acts',

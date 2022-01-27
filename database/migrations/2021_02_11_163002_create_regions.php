@@ -15,8 +15,9 @@ class CreateRegions extends Migration
     {
         Schema::create('regions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name')->nullable();
-            $table->string('name_ru')->nullable();
+            $table->string('nameKg')->nullable();
+            $table->string('nameRu')->nullable();
+            $table->string('nameEn')->nullable();
             $table->timestamps();
         });
     }

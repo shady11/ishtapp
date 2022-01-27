@@ -19,12 +19,16 @@ class Vacancy extends Model
         'address',
         'description',
         'salary',
+        'salary_from',
+        'salary_to',
         'busyness_id',
         'schedule_id',
         'job_type_id',
         'is_disability_person_vacancy',
         'vacancy_type_id',
         'region_id',
+        'district_id',
+        'currency',
         'company_id',
         'is_active',
     ];
@@ -92,6 +96,16 @@ class Vacancy extends Model
     public function region()
     {
         return $this->belongsTo(Region::class, 'region_id');
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_id');
+    }
+
+    public function getcurrency()
+    {
+        return $this->belongsTo(Currency::class, 'currency');
     }
 
     public function getCreatedDate()
