@@ -42,6 +42,13 @@ Route::group([
     Route::post('users/company_image', ['uses' => 'UserController@avatar']);
     Route::post('company/submitted_users/{company_id}', ['uses' => 'UserController@getCompanySubmittedUserCvs']);
     Route::post('users/full_info/{user_id}', ['uses' => 'UserController@getUserFullInfo']);
+    Route::get('department', ['uses' => 'ReferenceController@departments']);
+    Route::get('social_orientation', ['uses' => 'ReferenceController@social_orientations']);
+    Route::get('opportunity', ['uses' => 'ReferenceController@opportunities']);
+    Route::get('intership_language', ['uses' => 'ReferenceController@intership_languages']);
+    Route::get('opportunity_type', ['uses' => 'ReferenceController@opportunity_types']);
+    Route::get('opportunity_duration', ['uses' => 'ReferenceController@opportunity_durations']);
+    Route::get('recommendation_letter_type', ['uses' => 'ReferenceController@recommendation_letter_types']);
 
     Route::post('users/filters/{user_id}', ['uses' => 'UserController@saveFilters']);
     Route::get('users/filters/{user_id}/{filter}', ['uses' => 'UserController@getFilters']);
