@@ -26,6 +26,7 @@ class VacancyController extends Controller
 {
     public function index(Request $request)
     {
+        
         $limit = $request->limit;
         $offset = $request->offset;
         $job_type_ids = $request->job_type_ids;
@@ -36,6 +37,8 @@ class VacancyController extends Controller
         $district_ids = $request->district_ids;
         $time_type = $request->type;
 
+        $route = $request->route;
+        
         if (!$job_type_ids) {
             $job_type_ids = [];
             foreach (JobType::all() as $model) {
@@ -72,10 +75,11 @@ class VacancyController extends Controller
                 array_push($district_ids, $model->id);
             }
         }
+
         if(!$offset){
             $offset = 0;
         }
-
+        
         $specificDate = strtotime('2000-1-1');
         $specificDate = date("Y-m-d H:i:s",$specificDate);
         if($time_type == 'day'){
@@ -101,16 +105,21 @@ class VacancyController extends Controller
                 $banned_ones = UserVacancy::where("user_id", $user->id)->where("type",'!=', 'LIKED_THEN_DELETED')->pluck('vacancy_id')->toArray();
         }
 
-        $vacancies = Vacancy::whereIn('job_type_id', $job_type_ids)
-            ->whereIn('schedule_id', $schedule_ids)
-            ->whereIn('busyness_id', $busyness_ids)
-            ->whereIn('vacancy_type_id', $type_ids)
-            ->whereIn('region_id', $region_ids)
-//            ->whereIn('district_id', $district_ids)
-            ->whereNotIn("id", $banned_ones)
+        $vacancies = Vacancy::whereNotIn("id", $banned_ones)
             ->where('is_active',true)
             ->whereDate('created_at','>', $specificDate)
             ->orderBy('created_at', 'desc');
+
+        if($route != 'PRODUCT_LAB') {
+            $vacancies = $vacancies->whereIn('job_type_id', $job_type_ids)
+            ->whereIn('schedule_id', $schedule_ids)
+            ->whereIn('busyness_id', $busyness_ids)
+            ->whereIn('vacancy_type_id', $type_ids)
+            ->whereIn('region_id', $region_ids);
+//            ->whereIn('district_id', $district_ids)
+        } else {
+            $vacancies = $vacancies->where("is_product_lab_vacancy", 1);
+        }
 
         if ($offset) {
             $vacancies = $vacancies->skip($offset);
@@ -121,7 +130,7 @@ class VacancyController extends Controller
         }
 
         $vacancies = $vacancies->get();
-
+        
         foreach ($vacancies->reverse() as $item) {
 
             array_push($result, [
@@ -134,17 +143,24 @@ class VacancyController extends Controller
                 'is_disability_person_vacancy' => $item->is_disability_person_vacancy,
                 'company_name' => $item->company->name,
                 'company_logo'=> $item->company->avatar,
-                'busyness' => $item->busyness->getName($request->lang),
-                'job_type' => $item->jobtype->getName($request->lang),
-                'schedule' => $item->schedule->getName($request->lang),
-                'type' => $item->vacancytype->getName($request->lang),
+                'busyness' => $item->busyness ? $item->busyness->getName($request->lang) : null,
+                'job_type' => $item->jobtype ? $item->jobtype->getName($request->lang) : null,
+                'schedule' => $item->schedule ? $item->schedule->getName($request->lang) : null,
+                'type' => $item->vacancytype ? $item->vacancytype->getName($request->lang) : null,
                 'region' => $item->region ? $item->region->getName($request->lang) : null,
                 'district' => $item->district ? $item->district->getName($request->lang) : null,
                 'currency' => $item->currency ? $item->getcurrency->getName($request->lang) : null,
                 'company' => $item->company->id,
+                'opportunity_id' => $item->opportunity ? $item->opportunity->getName($request->lang) : null,
+                'opportunity_type_id' => $item->opportunity_type ? $item->opportunity_type->getName($request->lang) : null,
+                'internship_language_id' => $item->internship_language_id ? $item->internship_language->getName($request->lang) : null,
+                'opportunity_duration_id' => $item->opportunity_duration_id ? $item->opportunity_duration->getName($request->lang) : null,
+                'age_from' => $item->age_from,
+                'age_to' => $item->age_to,
+                'recommendation_letter_type_id' => $item->recommendation_letter_type_id ? $item->recommendation_letter_type->getName($request->lang) : null,
+                'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
             ]);
         }
-
         return $result;
     }
 

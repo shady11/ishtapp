@@ -111,6 +111,31 @@ class Vacancy extends Model
         return $this->belongsTo(District::class, 'district_id');
     }
 
+    public function opportunity()
+    {
+        return $this->belongsTo(Opportunity::class, 'opportunity_id');
+    }
+
+    public function opportunity_type()
+    {
+        return $this->belongsTo(OpportunityType::class, 'opportunity_type_id');
+    }
+
+    public function internship_language()
+    {
+        return $this->belongsTo(IntershipLanguage::class, 'internship_language_id');
+    }
+
+    public function opportunity_duration()
+    {
+        return $this->belongsTo(OpportunityDuration::class, 'opportunity_duration_id');
+    }
+
+    public function recommendation_letter_type()
+    {
+        return $this->belongsTo(RecommendationLetterType::class, 'recommendation_letter_type_id');
+    }
+
     public function getcurrency()
     {
         return $this->belongsTo(Currency::class, 'currency');
