@@ -38,7 +38,7 @@ class ReferenceController extends Controller
         if($request->job_sphere){
             $job_sphere = JobSphere::where('name_ru', $request->job_sphere)->orWhere('name', $request->job_sphere)->first();
 
-            foreach (Department::where('job_sphere', $job_sphere->id)->get() as $item){
+            foreach (Department::where('job_sphere_id', $job_sphere->id)->get() as $item){
                 array_push($result, [
                     'id'=> $item->id,
                     'name'=> $item->getName($request->lang)

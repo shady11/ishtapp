@@ -56,6 +56,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'filter_schedule',
         'district',
         'job_type',
+        'job_sphere',
+        'department',
+        'social_orientation',
+        'contact_person_fullname',
+        'contact_person_position',
+        'is_product_lab_user',
     ];
 
     protected $casts = [

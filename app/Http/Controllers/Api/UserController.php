@@ -41,18 +41,42 @@ class UserController extends Controller
             if($user->region && $user->district) {
                 $region = Region::find($user->region);
                 $district = District::find($user->district);
+
                 $user->region = $region->getName($request->lang);
                 $user->district = $district->getName($request->lang);
             } else {
                 $user->region = '';
                 $user->district = '';
             }
+
             if($user->job_type) {
                 $job_type = JobType::find($user->job_type);
                 $user->job_type = $job_type->getName($request->lang);
             } else {
                 $user->job_type = '';
             }
+
+            if($user->job_sphere) {
+                $job_sphere = JobSphere::find($user->job_sphere);
+                $user->job_sphere = $job_sphere->getName($request->lang);
+            } else {
+                $user->job_sphere = '';
+            }
+
+            if($user->department) {
+                $department = Department::find($user->department);
+                $user->department = $department->getName($request->lang);
+            } else {
+                $user->department = '';
+            }
+
+            if($user->social_orientation) {
+                $social_orientation = SocialOrientation::find($user->social_orientation);
+                $user->social_orientation = $social_orientation->getName($request->lang);
+            } else {
+                $user->social_orientation = '';
+            }
+
             return response($user);
         }
         return response('token is not valid');
@@ -338,9 +362,9 @@ class UserController extends Controller
 
             $region = Region::where('nameRu', $request->region)->orWhere('nameKg', $request->region)->first();
             $district = District::where('nameRu', $request->district)->orWhere('nameKg', $request->district)->first();
-            $job_sphere = District::where('nameRu', $request->job_sphere)->orWhere('nameKg', $request->job_sphere)->first();
-            $department = District::where('nameRu', $request->department)->orWhere('nameKg', $request->department)->first();
-            $social_orientation = District::where('nameRu', $request->social_orientation)->orWhere('nameKg', $request->social_orientation)->first();
+            $job_sphere = JobSphere::where('name_ru', $request->job_sphere)->orWhere('name', $request->job_sphere)->first();
+            $department = Department::where('name_ru', $request->department)->orWhere('name', $request->department)->first();
+            $social_orientation = SocialOrientation::where('name_ru', $request->social_orientation)->orWhere('name', $request->social_orientation)->first();
 
             $user ->update([
                 'name' => $request->name,
@@ -353,12 +377,13 @@ class UserController extends Controller
                 'gender' => $request->gender == '1',
                 'region' => $region ? $region->id : null,
                 'district' => $district ? $district->id : null,
-                'contact_person_fullname' => $user->contact_person_fullname,
-                'contact_person_position' => $user->contact_person_position,
+                'contact_person_fullname' => $request->contact_person_fullname,
+                'contact_person_position' => $request->contact_person_position,
                 'job_sphere' => $job_sphere ? $job_sphere->id : 0,
                 'department' => $department ? $department->id : 0,
                 'social_orientation' => $social_orientation ? $social_orientation->id : 0,
             ]);
+            
             try {
                 $user->save();
                 return response()->json([

@@ -15,7 +15,8 @@ class Department extends Model
     protected $fillable = [
         'name',
         'name_ru',
-        'job_type_id'
+        'job_type_id',
+        'job_sphere_id',
     ];
 
     public function getName($lang)

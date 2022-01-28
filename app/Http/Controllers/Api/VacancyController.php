@@ -151,13 +151,13 @@ class VacancyController extends Controller
                 'district' => $item->district ? $item->district->getName($request->lang) : null,
                 'currency' => $item->currency ? $item->getcurrency->getName($request->lang) : null,
                 'company' => $item->company->id,
-                'opportunity_id' => $item->opportunity ? $item->opportunity->getName($request->lang) : null,
-                'opportunity_type_id' => $item->opportunity_type ? $item->opportunity_type->getName($request->lang) : null,
-                'internship_language_id' => $item->internship_language_id ? $item->internship_language->getName($request->lang) : null,
-                'opportunity_duration_id' => $item->opportunity_duration_id ? $item->opportunity_duration->getName($request->lang) : null,
+                'opportunity' => $item->opportunity ? $item->opportunity->getName($request->lang) : null,
+                'opportunity_type' => $item->opportunity_type ? $item->opportunity_type->getName($request->lang) : null,
+                'internship_language' => $item->internship_language_id ? $item->internship_language->getName($request->lang) : null,
+                'opportunity_duration' => $item->opportunity_duration_id ? $item->opportunity_duration->getName($request->lang) : null,
                 'age_from' => $item->age_from,
                 'age_to' => $item->age_to,
-                'recommendation_letter_type_id' => $item->recommendation_letter_type_id ? $item->recommendation_letter_type->getName($request->lang) : null,
+                'recommendation_letter_type' => $item->recommendation_letter_type_id ? $item->recommendation_letter_type->getName($request->lang) : null,
                 'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
             ]);
         }
@@ -169,7 +169,7 @@ class VacancyController extends Controller
         $token = $request->header('Authorization');
 
         $user = User::where("password", $token)->firstOrFail();
-        
+
         $opportunity = Opportunity::where('name_ru', $request->opportunity)->orWhere('name', $request->opportunity)->first();
         $opportunity_type = OpportunityType::where('name_ru', $request->opportunity_type)->orWhere('name', $request->opportunity_type)->first();
         $internship_language = IntershipLanguage::where('name_ru', $request->internship_language)->orWhere('name', $request->internship_language)->first();
@@ -211,8 +211,8 @@ class VacancyController extends Controller
                     'busyness_id' => $request->busyness,
                     'schedule_id' => $request->schedule,
                     'job_type_id' => $request->job_type,
-                    'region_id' => $request->region,
-                    'district_id' => $request->district,
+                    'region_id' => $request->region ? $request->region : $user->region,
+                    'district_id' => $request->district ? $request->district : $user->distirct,
                     'vacancy_type_id' => $request->type,
                     'currency' => $request->currency,
                     'is_active' => true,
@@ -237,8 +237,8 @@ class VacancyController extends Controller
                     'busyness_id' => $request->busyness,
                     'schedule_id' => $request->schedule,
                     'job_type_id' => $request->job_type,
-                    'region_id' => $request->region,
-                    'district_id' => $request->district,
+                    'region_id' => $request->region ? $request->region : $user->region,
+                    'district_id' => $request->district ? $request->district : $user->district,
                     'vacancy_type_id' => $request->type,
                     'currency' => $request->currency,
                     'company_id' => $request->company_id,
@@ -255,7 +255,6 @@ class VacancyController extends Controller
                     'created_at' => date('Y-m-d H:i:s'),
                 ]);
             }
-
             return "OK";
         }
         else{
@@ -297,17 +296,18 @@ class VacancyController extends Controller
         }
 
     }
-    public function getVacanciesByType(Request $request,$type)
-    {
-
+    public function getVacanciesByType(Request $request, $type)
+    {        
         $token = $request->header('Authorization');
-
         $user = User::where("password", $token)->firstOrFail();
         if($user){
-//            $type = $request->type;
+            $type = $request->type;
+            
             $result = UserVacancy::where("type", $type)
                 ->where("user_id", $user->id)
+                //->where("user_id", 7885)
                 ->pluck('vacancy_id')->toArray();
+
             $vacancies = Vacancy::wherein('id', $result)->get();
             $result1 = [];
                     foreach (Vacancy::whereIn('id', $result)
@@ -322,12 +322,20 @@ class VacancyController extends Controller
                             'salary'=> $item->salary,
                             'company_name' => $item->company->name,
                             'company_logo'=> $item->company->avatar,
-                            'busyness' => $item->busyness->getName($request->lang),
-                            'job_type' => $item->jobtype->getName($request->lang),
-                            'schedule' => $item->schedule->getName($request->lang),
-                            'type' => $item->vacancytype->getName($request->lang),
-                            'region' => $item->region->getName($request->lang),
-                            'company' => $item->company->id
+                            'busyness' => $item->busyness ? $item->busyness->getName($request->lang) : null,
+                            'job_type' => $item->jobtype ? $item->jobtype->getName($request->lang) : null,
+                            'schedule' => $item->schedule ? $item->schedule->getName($request->lang) : null,
+                            'type' => $item->vacancytype ? $item->vacancytype->getName($request->lang) : null,
+                            'region' => $item->region ? $item->region->getName($request->lang) : null,
+                            'company' => $item->company->id,
+                            'opportunity' => $item->opportunity ? $item->opportunity->getName($request->lang) : null,
+                            'opportunity_type' => $item->opportunity_type ? $item->opportunity_type->getName($request->lang) : null,
+                            'opportunity_duration' => $item->opportunity_duration ? $item->opportunity_duration->getName($request->lang) : null,
+                            'internship_language' => $item->internship_language ? $item->internship_language->getName($request->lang) : null,
+                            'age_from' => $item->age_from,
+                            'age_to' => $item->age_to,
+                            'recommendation_letter_type' => $item->recommendation_letter_type ? $item->recommendation_letter_type->getName($request->lang) : null,
+                            'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
                         ]);
                     }
 //            $vacancies = Vacancy::where('id', 3)->get();
@@ -352,22 +360,19 @@ class VacancyController extends Controller
             $vacancies = Vacancy::wherein('id', $result)->get();
             return count($vacancies);
         }
-        else{
+        else {
             return 'FALSE';
         }
 
     }
     public function getVacanciesByCompany(Request $request)
     {
-        // $token = $request->header('Authorization');
-        $token = '$2y$10$66Axr.cbjxkglszfxqTLpe.3CgH9NHB5oigGRvtIyW2nwjn.cGLNi';
+        $token = $request->header('Authorization');
         $user = User::where("password", "$token")->firstOrFail();
         
         if($user){
             $result1 = [];
             $vacancies = Vacancy::where('company_id', $user->id)->where('is_active', true)->orderBy('created_at', 'desc')->take(10)->get();
-
-            
 
             foreach ($vacancies as $item) {
 
