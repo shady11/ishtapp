@@ -241,16 +241,16 @@ class UserController extends Controller
                 $region = Region::where('nameRu', $request->region)->first();
                 $district = District::where('nameRu', $request->district)->first();
                 $job_type = JobType::where('name_ru', $request->job_type)->first();
-                $job_sphere = JobSphere::where('name_ru', $request->job_sphere)->first();
-                $department = Department::where('name_ru', $request->department)->first();
-                $social_orientation = SocialOrientation::where('name_ru', $request->social_orientation)->first();
+//                $job_sphere = JobSphere::where('name_ru', $request->job_sphere)->first();
+//                $department = Department::where('name_ru', $request->department)->first();
+//                $social_orientation = SocialOrientation::where('name_ru', $request->social_orientation)->first();
             } else {
                 $region = Region::where('nameKg', $request->region)->first();
                 $district = District::where('nameKg', $request->district)->first();
                 $job_type = JobType::where('name', $request->job_type)->first();
-                $job_sphere = JobSphere::where('name', $request->job_sphere)->first();
-                $department = Department::where('name', $request->department)->first();
-                $social_orientation = SocialOrientation::where('name', $request->social_orientation)->first();
+//                $job_sphere = JobSphere::where('name', $request->job_sphere)->first();
+//                $department = Department::where('name', $request->department)->first();
+//                $social_orientation = SocialOrientation::where('name', $request->social_orientation)->first();
             }
 
             $user = User::create([
@@ -383,7 +383,7 @@ class UserController extends Controller
                 'department' => $department ? $department->id : 0,
                 'social_orientation' => $social_orientation ? $social_orientation->id : 0,
             ]);
-            
+
             try {
                 $user->save();
                 return response()->json([
