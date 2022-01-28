@@ -31,6 +31,14 @@ class Vacancy extends Model
         'currency',
         'company_id',
         'is_active',
+        'opportunity_id',
+        'opportunity_type_id',
+        'internship_language_id',
+        'opportunity_duration_id',
+        'age_from',
+        'age_to',
+        'recommendation_letter_type_id',
+        'is_product_lab_vacancy',
     ];
 
     protected $searchable = [
