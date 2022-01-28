@@ -48,8 +48,6 @@ class RegionController extends Controller
     {
         $result = [];
 
-        return $request->region;
-
         if($request->region){
 
             $region = Region::where('nameRu', $request->region)->orWhere('nameKg', $request->region)->first();

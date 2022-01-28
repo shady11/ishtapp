@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Department;
 use App\Models\District;
 use App\Models\EducationType;
+use App\Models\JobSphere;
 use App\Models\JobType;
 use App\Models\Region;
+use App\Models\SocialOrientation;
 use App\Models\User;
 use App\Models\UserCourse;
 use App\Models\UserCV;
@@ -206,20 +209,26 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        
         $lang = $request->lang ? $request->lang : 'ru';
+
         if (User::where('email', $request->email)->count() == 0) {
-            
+
             if($lang == 'ru'){
                 $region = Region::where('nameRu', $request->region)->first();
                 $district = District::where('nameRu', $request->district)->first();
                 $job_type = JobType::where('name_ru', $request->job_type)->first();
+                $job_sphere = JobSphere::where('name_ru', $request->job_sphere)->first();
+                $department = Department::where('name_ru', $request->department)->first();
+                $social_orientation = SocialOrientation::where('name_ru', $request->social_orientation)->first();
             } else {
                 $region = Region::where('nameKg', $request->region)->first();
                 $district = District::where('nameKg', $request->district)->first();
                 $job_type = JobType::where('name', $request->job_type)->first();
+                $job_sphere = JobSphere::where('name', $request->job_sphere)->first();
+                $department = Department::where('name', $request->department)->first();
+                $social_orientation = SocialOrientation::where('name', $request->social_orientation)->first();
             }
-            
+
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -234,8 +243,13 @@ class UserController extends Controller
                 'region' => $region ? $region->id : null,
                 'district' => $district ? $district->id : null,
                 'job_type' => $job_type ? $job_type->id : null,
+                'contact_person_fullname' => $request->contact_person_fullname,
+                'contact_person_position' => $request->contact_person_position,
+                'job_sphere' => $job_sphere ? $job_sphere->id : null,
+                'department' => $department ? $department->id : null,
+                'social_orientation' => $social_orientation ? $social_orientation->id : null,
             ]);
-            
+
             // create empty cv
             if($user && $user->type == 'USER') {
                 UserCV::create([
@@ -276,6 +290,11 @@ class UserController extends Controller
                     'region' => $region ? $region->getName($lang) : 0,
                     'district' => $district ? $district->getName($lang) : 0,
                     'job_type' => $job_type ? $job_type->getName($lang) : 0,
+                    'contact_person_fullname' => $user->contact_person_fullname,
+                    'contact_person_position' => $user->contact_person_position,
+                    'job_sphere' => $job_sphere ? $job_sphere->getName($lang) : 0,
+                    'department' => $department ? $department->getName($lang) : 0,
+                    'social_orientation' => $social_orientation ? $social_orientation->getName($lang) : 0,
                 ], 200);
             } catch (QueryException $e) {
                 return response()->json([
@@ -319,6 +338,9 @@ class UserController extends Controller
 
             $region = Region::where('nameRu', $request->region)->orWhere('nameKg', $request->region)->first();
             $district = District::where('nameRu', $request->district)->orWhere('nameKg', $request->district)->first();
+            $job_sphere = District::where('nameRu', $request->job_sphere)->orWhere('nameKg', $request->job_sphere)->first();
+            $department = District::where('nameRu', $request->department)->orWhere('nameKg', $request->department)->first();
+            $social_orientation = District::where('nameRu', $request->social_orientation)->orWhere('nameKg', $request->social_orientation)->first();
 
             $user ->update([
                 'name' => $request->name,
@@ -331,6 +353,11 @@ class UserController extends Controller
                 'gender' => $request->gender == '1',
                 'region' => $region ? $region->id : null,
                 'district' => $district ? $district->id : null,
+                'contact_person_fullname' => $user->contact_person_fullname,
+                'contact_person_position' => $user->contact_person_position,
+                'job_sphere' => $job_sphere ? $job_sphere->id : 0,
+                'department' => $department ? $department->id : 0,
+                'social_orientation' => $social_orientation ? $social_orientation->id : 0,
             ]);
             try {
                 $user->save();
