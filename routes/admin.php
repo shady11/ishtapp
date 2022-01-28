@@ -31,6 +31,7 @@ Route::middleware('auth')->group( function () {
         'regions.districts.villages' => 'VillageController',
         'vacancies' => 'VacancyController',
         'education_types' => 'EducationTypeController',
+        'skillset' => 'SkillsetController',
         'user_cv' => 'UserCvController',
         'chats' => 'ChatController',
         'currencies' => 'CurrencyController',
@@ -52,6 +53,8 @@ Route::middleware('auth')->group( function () {
     Route::name('regions.districts.villages.delete')->get('regions/{region}/districts/{district}/villages/delete/{village}', ['uses' => 'VillageController@destroy']);
     Route::name('job_types.delete')->get('job_types/delete/{job_type}', ['uses' => 'JobTypeController@destroy']);
     Route::name('education_types.delete')->get('education_types/delete/{education_type}', ['uses' => 'EducationTypeController@destroy']);
+    Route::name('skillset.delete')->get('skillset/delete/{education_type}', ['uses' => 'SkillsetController@destroy']);
+
 
     Route::name('vacancies.delete')->get('vacancies/delete/{vacancy}', ['uses' => 'VacancyController@destroy']);
     Route::name('user_cv.delete')->get('user_cv/delete/{user_cv}', ['uses' => 'UserCvController@destroy']);
@@ -77,6 +80,7 @@ Route::middleware('auth')->group( function () {
         Route::name('schedules.api')->get('schedules', ['uses' => 'ScheduleController@api']);
         Route::name('job_types.api')->get('job_types', ['uses' => 'JobTypeController@api']);
         Route::name('education_types.api')->get('education_types', ['uses' => 'EducationTypeController@api']);
+        Route::name('skillset.api')->get('skillset', ['uses' => 'SkillsetController@api']);
         Route::name('vacancies.api')->get('vacancies', ['uses' => 'VacancyController@api']);
         Route::name('user_cv.api')->get('user_cv', ['uses' => 'UserCvController@api']);
         Route::name('chats.api')->get('chats', ['uses' => 'ChatController@api']);

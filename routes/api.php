@@ -18,6 +18,7 @@ Route::group([
     Route::get('districts_by_region_id', ['uses' => 'RegionController@districtsByRegionId']);
     Route::get('job_type', ['uses' => 'JobTypeController@index']);
     Route::get('education_type', ['uses' => 'EducationTypeController@index']);
+    Route::get('skillset', ['uses' => 'SkillsetController@index']);
     Route::get('vacancy_type', ['uses' => 'VacancyTypeController@index']);
     Route::post('vacancy', ['uses' => 'VacancyController@index']);
     Route::post('user_vacancy', ['uses' => 'VacancyController@likeOrSubmit']);
