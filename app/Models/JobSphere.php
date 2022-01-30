@@ -5,18 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
-class Department extends Model
+class JobSphere extends Model
 {
     use SearchableTrait;
 
     protected $connection = 'mysql';
 
-    protected $table = 'departments';
+    protected $table = 'job_spheres';
     protected $fillable = [
         'name',
         'name_ru',
-        'job_type_id',
-        'job_sphere_id',
     ];
 
     public function getName($lang)
@@ -41,11 +39,5 @@ class Department extends Model
     public function getCreatedTime()
     {
         return date('H:i', strtotime($this->created_at));
-    }
-
-    //    Scopes
-    public function scopePublished($query)
-    {
-        return $query->where('published', true);
     }
 }
