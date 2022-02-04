@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Skillset;
 use Illuminate\Http\Request;
+use App\Models\Skillset;
 
 class SkillsetController extends Controller
 {

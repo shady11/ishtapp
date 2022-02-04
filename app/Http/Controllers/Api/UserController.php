@@ -241,16 +241,10 @@ class UserController extends Controller
                 $region = Region::where('nameRu', $request->region)->first();
                 $district = District::where('nameRu', $request->district)->first();
                 $job_type = JobType::where('name_ru', $request->job_type)->first();
-//                $job_sphere = JobSphere::where('name_ru', $request->job_sphere)->first();
-//                $department = Department::where('name_ru', $request->department)->first();
-//                $social_orientation = SocialOrientation::where('name_ru', $request->social_orientation)->first();
             } else {
                 $region = Region::where('nameKg', $request->region)->first();
                 $district = District::where('nameKg', $request->district)->first();
                 $job_type = JobType::where('name', $request->job_type)->first();
-//                $job_sphere = JobSphere::where('name', $request->job_sphere)->first();
-//                $department = Department::where('name', $request->department)->first();
-//                $social_orientation = SocialOrientation::where('name', $request->social_orientation)->first();
             }
 
             $user = User::create([
@@ -269,9 +263,7 @@ class UserController extends Controller
                 'job_type' => $job_type ? $job_type->id : null,
                 'contact_person_fullname' => $request->contact_person_fullname,
                 'contact_person_position' => $request->contact_person_position,
-                'job_sphere' => $job_sphere ? $job_sphere->id : null,
-                'department' => $department ? $department->id : null,
-                'social_orientation' => $social_orientation ? $social_orientation->id : null,
+                'is_product_lab_user' => $request->is_product_lab_user,
             ]);
 
             // create empty cv
@@ -316,9 +308,6 @@ class UserController extends Controller
                     'job_type' => $job_type ? $job_type->getName($lang) : 0,
                     'contact_person_fullname' => $user->contact_person_fullname,
                     'contact_person_position' => $user->contact_person_position,
-                    'job_sphere' => $job_sphere ? $job_sphere->getName($lang) : 0,
-                    'department' => $department ? $department->getName($lang) : 0,
-                    'social_orientation' => $social_orientation ? $social_orientation->getName($lang) : 0,
                 ], 200);
             } catch (QueryException $e) {
                 return response()->json([
