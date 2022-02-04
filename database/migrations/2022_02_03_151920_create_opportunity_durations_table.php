@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterUsersAddGenderRegionColumns extends Migration
+class CreateOpportunityDurationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class AlterUsersAddGenderRegionColumns extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('gender')->default(0);
-            $table->integer('region')->nullable();
+        Schema::create('opportunity_durations', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name')->nullable();
+            $table->string('name_ru')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -26,8 +28,6 @@ class AlterUsersAddGenderRegionColumns extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('opportunity_durations');
     }
 }

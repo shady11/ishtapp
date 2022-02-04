@@ -3,27 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SkillsetCategory;
 use Illuminate\Http\Request;
-use App\Models\Skillset;
 use Illuminate\Pagination\Paginator;
 
-class SkillsetController extends Controller
+class SkillsetCategoryController extends Controller
 {
     public function index()
     {
-        $title = 'Навыки';
-        $data = Skillset::all();
-        return view('admin.skillsets.index', compact('title', 'data'));
+        $title = 'Категория навыков';
+        return view('admin.skillset_categories.index', compact('title'));
     }
 
 
 
     public function create()
     {
-        $skillset = new Skillset();
-        $title = 'Навыки';
+        $skillset_categories = new SkillsetCategory();
+        $title = 'Категория навыков';
 
-        return view('admin.skillsets.create', compact('skillset', 'title'));
+        return view('admin.skillset_categories.create', compact('skillset_categories', 'title'));
     }
 
 
@@ -34,40 +33,42 @@ class SkillsetController extends Controller
             'name' => ['required'],
             'name_ru' => ['required'],
         ]);
-        $skillset = Skillset::create($request->all());
+        $skillset_сategories = SkillsetCategory::create($request->all());
 
-        return redirect()->route('skillsets.index');
+        return redirect()->route('skillset_categories.index');
     }
 
 
-    public function edit(Skillset $skillset)
+    public function edit(SkillsetCategory $skillset_category)
     {
-        $title = 'Навыки';
-        return view('admin.skillsets.edit', compact('skillset', 'title'));
+        $title = 'Категория навыков';
+        return view('admin.skillset_categories.edit', compact('skillset_category', 'title'));
     }
 
 
-    public function update(Request $request, Skillset $skillset)
+    public function update(Request $request, SkillsetCategory $skillset_category)
     {
         $this->validate($request, [
             'name' => ['required'],
             'name_ru' => ['required'],
         ]);
-        $skillset->update($request->all());
+        $skillset_category->update($request->all());
 
-        return redirect()->route('skillsets.index');
+        return redirect()->route('skillset_categories.index');
     }
 
 
-    public function destroy(Skillset $skillset)
+
+    public function destroy(SkillsetCategory $skillset_category)
     {
-        $skillset->delete();
-        return redirect()->route('skillsets.index');
+        $skillset_category->delete();
+        return redirect()->route('skillset_categories.index');
     }
 
     public function api(Request $request)
     {
         $pagination = $request->pagination;
+
         $sort = $request->sort;
         $query = $request->input('query');
 
@@ -88,7 +89,7 @@ class SkillsetController extends Controller
             return $page;
         });
 
-        $resultPaginated = Skillset::orderBy('name', 'asc')->orderBy('name', 'asc');
+        $resultPaginated = SkillsetCategory::orderBy('name', 'asc')->orderBy('name', 'asc');
 
         if ($query) {
             if (array_key_exists('generalSearch', $query)) {
@@ -103,7 +104,7 @@ class SkillsetController extends Controller
             $row->order = ($page - 1) * $perpage + $key + 1;
 
             $row->actions = '
-                <a href="' . route('skillsets.edit', $row) . '" class="btn btn-sm btn-clean btn-icon mr-2" title="Редактировать">
+                <a href="' . route('skillset_categories.edit', $row) . '" class="btn btn-sm btn-clean btn-icon mr-2" title="Редактировать">
                     <span class="svg-icon svg-icon-md">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -113,7 +114,7 @@ class SkillsetController extends Controller
                         </svg>
                     </span>
                 </a>
-                <a href="' . route('skillsets.delete', $row) . '" class="btn btn-sm btn-clean btn-icon" title="Удалить">
+                <a href="' . route('skillset_categories.delete', $row) . '" class="btn btn-sm btn-clean btn-icon" title="Удалить">
                     <span class="svg-icon svg-icon-md">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

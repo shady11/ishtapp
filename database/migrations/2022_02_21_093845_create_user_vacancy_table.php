@@ -26,7 +26,8 @@ class CreateUserVacancyTable extends Migration
                 ->on('vacancies')
                 ->onDelete('cascade');
             $table->timestamps();
-            $table->enum('type', ['LIKED', 'DISLIKED', 'SUBMITTED']);
+            $table->enum('type', ['LIKED', 'DISLIKED', 'SUBMITTED', 'LIKED_THEN_DELETED']);
+
         });
     }
 

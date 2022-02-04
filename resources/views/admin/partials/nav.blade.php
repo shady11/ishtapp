@@ -75,8 +75,8 @@
                                 </a>
                             </li>
                             <li class="menu-item" aria-haspopup="true">
-                                <a href="{{route('skillset.index')}}" class="menu-link">
-                                    <span class="menu-text">Умение (skillset)</span>
+                                <a href="{{route('skillsets.index')}}" class="menu-link">
+                                    <span class="menu-text">Навыки</span>
                                 </a>
                             </li>
                         </ul>

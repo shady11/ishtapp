@@ -27,7 +27,17 @@
                                 </div>
                             </div>
                             <div class="col-lg-3 col-xl-4 mt-5 mt-lg-0 text-right">
-                                <a href="{{route('skillset.create')}}" class="btn btn-primary font-weight-bold">
+
+                                <a href="{{route('skillset_categories.index')}}" class="btn btn-info" role="button">
+                                    <span class="svg-icon svg-icon-md">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 1792" width="24px" height="24px" >
+                                            <path style="fill:ghostwhite; stroke:ghostwhite;" d="M256 1312v192q0 13-9.5 22.5t-22.5 9.5h-192q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h192q13 0 22.5 9.5t9.5 22.5zm0-384v192q0 13-9.5 22.5t-22.5 9.5h-192q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h192q13 0 22.5 9.5t9.5 22.5zm0-384v192q0 13-9.5 22.5t-22.5 9.5h-192q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h192q13 0 22.5 9.5t9.5 22.5zm1536 768v192q0 13-9.5 22.5t-22.5 9.5h-1344q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h1344q13 0 22.5 9.5t9.5 22.5zm-1536-1152v192q0 13-9.5 22.5t-22.5 9.5h-192q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h192q13 0 22.5 9.5t9.5 22.5zm1536 768v192q0 13-9.5 22.5t-22.5 9.5h-1344q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h1344q13 0 22.5 9.5t9.5 22.5zm0-384v192q0 13-9.5 22.5t-22.5 9.5h-1344q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h1344q13 0 22.5 9.5t9.5 22.5zm0-384v192q0 13-9.5 22.5t-22.5 9.5h-1344q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h1344q13 0 22.5 9.5t9.5 22.5z"/>
+                                        </svg>
+                                    </span>
+                                    Категория навыков
+                                </a>
+
+                                <a href="{{route('skillsets.create')}}" class="btn btn-primary font-weight-bold" role="button">
                                     <span class="svg-icon svg-icon-md">
                                         <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -48,31 +58,6 @@
                     <!--end: Search Form-->
                     <!--begin: Datatable-->
                     <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable">
-                        <span> Данные из БД:</span>
-
-                        {{--<table class="table table-hover">
-                            <thead class="text-uppercase">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">name</th>
-                                    <th scope="col">name_ru</th>
-                                    <th scope="col" class="text-center">actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($data as $item)
-                                    <tr>
-                                        <th scope="row">{{$item->id}}</th>
-                                        <td>{{$item->name}}</td>
-                                        <td>{{$item->name_ru}}</td>
-                                        <td class="text-center">
-                                            <a href="{{route('skillset.edit', $item->id)}}" class="btn btn-default h6 mr-2">&#9998;</a>
-                                            <a href="{{route('skillset.delete', $item->id)}}" class="btn btn-default h6">&#9986;</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>--}}
                     </div>
                     <!--end: Datatable-->
                 </div>
@@ -86,9 +71,7 @@
 
 @section('scripts')
 
-    <script>
-        $('#kt_datatable').css('display', 'block');
-    </script>
+   {{-- <script>$('#kt_datatable').css('display', 'block');</script>--}}
 
     <script>
         var datatable = $('#kt_datatable').KTDatatable({
@@ -98,7 +81,7 @@
                 source: {
                     read: {
                         method: 'GET',
-                        url: '{{route("skillset.api")}}',
+                        url: '{{route("skillsets.api")}}',
                         params: {
                             type: '{{request()->type}}'
                         },

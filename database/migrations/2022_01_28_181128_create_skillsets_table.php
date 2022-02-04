@@ -17,6 +17,12 @@ class CreateSkillsetsTable extends Migration
             $table->bigIncrements('id')->unsigned();
             $table->string('name')->nullable();
             $table->string('name_ru')->nullable();
+
+            $table->bigInteger('skillset_category_id')->nullable()->unsigned();
+            $table->foreign('skillset_category_id')
+                ->references('id')
+                ->on('skillset_categories')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -19,6 +19,7 @@ Route::group([
     Route::get('job_type', ['uses' => 'JobTypeController@index']);
     Route::get('education_type', ['uses' => 'EducationTypeController@index']);
     Route::get('skillset', ['uses' => 'SkillsetController@index']);
+    Route::get('skillset_category', ['uses' => 'SkillsetCategoryController@index']);
     Route::get('vacancy_type', ['uses' => 'VacancyTypeController@index']);
     Route::post('vacancy', ['uses' => 'VacancyController@index']);
     Route::post('user_vacancy', ['uses' => 'VacancyController@likeOrSubmit']);
@@ -43,8 +44,6 @@ Route::group([
     Route::post('users/company_image', ['uses' => 'UserController@avatar']);
     Route::post('company/submitted_users/{company_id}', ['uses' => 'UserController@getCompanySubmittedUserCvs']);
     Route::post('users/full_info/{user_id}', ['uses' => 'UserController@getUserFullInfo']);
-
-
     Route::post('users/filters/{user_id}', ['uses' => 'UserController@saveFilters']);
     Route::get('users/filters/{user_id}/{filter}', ['uses' => 'UserController@getFilters']);
 
@@ -55,6 +54,7 @@ Route::group([
         'user_cv_education' => 'UserCvEducationController',
         'user_cv_course' => 'UserCvCourseController',
     ]);
+
     Route::post('user/experience/update/{user_cv_experience}', ['uses' => 'UserCvExperienceController@update']);
     Route::post('user/experience/delete/{user_cv_experience}', ['uses' => 'UserCvExperienceController@delete']);
 
@@ -78,6 +78,5 @@ Route::group([
     Route::get('opportunity_type', ['uses' => 'ReferenceController@opportunity_types']);
     Route::get('opportunity_duration', ['uses' => 'ReferenceController@opportunity_durations']);
     Route::get('recommendation_letter_type', ['uses' => 'ReferenceController@recommendation_letter_types']);
-
     Route::get('job_sphere', ['uses' => 'ReferenceController@job_spheres']);
 });

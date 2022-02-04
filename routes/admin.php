@@ -31,7 +31,8 @@ Route::middleware('auth')->group( function () {
         'regions.districts.villages' => 'VillageController',
         'vacancies' => 'VacancyController',
         'education_types' => 'EducationTypeController',
-        'skillset' => 'SkillsetController',
+        'skillsets' => 'SkillsetController',
+        'skillset_categories' => 'SkillsetCategoryController',
         'user_cv' => 'UserCvController',
         'chats' => 'ChatController',
         'currencies' => 'CurrencyController',
@@ -43,6 +44,12 @@ Route::middleware('auth')->group( function () {
     // CUSTOM ROUTES
     Route::name('user_cv.show')->get('user_cv/{user_vacancy}', ['uses' => 'UserCvController@show']);
 
+    // TODO потом убрать
+//    Route::prefix('skillset_categories')->group(function (){
+//        Route::name('skillset_categories.index')->get('/', ['uses' => 'UserCvController@show']);
+//    });
+
+
     // DELETE ROUTES
     Route::name('users.delete')->get('users/delete/{user}', ['uses' => 'UserController@destroy']);
     Route::name('vacancy_types.delete')->get('vacancy_types/delete/{vacancy_type}', ['uses' => 'VacancyTypeController@destroy']);
@@ -53,8 +60,8 @@ Route::middleware('auth')->group( function () {
     Route::name('regions.districts.villages.delete')->get('regions/{region}/districts/{district}/villages/delete/{village}', ['uses' => 'VillageController@destroy']);
     Route::name('job_types.delete')->get('job_types/delete/{job_type}', ['uses' => 'JobTypeController@destroy']);
     Route::name('education_types.delete')->get('education_types/delete/{education_type}', ['uses' => 'EducationTypeController@destroy']);
-    Route::name('skillset.delete')->get('skillset/delete/{education_type}', ['uses' => 'SkillsetController@destroy']);
-
+    Route::name('skillsets.delete')->get('skillsets/delete/{skillset}', ['uses' => 'SkillsetController@destroy']);
+    Route::name('skillset_categories.delete')->get('skillset_categories/delete/{skillset_category}', ['uses' => 'SkillsetCategoryController@destroy']);
 
     Route::name('vacancies.delete')->get('vacancies/delete/{vacancy}', ['uses' => 'VacancyController@destroy']);
     Route::name('user_cv.delete')->get('user_cv/delete/{user_cv}', ['uses' => 'UserCvController@destroy']);
@@ -66,7 +73,6 @@ Route::middleware('auth')->group( function () {
 
 
     // Api Datatable
-
     Route::prefix('api')->group( function () {
         Route::name('users.api')->get('users_api', ['uses' => 'UserController@api']);
         Route::name('admin.menus')->get('menus','HomeController@menu');
@@ -80,7 +86,9 @@ Route::middleware('auth')->group( function () {
         Route::name('schedules.api')->get('schedules', ['uses' => 'ScheduleController@api']);
         Route::name('job_types.api')->get('job_types', ['uses' => 'JobTypeController@api']);
         Route::name('education_types.api')->get('education_types', ['uses' => 'EducationTypeController@api']);
-        Route::name('skillset.api')->get('skillset', ['uses' => 'SkillsetController@api']);
+        Route::name('skillsets.api')->get('skillsets', ['uses' => 'SkillsetController@api']);
+        Route::name('skillset_categories.api')->get('skillset_categories', ['uses' => 'SkillsetCategoryController@api']);
+
         Route::name('vacancies.api')->get('vacancies', ['uses' => 'VacancyController@api']);
         Route::name('user_cv.api')->get('user_cv', ['uses' => 'UserCvController@api']);
         Route::name('chats.api')->get('chats', ['uses' => 'ChatController@api']);
@@ -123,14 +131,14 @@ Route::middleware('auth')->group( function () {
 //        // Api Datatable
 //
 //        Route::name('users.api')->get('users_api', ['uses' => 'UserController@api']);
-////        Route::name('patients.api')->get('patients_api', ['uses' => 'PatientController@api']);
-////        Route::name('categorytests.api')->get('categorytests_api', ['uses' => 'CategorytestController@api']);
-////        Route::name('categorytests.deleted')->get('categorytests/delete/{id}', ['uses' => 'CategorytestController@deleted']);
-////        Route::name('questiontests.deleted')->get('questiontests/delete/{id}', ['uses' => 'QuestiontestController@deleted']);
-////        Route::name('questiontests.api')->get('questiontests_api', ['uses' => 'QuestiontestController@api']);
-////        Route::name('questionnaires.api')->get('questionnaires_api', ['uses' => 'QuestionnaireController@api']);
-////        Route::name('themeconsultantquestions.api')->get('themeconsultantquestions_api', ['uses' => 'ThemeconsultantController@api']);
-////        Route::name('consultants.api')->get('consultants_api', ['uses' => 'СonsultantController@api']);
+//        Route::name('patients.api')->get('patients_api', ['uses' => 'PatientController@api']);
+//        Route::name('categorytests.api')->get('categorytests_api', ['uses' => 'CategorytestController@api']);
+//        Route::name('categorytests.deleted')->get('categorytests/delete/{id}', ['uses' => 'CategorytestController@deleted']);
+//        Route::name('questiontests.deleted')->get('questiontests/delete/{id}', ['uses' => 'QuestiontestController@deleted']);
+//        Route::name('questiontests.api')->get('questiontests_api', ['uses' => 'QuestiontestController@api']);
+//        Route::name('questionnaires.api')->get('questionnaires_api', ['uses' => 'QuestionnaireController@api']);
+//        Route::name('themeconsultantquestions.api')->get('themeconsultantquestions_api', ['uses' => 'ThemeconsultantController@api']);
+//        Route::name('consultants.api')->get('consultants_api', ['uses' => 'СonsultantController@api']);
 //        Route::name('admin.menus')->get('menus','HomeController@menu');
 //        Route::name('vacancy_types.api')->get('vacancy_type', ['uses' => 'VacancyTypeController@api']);
 //        Route::name('busynesses.api')->get('busyness', ['uses' => 'BusynessController@api']);

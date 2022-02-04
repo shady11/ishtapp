@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddJobSphereIdToDepartmentsTable extends Migration
+class CreateDepartmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,13 @@ class AddJobSphereIdToDepartmentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('departments', function (Blueprint $table) {
+        Schema::create('departments', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name', 100);
+            $table->string('name_ru', 100);
+            $table->bigInteger('job_type_id')->unsigned();
             $table->bigInteger('job_sphere_id')->unsigned();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +30,6 @@ class AddJobSphereIdToDepartmentsTable extends Migration
      */
     public function down()
     {
-        Schema::table('departments', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('departments');
     }
 }

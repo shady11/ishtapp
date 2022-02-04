@@ -35,8 +35,32 @@ class CreateUsersTable extends Migration
 
             $table->boolean('active')->default(0);
 
+            $table->boolean('is_migrant')->default(false);
+
+            $table->boolean('gender')->default(0);
+            $table->integer('region')->nullable();
+
+            $table->string('filter_region')->nullable();
+            $table->string('filter_activity')->nullable();
+            $table->string('filter_type')->nullable();
+            $table->string('filter_busyness')->nullable();
+            $table->string('filter_schedule')->nullable();
+            $table->string('filter_district')->nullable();
+
+            $table->integer('district')->nullable();
+            $table->integer('job_type')->nullable();
+
+            $table->string('contact_person_fullname')->nullable();
+            $table->string('contact_person_position')->nullable();
+            $table->integer('job_sphere')->nullable();
+            $table->integer('department')->nullable();
+            $table->integer('social_orientation')->nullable();
+
+            $table->boolean('is_product_lab_user')->default(0);
+
+
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestamps(); // 2 columns
         });
     }
 
@@ -47,6 +71,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-//        Schema::dropIfExists('users');
+        Schema::dropIfExists('users');
     }
 }

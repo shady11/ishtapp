@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJobSpheresTable extends Migration
+class CreateVacancyTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateJobSpheresTable extends Migration
      */
     public function up()
     {
-        Schema::create('job_spheres', function (Blueprint $table) {
-            $table->bigIncrements('id')->unsigned();
+        Schema::create('vacancy_types', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->string('name')->nullable();
             $table->string('name_ru')->nullable();
             $table->timestamps();
@@ -28,6 +28,6 @@ class CreateJobSpheresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('job_spheres');
+        Schema::dropIfExists('vacancy_types');
     }
 }

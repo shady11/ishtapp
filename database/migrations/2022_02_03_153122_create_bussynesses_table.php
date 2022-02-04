@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddIsProductLabUserToUsersTable extends Migration
+class CreateBussynessesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AddIsProductLabUserToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_product_lab_user')->default(0);
+        Schema::create('bussynesses', function (Blueprint $table) {
+            $table->bigIncrements('id')->unsigned();
+            $table->string('name')->nullable();
+            $table->string('name_ru')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ class AddIsProductLabUserToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('bussynesses');
     }
 }

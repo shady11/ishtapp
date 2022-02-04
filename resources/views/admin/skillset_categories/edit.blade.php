@@ -12,9 +12,9 @@
                     <h3 class="card-title">Редактировать</h3>
                 </div>
                 <!--begin::Form-->
-            {!! Form::model($skillset, ['route' => ['skillset.update', $skillset], 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'class' => 'form']) !!}
-            @include('admin.skillset.form', $skillset)
-            {!! Form::close() !!}
+            {!!Form::model($skillset_category, ['route' => ['skillset_categories.update', $skillset_category], 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'class' => 'form'])!!}
+            @include('admin.skillset_categories.form', $skillset_category)
+            {!!Form::close() !!}
             <!--end::Form-->
             </div>
         </div>

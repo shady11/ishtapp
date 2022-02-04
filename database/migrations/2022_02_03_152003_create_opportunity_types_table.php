@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddIsForDisabilityPersonColumn extends Migration
+class CreateOpportunityTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AddIsForDisabilityPersonColumn extends Migration
      */
     public function up()
     {
-        Schema::table('vacancies', function (Blueprint $table) {
-            $table->boolean('is_disability_person_vacancy')->default(false);
+        Schema::create('opportunity_types', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name')->nullable();
+            $table->string('name_ru')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ class AddIsForDisabilityPersonColumn extends Migration
      */
     public function down()
     {
-        Schema::table('vacancies', function (Blueprint $table) {
-            $table->dropColumn('is_disability_person_vacancy');
-        });
+        Schema::dropIfExists('opportunity_types');
     }
 }
