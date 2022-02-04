@@ -36,8 +36,40 @@ class VacancyController extends Controller
         $region_ids = $request->region_ids;
         $district_ids = $request->district_ids;
         $time_type = $request->type;
+        $opportunity_ids = $request->opportunity_ids;
+        $opportunity_type_ids = $request->opportunity_type_ids;
+        $opportunity_duration_ids = $request->opportunity_duration_ids;
+        $internship_language_ids = $request->internship_language_ids;
 
         $route = $request->route;
+
+        if (!$opportunity_ids) {
+            !$opportunity_ids = [];
+            foreach (Opportunity::all() as $model) {
+                array_push($opportunity_ids, $model->id);
+            }
+        }
+
+        if (!$opportunity_type_ids) {
+            !$opportunity_type_ids = [];
+            foreach (OpportunityType::all() as $model) {
+                array_push($opportunity_type_ids, $model->id);
+            }
+        }
+
+        if (!$opportunity_duration_ids) {
+            !$opportunity_duration_ids = [];
+            foreach (OpportunityDuration::all() as $model) {
+                array_push($opportunity_duration_ids, $model->id);
+            }
+        }
+
+        if (!$internship_language_ids) {
+            !$internship_language_ids = [];
+            foreach (IntershipLanguage::all() as $model) {
+                array_push($internship_language_ids, $model->id);
+            }
+        }
         
         if (!$job_type_ids) {
             $job_type_ids = [];
@@ -118,7 +150,11 @@ class VacancyController extends Controller
             ->whereIn('region_id', $region_ids);
 //            ->whereIn('district_id', $district_ids)
         } else {
-            $vacancies = $vacancies->where("is_product_lab_vacancy", 1);
+            $vacancies = $vacancies->where("is_product_lab_vacancy", 1)
+                ->whereIn('opportunity_id', $opportunity_ids)
+                ->whereIn('opportunity_type_id', $opportunity_type_ids)
+                ->whereIn('opportunity_duration_id', $opportunity_duration_ids)
+                ->whereIn('internship_language_id', $internship_language_ids);
         }
 
         if ($offset) {
@@ -128,11 +164,10 @@ class VacancyController extends Controller
         if($limit) {
             $vacancies = $vacancies->take($limit);
         }
-
-        $vacancies = $vacancies->get();
         
-        foreach ($vacancies->reverse() as $item) {
+        $vacancies = $vacancies->get();
 
+        foreach ($vacancies->reverse() as $item) {
             array_push($result, [
                 'id' => $item->id,
                 'name' => $item->name,
@@ -161,6 +196,7 @@ class VacancyController extends Controller
                 'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
             ]);
         }
+
         return $result;
     }
 
