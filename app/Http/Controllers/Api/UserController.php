@@ -16,11 +16,13 @@ use App\Models\UserEducation;
 use App\Models\UserExperience;
 use App\Models\UserVacancy;
 use App\Models\Vacancy;
+use App\Models\Skillset;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -476,6 +478,50 @@ class UserController extends Controller
             return "OK";
         }
         return response()->json('user id does not exist');
+    }
+
+    public function saveUserSkills(Request $request) {
+
+
+        $lang = $request->lang ? $request->lang : 'ru';
+        $tag = array();
+
+        $user = User::find($request->user_id);
+
+        if(count($request->user_skills) > 0) {
+
+            foreach($request->user_skills as $skill_name){
+
+                $skill = Skillset::where('name_ru', $skill_name)->where('skillset_category_id', $request->category_id)->first();
+
+                if($skill){
+                    DB::table('user_skills')->insert([
+                        'user_id' => $request->user_id,
+                        'skill_id' => $skill->id
+                    ]);
+                }
+            }
+        }
+           
+        try {
+            return response()->json([
+                'id' => $user->id,
+                'message' => 'Successfully added user skills!'
+            ], 200);
+        } catch (QueryException $e) {
+            return response()->json([
+                'id' => null,
+                'token' => null,
+                'message' => 'error!',
+                'status' => 999,
+            ]);
+        }
+        return response()->json([
+            'id' => null,
+            'token' => null,
+            'message' => 'user exist!',
+            'status' => 999,
+        ]);
     }
 
 }

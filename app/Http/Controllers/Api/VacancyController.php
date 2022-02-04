@@ -569,4 +569,48 @@ class VacancyController extends Controller
         }
 
     }
+
+    public function saveVacancySkills(Request $request) {
+
+
+        $lang = $request->lang ? $request->lang : 'ru';
+        $tag = array();
+
+        $user = User::find($request->user_id);
+
+        if(count($request->vacancy_skills) > 0) {
+
+            foreach($request->vacancy_skills as $skill_name){
+
+                $skill = Skillset::where('name_ru', $skill_name)->where('skillset_category_id', $request->category_id)->first();
+
+                if($skill){
+                    DB::table('vacancy_skills')->insert([
+                        'user_id' => $request->user_id,
+                        'skill_id' => $skill->id
+                    ]);
+                }
+            }
+        }
+           
+        try {
+            return response()->json([
+                'id' => $user->id,
+                'message' => 'Successfully added user skills!'
+            ], 200);
+        } catch (QueryException $e) {
+            return response()->json([
+                'id' => null,
+                'token' => null,
+                'message' => 'error!',
+                'status' => 999,
+            ]);
+        }
+        return response()->json([
+            'id' => null,
+            'token' => null,
+            'message' => 'user exist!',
+            'status' => 999,
+        ]);
+    }
 }
