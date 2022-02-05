@@ -18,6 +18,8 @@ use \App\Models\IntershipLanguage;
 use \App\Models\OpportunityType;
 use \App\Models\OpportunityDuration;
 use \App\Models\RecommendationLetterType;
+use \App\Models\Skillset;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -291,7 +293,10 @@ class VacancyController extends Controller
                     'created_at' => date('Y-m-d H:i:s'),
                 ]);
             }
-            return "OK";
+            return response()->json([
+                'id' => $vacancy->id,
+                'message' => 'OK'
+            ], 200);
         }
         else{
             return "token is not valid";
@@ -570,23 +575,21 @@ class VacancyController extends Controller
 
     }
 
-    public function saveVacancySkills(Request $request) {
-
-
+    public function saveVacancySkills(Request $request) 
+    {
         $lang = $request->lang ? $request->lang : 'ru';
         $tag = array();
-
-        $user = User::find($request->user_id);
-
+        
+        $vacancy = Vacancy::find($request->vacancy_id);
+        
         if(count($request->vacancy_skills) > 0) {
 
             foreach($request->vacancy_skills as $skill_name){
 
                 $skill = Skillset::where('name_ru', $skill_name)->where('skillset_category_id', $request->category_id)->first();
-
                 if($skill){
                     DB::table('vacancy_skills')->insert([
-                        'user_id' => $request->user_id,
+                        'vacancy_id' => $vacancy->id,
                         'skill_id' => $skill->id
                     ]);
                 }
@@ -595,7 +598,7 @@ class VacancyController extends Controller
            
         try {
             return response()->json([
-                'id' => $user->id,
+                'id' => $vacancy->id,
                 'message' => 'Successfully added user skills!'
             ], 200);
         } catch (QueryException $e) {
