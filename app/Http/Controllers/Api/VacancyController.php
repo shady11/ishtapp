@@ -579,6 +579,8 @@ class VacancyController extends Controller
     {
         $lang = $request->lang ? $request->lang : 'ru';
         $tag = array();
+
+
         
         $vacancy = Vacancy::find($request->vacancy_id);
         
@@ -586,11 +588,13 @@ class VacancyController extends Controller
 
             foreach($request->vacancy_skills as $skill_name){
 
-                $skill = Skillset::where('name_ru', $skill_name)->where('skillset_category_id', $request->category_id)->first();
+                // $skill = Skillset::where('name_ru', $skill_name)->where('skillset_category_id', $request->category_id)->first();
+                $skill = Skillset::where('name_ru', $skill_name)->first();
                 if($skill){
                     DB::table('vacancy_skills')->insert([
                         'vacancy_id' => $vacancy->id,
-                        'skill_id' => $skill->id
+                        'skill_id' => $skill->id,
+                        'is_required' =>$request->is_required
                     ]);
                 }
             }
