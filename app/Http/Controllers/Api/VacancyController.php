@@ -575,12 +575,41 @@ class VacancyController extends Controller
 
     }
 
+    public function getVacancySkills(Request $request)
+    {
+        
+        $vacancies = DB::table('vacancy_skills')->where('vacancy_id', $request->vacancy_id)->get();
+
+        $skill_ids = [];
+        foreach (Skillset::all() as $model) 
+        {
+            array_push($skill_ids, $model->id);
+        }
+            
+        $skills = Skillset::all();
+        $result = [];
+
+        $vacancies = $vacancies->whereIn('skill_id', $skill_ids);
+
+        
+        foreach ($vacancies as $item) {
+            $skill_name = $skills->where('id', $item->skill_id)->first()->getName("ru");
+
+            $result[] = [
+                'id'=> $item->id,
+                'vacancy_id' => $item->vacancy_id,
+                'name'=> $skill_name,
+                'is_required' => $item->is_required,
+            ];
+        }
+
+        return $result;
+    }
+
     public function saveVacancySkills(Request $request) 
     {
         $lang = $request->lang ? $request->lang : 'ru';
         $tag = array();
-
-
         
         $vacancy = Vacancy::find($request->vacancy_id);
         

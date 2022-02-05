@@ -49,6 +49,7 @@ Route::group([
     Route::post('user_skillset', ['uses' => 'UserController@saveUserSkills']);
     Route::get('user/skills', ['uses' => 'UserController@getUserSkills']);
     Route::post('vacancy_skillset', ['uses' => 'VacancyController@saveVacancySkills']);
+    Route::get('vacancy_skillset', ['uses' => 'VacancyController@getVacancySkills']);
 
     Route::resources([
         'users' => 'UserController',
