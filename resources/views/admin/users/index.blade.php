@@ -112,7 +112,7 @@
                 {
                     extend: 'pdfHtml5',
                     exportOptions: {
-                        columns: [0,1,2,3,4 ]
+                        columns: [0,1,2,3,4]
                     }
                 },
             ],
@@ -163,129 +163,6 @@
         });
 
     </script>
-
-
-    {{--    <script>--}}
-{{--        var datatable = $('#kt_datatable').KTDatatable({--}}
-{{--            // datasource definition--}}
-{{--            data: {--}}
-{{--                type: 'remote',--}}
-{{--                source: {--}}
-{{--                    read: {--}}
-{{--                        method: 'GET',--}}
-{{--                        url: '{{route("users.api")}}',--}}
-{{--                        params: {--}}
-{{--                            type: '{{request()->type}}'--}}
-{{--                        },--}}
-{{--                        // sample custom headers--}}
-{{--                        // headers: {'x-my-custom-header': 'some value', 'x-test-header': 'the value'},--}}
-{{--                        map: function(raw) {--}}
-{{--                            // sample data mapping--}}
-{{--                            var dataSet = raw;--}}
-{{--                            if (typeof raw.data !== 'undefined') {--}}
-{{--                                dataSet = raw.data;--}}
-{{--                            }--}}
-{{--                            return dataSet;--}}
-{{--                        },--}}
-{{--                    },--}}
-{{--                },--}}
-{{--                pageSize: 10,--}}
-{{--                serverPaging: true,--}}
-{{--                serverFiltering: true,--}}
-{{--                serverSorting: true,--}}
-{{--                saveState: false--}}
-{{--            },--}}
-
-{{--            // layout definition--}}
-{{--            layout: {--}}
-{{--                scroll: false,--}}
-{{--                footer: false,--}}
-{{--            },--}}
-
-{{--            // column sorting--}}
-{{--            sortable: true,--}}
-
-{{--            pagination: true,--}}
-
-{{--            search: {--}}
-{{--                input: $('#kt_datatable_search_query'),--}}
-{{--                key: 'generalSearch'--}}
-{{--            },--}}
-
-{{--            // columns definition--}}
-{{--            columns: [{--}}
-{{--                field: 'order',--}}
-{{--                title: '#',--}}
-{{--                sortable: false,--}}
-{{--                width: 30,--}}
-{{--                type: 'number',--}}
-{{--                selector: false,--}}
-{{--                textAlign: 'center',--}}
-{{--            }, {--}}
-{{--                field: 'name',--}}
-{{--                title: 'Имя, фамилия',--}}
-{{--            }, {--}}
-{{--                field: 'email',--}}
-{{--                title: 'Email',--}}
-{{--            }, {--}}
-{{--                field: 'region',--}}
-{{--                title: 'Регион',--}}
-{{--            }, {--}}
-{{--                field: 'active',--}}
-{{--                title: 'Статус',--}}
-{{--                // callback function support for column rendering--}}
-{{--                template: function(row) {--}}
-{{--                    var status = {--}}
-{{--                        1: {--}}
-{{--                            'title': 'active',--}}
-{{--                            'class': ' label-light-success'--}}
-{{--                        },--}}
-{{--                        0: {--}}
-{{--                            'title': 'inactive',--}}
-{{--                            'class': ' label-light-danger'--}}
-{{--                        }--}}
-{{--                    };--}}
-{{--                    return '<span class="label font-weight-bold label-lg ' + status[row.active].class + ' label-inline">' + status[row.active].title + '</span>';--}}
-{{--                },--}}
-{{--            }, {--}}
-{{--                field: 'created_at',--}}
-{{--                title: 'Дата регистрации',--}}
-{{--            }, {--}}
-{{--                field: 'acts',--}}
-{{--                title: 'Actions',--}}
-{{--                sortable: false,--}}
-{{--                overflow: 'visible',--}}
-{{--                autoHide: false,--}}
-{{--                textAlign: 'right',--}}
-{{--                template: function(row) {--}}
-{{--                    return row.actions;--}}
-{{--                },--}}
-{{--            }],--}}
-
-{{--        });--}}
-
-{{--        $('#kt_datatable_search_gender').on('change', function() {--}}
-{{--            datatable.search($(this).val().toLowerCase(), 'gender');--}}
-{{--            datatable.ajax.reload();--}}
-{{--        });--}}
-
-{{--        $('#kt_datatable_search_region').on('change', function() {--}}
-{{--            datatable.search($(this).val().toLowerCase(), 'region');--}}
-{{--            datatable.ajax.reload();--}}
-{{--        });--}}
-
-{{--        $('#kt_datatable_search_job_type').on('change', function() {--}}
-{{--            datatable.search($(this).val().toLowerCase(), 'job_type');--}}
-{{--            datatable.ajax.reload();--}}
-{{--        });--}}
-
-{{--        $('#kt_datatable_search_age').on('change', function() {--}}
-{{--            datatable.search($(this).val().toLowerCase(), 'age');--}}
-{{--            datatable.ajax.reload();--}}
-{{--        });--}}
-
-{{--        $('#kt_datatable_search_gender, #kt_datatable_search_region, #kt_datatable_search_age, #kt_datatable_search_job_type').selectpicker();--}}
-{{--    </script>--}}
 
 @endsection
 

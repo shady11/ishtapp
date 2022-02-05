@@ -87,7 +87,7 @@ class UserController extends Controller
                 $data = $data->where('job_type', request()->job_type);
             }
 
-            $data = $data->get();
+//            $data = $data->get();
 
             return datatables()->of($data)
                 ->addIndexColumn()
@@ -126,7 +126,7 @@ class UserController extends Controller
                         </span>
                     </a>';
                 })
-                ->addColumn('region', function ($row) { return Region::find($row->region) ? Region::find($row->region)->nameRu : '-'; })
+                ->addColumn('region', function ($row) { return $row->region && Region::find($row->region) ? Region::find($row->region)->nameRu : '-'; })
                 ->rawColumns(['acts'])
                 ->make(true);
         }
