@@ -480,6 +480,43 @@ class UserController extends Controller
         return response()->json('user id does not exist');
     }
 
+    public function getUserSkills(Request $request)
+    {
+        if($request->email) {
+            $user = User::where('email', $request->email)->first();
+
+            if($user){
+
+                $user_skills = DB::table('user_skills')->where('user_id', $user->id)->get();
+
+                foreach ($user_skills as $user_skill){
+
+                    $skill = Skillset::find($user_skill->skill_id);
+
+                    if($skill){
+                        $result[] = [
+                            'id'=> $skill->id,
+                            'name'=> $skill->getName("ru"),
+                            'category_id' => $skill->skillset_category_id,
+                        ];
+                    }
+                }
+
+                return json_encode($result, JSON_UNESCAPED_UNICODE);
+
+            }
+
+        }
+
+        return response()->json([
+            'id' => null,
+            'token' => null,
+            'message' => 'user doesn\'t exists!',
+            'status' => 999,
+        ]);
+
+    }
+
     public function saveUserSkills(Request $request) {
 
 
@@ -492,17 +529,30 @@ class UserController extends Controller
 
             foreach($request->user_skills as $skill_name){
 
-                $skill = Skillset::where('name_ru', $skill_name)->where('skillset_category_id', $request->category_id)->first();
+                $skill = Skillset::where('name_ru', $skill_name)->first();
 
                 if($skill){
+
+                    $category_skills = Skillset::where('skillset_category_id', $skill->skillset_category_id)->get();
+
+                    foreach ($category_skills as $category_skill) {
+                        if(!in_array($category_skill->name_ru, $request->user_skills)){
+                            DB::table('user_skills')->where('user_id', $user->id)->where('skill_id', $category_skill->id)->delete();
+                        }
+                        if($category_skill->id == $skill->id){
+                            DB::table('user_skills')->where('user_id', $user->id)->where('skill_id', $category_skill->id)->delete();
+                        }
+                    }
+
                     DB::table('user_skills')->insert([
                         'user_id' => $request->user_id,
                         'skill_id' => $skill->id
                     ]);
+
                 }
             }
         }
-           
+
         try {
             return response()->json([
                 'id' => $user->id,

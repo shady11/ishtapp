@@ -47,6 +47,7 @@ Route::group([
     Route::post('users/filters/{user_id}', ['uses' => 'UserController@saveFilters']);
     Route::get('users/filters/{user_id}/{filter}', ['uses' => 'UserController@getFilters']);
     Route::post('user_skillset', ['uses' => 'UserController@saveUserSkills']);
+    Route::get('user/skills', ['uses' => 'UserController@getUserSkills']);
     Route::post('vacancy_skillset', ['uses' => 'VacancyController@saveVacancySkills']);
 
     Route::resources([
