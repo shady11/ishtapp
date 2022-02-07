@@ -344,16 +344,15 @@ class VacancyController extends Controller
         if($user){
             $type = $request->type;
             
+            
             $result = UserVacancy::where("type", $type)
                 ->where("user_id", $user->id)
-                //->where("user_id", 7885)
+                // ->where("user_id", 7876)
                 ->pluck('vacancy_id')->toArray();
 
             $vacancies = Vacancy::wherein('id', $result)->get();
             $result1 = [];
-                    foreach (Vacancy::whereIn('id', $result)
-                                 ->get() as $item){
-            //            dd($item);
+                    foreach (Vacancy::whereIn('id', $result)->get() as $item){
                         array_push($result1, [
                             'id'=> $item->id,
                             'name'=> $item->name,
@@ -379,6 +378,8 @@ class VacancyController extends Controller
                             'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
                         ]);
                     }
+                    
+
 //            $vacancies = Vacancy::where('id', 3)->get();
 //            dd($vacancies);
             return $result1;
@@ -493,11 +494,13 @@ class VacancyController extends Controller
         $token = $request->header('Authorization');
 
         $user = User::where("password", $token)->firstOrFail();
+        
         if($user){
             $result1 = [];
             foreach (Vacancy::where('company_id', $user->id)
                          ->where('is_active', false)
                          ->get() as $item){
+                            
                 array_push($result1, [
                     'id'=> $item->id,
                     'name'=> $item->name,
@@ -507,11 +510,11 @@ class VacancyController extends Controller
                     'salary'=> $item->salary,
                     'company_name' => $item->company->name,
                     'company_logo'=> $item->company->avatar,
-                    'busyness' => $item->busyness->getName($request->lang),
-                    'job_type' => $item->jobtype->getName($request->lang),
-                    'schedule' => $item->schedule->getName($request->lang),
-                    'type' => $item->vacancytype->getName($request->lang),
-                    'region' => $item->region->getName($request->lang),
+                    'busyness' => $item->busyness ? $item->busyness->getName($request->lang) : null,
+                    'job_type' => $item->jobtype ? $item->jobtype->getName($request->lang) : null,
+                    'schedule' => $item->schedule ? $item->schedule->getName($request->lang) : null,
+                    'type' => $item->vacancytype ? $item->vacancytype->getName($request->lang) : null,
+                    'region' => $item->region ? $item->region->getName($request->lang) : null,
                     'company' => $item->company->id
                 ]);
             }
