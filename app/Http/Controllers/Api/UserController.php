@@ -7,6 +7,7 @@ use App\Models\District;
 use App\Models\EducationType;
 use App\Models\JobSphere;
 use App\Models\JobType;
+use App\Models\Opportunity;
 use App\Models\Region;
 use App\Models\SocialOrientation;
 use App\Models\User;
@@ -56,6 +57,13 @@ class UserController extends Controller
                 $user->job_type = $job_type->getName($request->lang);
             } else {
                 $user->job_type = '';
+            }
+
+            if($user->opportunity) {
+                $opportunity = Opportunity::find($user->opportunity);
+                $user->opportunity = $opportunity->getName($request->lang);
+            } else {
+                $user->opportunity = '';
             }
 
             if($user->job_sphere) {
@@ -482,12 +490,20 @@ class UserController extends Controller
 
     public function getUserSkills(Request $request)
     {
+        $type = $request->type;
+
+        $result = [];
+
         if($request->email) {
             $user = User::where('email', $request->email)->first();
 
             if($user){
 
-                $user_skills = DB::table('user_skills')->where('user_id', $user->id)->get();
+                if($type) {
+                    $user_skills = DB::table('user_skills')->where('user_id', $user->id)->where('type', $type)->get();
+                } else {
+                    $user_skills = DB::table('user_skills')->where('user_id', $user->id)->get();
+                }
 
                 foreach ($user_skills as $user_skill){
 
@@ -517,13 +533,13 @@ class UserController extends Controller
 
     }
 
-    public function saveUserSkills(Request $request) {
-
-
+    public function saveUserSkills(Request $request)
+    {
         $lang = $request->lang ? $request->lang : 'ru';
         $tag = array();
 
         $user = User::find($request->user_id);
+        $type = $request->type ? $request->type : 1;
 
         if(count($request->user_skills) > 0) {
 
@@ -537,16 +553,17 @@ class UserController extends Controller
 
                     foreach ($category_skills as $category_skill) {
                         if(!in_array($category_skill->name_ru, $request->user_skills)){
-                            DB::table('user_skills')->where('user_id', $user->id)->where('skill_id', $category_skill->id)->delete();
+                            DB::table('user_skills')->where('user_id', $user->id)->where('skill_id', $category_skill->id)->where('type', $type)->delete();
                         }
                         if($category_skill->id == $skill->id){
-                            DB::table('user_skills')->where('user_id', $user->id)->where('skill_id', $category_skill->id)->delete();
+                            DB::table('user_skills')->where('user_id', $user->id)->where('skill_id', $category_skill->id)->where('type', $type)->delete();
                         }
                     }
 
                     DB::table('user_skills')->insert([
                         'user_id' => $request->user_id,
-                        'skill_id' => $skill->id
+                        'skill_id' => $skill->id,
+                        'type' => $type
                     ]);
 
                 }
@@ -570,6 +587,62 @@ class UserController extends Controller
             'id' => null,
             'token' => null,
             'message' => 'user exist!',
+            'status' => 999,
+        ]);
+    }
+
+    public function saveJobSphere(Request $request)
+    {
+        $user = User::find($request->id);
+
+        if($user){
+
+            if($request->job_sphere){
+                $job_sphere = JobSphere::where('name_ru', $request->job_sphere)->first();
+
+                $user->job_sphere = $job_sphere->id;
+                $user->save();
+
+                return response()->json([
+                    'id' => $user->id,
+                    'message' => 'Successfully updated user!'
+                ], 200);
+            }
+
+        }
+        return response()->json([
+            'id' => null,
+            'token' => null,
+            'message' => 'Something went wrong!',
+            'status' => 999,
+        ]);
+    }
+
+    public function saveOpportunity(Request $request)
+    {
+        $user = User::find($request->id);
+
+        if($user){
+
+            if($request->opportunity){
+                $opportunity = Opportunity::where('name_ru', $request->opportunity)->first();
+
+                if($opportunity){
+                    $user->opportunity = $opportunity->id;
+                    $user->save();
+
+                    return response()->json([
+                        'id' => $user->id,
+                        'message' => 'Successfully updated user!'
+                    ], 200);
+                }
+            }
+
+        }
+        return response()->json([
+            'id' => null,
+            'token' => null,
+            'message' => 'Something went wrong!',
             'status' => 999,
         ]);
     }

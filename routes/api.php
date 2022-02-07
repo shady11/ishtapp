@@ -59,6 +59,9 @@ Route::group([
         'user_cv_course' => 'UserCvCourseController',
     ]);
 
+    Route::post('user/save/job_sphere', ['uses' => 'UserController@saveJobSphere']);
+    Route::post('user/save/opportunity', ['uses' => 'UserController@saveOpportunity']);
+
     Route::post('user/experience/update/{user_cv_experience}', ['uses' => 'UserCvExperienceController@update']);
     Route::post('user/experience/delete/{user_cv_experience}', ['uses' => 'UserCvExperienceController@delete']);
 

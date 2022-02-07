@@ -100,7 +100,7 @@ class UserCvController extends Controller
                     'experience_year' => ['required'],
                 ]);
             }
-            
+
             if ($request->user_cv_id) {
                 $user_cv = UserCV::findOrFail($request->user_cv_id);
                 $user_cv->update([
@@ -113,12 +113,13 @@ class UserCvController extends Controller
                     'user_id' => $request->user_id,
                     'experience_year' => $request->experience_year ? $request->experience_year : null,
                 ]);
-                
+
             }
             if ($request->hasFile('attachment')) {
                 $file = $request->file('attachment');
-                $path = '/storage/attachments/' . Carbon::now()->format('YmdHms') . $file->getClientOriginalName();
-                $file->move(public_path() . '/storage/attachments/', Carbon::now()->format('YmdHms') . $file->getClientOriginalName());
+                $filename = Carbon::now()->format('YmdHms') . '.' . $file->getClientOriginalExtension();
+                $path = 'storage/attachments/' . $filename;
+                $file->move(public_path() . '/storage/attachments/', $filename);
                 $user_cv->attachment = $path;
             }
             $user_cv->save();
