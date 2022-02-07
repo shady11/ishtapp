@@ -94,10 +94,13 @@ class UserCvController extends Controller
         $user_cv = new UserCV();
 
         if ($user) {
-            $this->validate($request, [
-                'job_title' => ['required'],
-                'experience_year' => ['required'],
-            ]);
+            if(!$request->is_product_lab_user) {
+                $this->validate($request, [
+                    'job_title' => ['required'],
+                    'experience_year' => ['required'],
+                ]);
+            }
+            
             if ($request->user_cv_id) {
                 $user_cv = UserCV::findOrFail($request->user_cv_id);
                 $user_cv->update([
@@ -106,10 +109,11 @@ class UserCvController extends Controller
                 ]);
             } else {
                 $user_cv = UserCV::create([
-                    'job_title' => $request->job_title,
+                    'job_title' => $request->job_title ? $request->job_title : null,
                     'user_id' => $request->user_id,
-                    'experience_year' => $request->experience_year,
+                    'experience_year' => $request->experience_year ? $request->experience_year : null,
                 ]);
+                
             }
             if ($request->hasFile('attachment')) {
                 $file = $request->file('attachment');
@@ -200,7 +204,6 @@ class UserCvController extends Controller
                     }
                 }
             }
-
 
 //            dd($request->experiences);
 
