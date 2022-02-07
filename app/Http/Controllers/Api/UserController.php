@@ -142,7 +142,6 @@ class UserController extends Controller
         if($company_id){
             $vacancy_ids =Vacancy::where('company_id', $company_id)->pluck('id')->toArray();
             $submitted_user_vacancies = UserVacancy::whereIn("vacancy_id", $vacancy_ids)->where("type", 'SUBMITTED')->orderBy('id', 'desc')->get();
-//            return $submitted_user_ids;
             $result = [];
             foreach ($submitted_user_vacancies as $submitted_user_vacancy) {
 
@@ -210,6 +209,30 @@ class UserController extends Controller
                         ]);
                     }
 
+                    $user_skills = [];
+                    foreach (DB::table('user_skills')->where('user_id', $user->id)->where('type', 1)->get() as $model) {
+                        $user_skills[] = $model->name_ru;
+                    }
+
+                    $user_skills2 = [];
+                    foreach (DB::table('user_skills')->where('user_id', $user->id)->where('type', 2)->get() as $model) {
+                        $user_skills2[] = $model->name_ru;
+                    }
+
+                    if($user->opportunity) {
+                        $opportunity = Opportunity::find($user->opportunity);
+                        $user->opportunity = $opportunity->getName("ru");
+                    } else {
+                        $user->opportunity = '';
+                    }
+        
+                    if($user->job_sphere) {
+                        $job_sphere = JobSphere::find($user->job_sphere);
+                        $user->job_sphere = $job_sphere->getName("ru");
+                    } else {
+                        $user->job_sphere = '';
+                    }
+
                     return response()->json([
                         'id' => $user->id,
                         'name' => $user->name,
@@ -226,6 +249,10 @@ class UserController extends Controller
                         'educations' => $user_educations,
                         'courses' => $user_courses,
                         'experiences' => $user_experiences,
+                        'opportunity' => $user->opportunity,
+                        'job_sphere' => $user->job_sphere,
+                        'skills' => $user_skills,
+                        'skills2' => $user_skills2,
                     ]);
                 }
                 else{
