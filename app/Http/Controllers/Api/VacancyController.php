@@ -28,7 +28,7 @@ class VacancyController extends Controller
 {
     public function index(Request $request)
     {
-        
+
         $limit = $request->limit;
         $offset = $request->offset;
         $job_type_ids = $request->job_type_ids;
@@ -72,7 +72,7 @@ class VacancyController extends Controller
                 array_push($internship_language_ids, $model->id);
             }
         }
-        
+
         if (!$job_type_ids) {
             $job_type_ids = [];
             foreach (JobType::all() as $model) {
@@ -113,7 +113,7 @@ class VacancyController extends Controller
         if(!$offset){
             $offset = 0;
         }
-        
+
         $specificDate = strtotime('2000-1-1');
         $specificDate = date("Y-m-d H:i:s",$specificDate);
         if($time_type == 'day'){
@@ -166,7 +166,7 @@ class VacancyController extends Controller
         if($limit) {
             $vacancies = $vacancies->take($limit);
         }
-        
+
         $vacancies = $vacancies->get();
 
         foreach ($vacancies->reverse() as $item) {
@@ -337,14 +337,15 @@ class VacancyController extends Controller
         }
 
     }
+
     public function getVacanciesByType(Request $request, $type)
-    {        
+    {
         $token = $request->header('Authorization');
         $user = User::where("password", $token)->firstOrFail();
         if($user){
             $type = $request->type;
-            
-            
+
+
             $result = UserVacancy::where("type", $type)
                 ->where("user_id", $user->id)
                 // ->where("user_id", 7876)
@@ -378,7 +379,7 @@ class VacancyController extends Controller
                             'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
                         ]);
                     }
-                    
+
 
 //            $vacancies = Vacancy::where('id', 3)->get();
 //            dd($vacancies);
@@ -411,7 +412,7 @@ class VacancyController extends Controller
     {
         $token = $request->header('Authorization');
         $user = User::where("password", "$token")->firstOrFail();
-        
+
         if($user){
             $result1 = [];
             $vacancies = Vacancy::where('company_id', $user->id)->where('is_active', true)->orderBy('created_at', 'desc')->take(10)->get();
@@ -494,13 +495,19 @@ class VacancyController extends Controller
         $token = $request->header('Authorization');
 
         $user = User::where("password", $token)->firstOrFail();
-        
+
         if($user){
             $result1 = [];
             foreach (Vacancy::where('company_id', $user->id)
                          ->where('is_active', false)
                          ->get() as $item){
-                            
+
+                $opportunity = Opportunity::where('id', $item->opportunity_id)->first();
+                $opportunity_duration = OpportunityDuration::where('id', $item->opportunity_duration_id)->first();
+                $opportunity_type = OpportunityType::where('id', $item->opportunity_type_id)->first();
+                $internship_language = IntershipLanguage::where('id', $item->internship_language_id)->first();
+                $recommendation_letter_type = RecommendationLetterType::where('id', $item->recommendation_letter_type_id)->first();
+
                 array_push($result1, [
                     'id'=> $item->id,
                     'name'=> $item->name,
@@ -515,7 +522,15 @@ class VacancyController extends Controller
                     'schedule' => $item->schedule ? $item->schedule->getName($request->lang) : null,
                     'type' => $item->vacancytype ? $item->vacancytype->getName($request->lang) : null,
                     'region' => $item->region ? $item->region->getName($request->lang) : null,
-                    'company' => $item->company->id
+                    'company' => $item->company->id,
+                    'opportunity' => $opportunity ? $opportunity->getName($request->lang) : null,
+                    'opportunity_type' => $opportunity_type ? $opportunity_type->getName($request->lang) : null,
+                    'opportunity_duration' => $opportunity_duration ? $opportunity_duration->getName($request->lang) : null,
+                    'internship_language' => $internship_language ? $internship_language->getName($request->lang) : null,
+                    'age_from' => $item->age_from,
+                    'age_to' => $item->age_to,
+                    'recommendation_letter_type' => $recommendation_letter_type ? $recommendation_letter_type->getName($request->lang) : null,
+                    'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
                 ]);
             }
             return $result1;
@@ -580,21 +595,21 @@ class VacancyController extends Controller
 
     public function getVacancySkills(Request $request)
     {
-        
+
         $vacancies = DB::table('vacancy_skills')->where('vacancy_id', $request->vacancy_id)->get();
 
         $skill_ids = [];
-        foreach (Skillset::all() as $model) 
+        foreach (Skillset::all() as $model)
         {
             array_push($skill_ids, $model->id);
         }
-            
+
         $skills = Skillset::all();
         $result = [];
 
         $vacancies = $vacancies->whereIn('skill_id', $skill_ids);
 
-        
+
         foreach ($vacancies as $item) {
             $skill_name = $skills->where('id', $item->skill_id)->first()->getName("ru");
 
@@ -609,13 +624,13 @@ class VacancyController extends Controller
         return $result;
     }
 
-    public function saveVacancySkills(Request $request) 
+    public function saveVacancySkills(Request $request)
     {
         $lang = $request->lang ? $request->lang : 'ru';
         $tag = array();
-        
+
         $vacancy = Vacancy::find($request->vacancy_id);
-        
+
         if(count($request->vacancy_skills) > 0) {
 
             foreach($request->vacancy_skills as $skill_name){
@@ -631,7 +646,7 @@ class VacancyController extends Controller
                 }
             }
         }
-           
+
         try {
             return response()->json([
                 'id' => $vacancy->id,

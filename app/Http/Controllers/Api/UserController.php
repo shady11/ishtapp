@@ -168,9 +168,7 @@ class UserController extends Controller
     protected function getUserFullInfo(Request $request, $user_id)
     {
         if($user_id){
-            $user = User::where('id', $user_id)
-                ->where('type','USER')
-                ->firstOrFail();
+            $user = User::find($user_id);
             if($user){
                 $user_cv = UserCV::where('user_id', $user_id)->firstOrFail();
                 if($user_cv){
@@ -209,14 +207,22 @@ class UserController extends Controller
                         ]);
                     }
 
-                    $user_skills = [];
-                    foreach (DB::table('user_skills')->where('user_id', $user->id)->where('type', 1)->get() as $model) {
-                        $user_skills[] = $model->name_ru;
+                    $user_skills = DB::table('user_skills')->where('user_id', $user->id)->where('type', 1)->get();
+                    $skills = [];
+                    if($user_skills){
+                        foreach ($user_skills as $model) {
+                            $skill = Skillset::find($model->skill_id);
+                            $skills[] = $skill->name_ru;
+                        }
                     }
 
-                    $user_skills2 = [];
-                    foreach (DB::table('user_skills')->where('user_id', $user->id)->where('type', 2)->get() as $model) {
-                        $user_skills2[] = $model->name_ru;
+                    $user_skills2 = DB::table('user_skills')->where('user_id', $user->id)->where('type', 2)->get();
+                    $skills2 = [];
+                    if($user_skills2){
+                        foreach ($user_skills2 as $model2) {
+                            $skill2 = Skillset::find($model2->skill_id);
+                            $skills2[] = $skill2->name_ru;
+                        }
                     }
 
                     if($user->opportunity) {
@@ -225,7 +231,7 @@ class UserController extends Controller
                     } else {
                         $user->opportunity = '';
                     }
-        
+
                     if($user->job_sphere) {
                         $job_sphere = JobSphere::find($user->job_sphere);
                         $user->job_sphere = $job_sphere->getName("ru");
@@ -251,8 +257,8 @@ class UserController extends Controller
                         'experiences' => $user_experiences,
                         'opportunity' => $user->opportunity,
                         'job_sphere' => $user->job_sphere,
-                        'skills' => $user_skills,
-                        'skills2' => $user_skills2,
+                        'skills' => $skills,
+                        'skills2' => $skills2,
                     ]);
                 }
                 else{
