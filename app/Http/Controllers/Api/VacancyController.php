@@ -595,7 +595,6 @@ class VacancyController extends Controller
 
     public function getVacancySkills(Request $request)
     {
-
         $vacancies = DB::table('vacancy_skills')->where('vacancy_id', $request->vacancy_id)->get();
 
         $skill_ids = [];
@@ -606,17 +605,18 @@ class VacancyController extends Controller
 
         $skills = Skillset::all();
         $result = [];
-
+        
         $vacancies = $vacancies->whereIn('skill_id', $skill_ids);
 
-
         foreach ($vacancies as $item) {
+            
             $skill_name = $skills->where('id', $item->skill_id)->first()->getName("ru");
-
+            $skill = $skills->where('id', $item->skill_id)->first();
             $result[] = [
                 'id'=> $item->id,
                 'vacancy_id' => $item->vacancy_id,
                 'name'=> $skill_name,
+                'category_id' => $skill->skillset_category_id,
                 'is_required' => $item->is_required,
             ];
         }
