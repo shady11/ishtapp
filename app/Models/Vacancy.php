@@ -39,6 +39,7 @@ class Vacancy extends Model
         'age_to',
         'recommendation_letter_type_id',
         'is_product_lab_vacancy',
+        'vacancy_link',
     ];
 
     protected $searchable = [

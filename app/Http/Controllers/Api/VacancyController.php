@@ -28,7 +28,6 @@ class VacancyController extends Controller
 {
     public function index(Request $request)
     {
-
         $limit = $request->limit;
         $offset = $request->offset;
         $job_type_ids = $request->job_type_ids;
@@ -196,6 +195,7 @@ class VacancyController extends Controller
                 'age_to' => $item->age_to,
                 'recommendation_letter_type' => $item->recommendation_letter_type_id ? $item->recommendation_letter_type->getName($request->lang) : null,
                 'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
+                'vacancy_link' => $item->vacancy_link,
             ]);
         }
 
@@ -262,7 +262,8 @@ class VacancyController extends Controller
                     'age_from' => $request->age_from,
                     'age_to' => $request->age_to,
                     'recommendation_letter_type_id' => $type_of_recommended_letter ? $type_of_recommended_letter->id : null,
-                    'is_product_lab_vacancy' => $request->is_product_lab_vacancy
+                    'is_product_lab_vacancy' => $request->is_product_lab_vacancy,
+                    'vacancy_link' => $request->vacancy_link,
                 ]);
             }
             else {
@@ -290,6 +291,7 @@ class VacancyController extends Controller
                     'age_to' => $request->age_to,
                     'recommendation_letter_type_id' => $type_of_recommended_letter ? $type_of_recommended_letter->id : null,
                     'is_product_lab_vacancy' => $request->is_product_lab_vacancy,
+                    'vacancy_link' => $request->vacancy_link,
                     'created_at' => date('Y-m-d H:i:s'),
                 ]);
             }
@@ -377,6 +379,7 @@ class VacancyController extends Controller
                             'age_to' => $item->age_to,
                             'recommendation_letter_type' => $item->recommendation_letter_type ? $item->recommendation_letter_type->getName($request->lang) : null,
                             'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
+                            'vacancy_link' => $item->vacancy_link,
                         ]);
                     }
 
@@ -448,6 +451,7 @@ class VacancyController extends Controller
                     'age_to' => $item->age_to,
                     'recommendation_letter_type' => $recommendation_letter_type ? $recommendation_letter_type->getName($request->lang) : null,
                     'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
+                    'vacancy_link' => $item->vacancy_link,
                 ]);
             }
             return $result1;
@@ -531,6 +535,7 @@ class VacancyController extends Controller
                     'age_to' => $item->age_to,
                     'recommendation_letter_type' => $recommendation_letter_type ? $recommendation_letter_type->getName($request->lang) : null,
                     'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
+                    'vacancy_link' => $item->vacancy_link,
                 ]);
             }
             return $result1;
@@ -666,5 +671,141 @@ class VacancyController extends Controller
             'message' => 'user exist!',
             'status' => 999,
         ]);
+    }
+
+    public function updateVacancySkills(Request $request)
+    {
+        $lang = $request->lang ? $request->lang : 'ru';
+        $tag = array();
+
+        $vacancy = Vacancy::find($request->vacancy_id);
+
+        
+
+        if(count($request->vacancy_skills) > 0) {
+
+            $vacancy_skills = DB::table('vacancy_skills')->where('vacancy_id', $request->vacancy_id)->get();
+            if($vacancy_skills) {
+                $vacancy_skills->delete();
+                foreach($request->vacancy_skills as $skill_name){
+
+                    // $skill = Skillset::where('name_ru', $skill_name)->where('skillset_category_id', $request->category_id)->first();
+                    $skill = Skillset::where('name_ru', $skill_name)->first();
+                    if($skill) {
+                        DB::table('vacancy_skills')->insert([
+                            'vacancy_id' => $vacancy->id,
+                            'skill_id' => $skill->id,
+                            'is_required' =>$request->is_required
+                        ]);
+                    }
+                }
+            }
+
+            
+        }
+
+        try {
+            return response()->json([
+                'id' => $vacancy->id,
+                'message' => 'Successfully added user skills!'
+            ], 200);
+        } catch (QueryException $e) {
+            return response()->json([
+                'id' => null,
+                'token' => null,
+                'message' => 'error!',
+                'status' => 999,
+            ]);
+        }
+        return response()->json([
+            'id' => null,
+            'token' => null,
+            'message' => 'user exist!',
+            'status' => 999,
+        ]);
+    }
+
+    public function checkingForNewMessages(Request $request)
+    {
+        $type = 'SUBMITTED';
+        $token = $request->header('Authorization');
+        $created_message_date = $request->created_message_date;
+        $user = User::where("password", $token)->firstOrFail();
+
+        if($user)
+        {
+            try {
+
+                $existing_new_messages = [];
+                $vacancies_ids = Vacancy::where('company_id', $user->id)->where('is_active', true)->pluck('id');
+                
+                if($vacancies_ids)
+                {
+                    if($created_message_date)
+                    {      
+                       $existing_new_messages = UserVacancy::whereIn("vacancy_id", $vacancies_ids)
+                            ->where("type", $type)
+                            ->where("created_at",'>', Carbon::parse($created_message_date))->orderBy('created_at', 'desc')->get();
+
+                        if($existing_new_messages and $existing_new_messages->count() > 0)
+                        {
+                            $message_count = $existing_new_messages->count();
+
+                            $message = $existing_new_messages->first();
+
+                            return response()->json([
+                                'is_exist' => true,
+                                'vacancy_id' => $message ? $message->vacancy_id : null,
+                                'count' => $message_count,
+                                'created_at' =>  $message->created_at->toDateTimeString(),
+                                'message' => 'OK'
+                            ], 200);
+                        } else {
+                            $data = UserVacancy::whereIn("vacancy_id", $vacancies_ids)
+                                ->where("type", $type)->orderBy('created_at', 'desc')->first();
+                            $last_submitted = $data ? $data->created_at : Carbon::now();
+
+                            return response()->json([
+                                'is_exist' => false,
+                                'vacancy_id' => $data ? $data->vacancy_id : null,
+                                'count' => "0",
+                                'created_at' => $last_submitted->toDateTimeString(),
+                                'message' => 'DOES NOT EXIST'
+                            ], 200);
+                        }
+                    } else {
+                        $data = UserVacancy::whereIn("vacancy_id", $vacancies_ids)
+                            ->where("type", $type)->orderBy('vacancy_id', 'desc')->first();
+                        $last_submitted = $data ? $data->created_at : Carbon::now();
+
+                        return response()->json([
+                            'is_exist' => false,
+                            'vacancy_id' => null,
+                            'count' => "0",
+                            'created_at' => $last_submitted->toDateTimeString(),
+                            'message' => 'DOES NOT EXIST'
+                        ], 200);
+                    }
+
+                } else {
+                    return response()->json([
+                        'message' => 'No vacancies',
+                        'status' => 999,
+                    ]);
+                }
+            } catch (QueryException $e) {
+                return response()->json([
+                    'message' => 'ERROR WHEN CHECKING NEW MESSAGES',
+                    'status' => 999,
+                ]);
+            }
+
+        } else {
+            return response()->json([
+                'message' => 'USER DOES NOT EXIST',
+                'status' => 999,
+            ]);
+        }
+
     }
 }

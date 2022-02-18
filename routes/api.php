@@ -50,6 +50,8 @@ Route::group([
     Route::get('user/skills', ['uses' => 'UserController@getUserSkills']);
     Route::post('vacancy_skillset', ['uses' => 'VacancyController@saveVacancySkills']);
     Route::get('vacancy_skillset', ['uses' => 'VacancyController@getVacancySkills']);
+    Route::post('check_for_new_messages', ['uses' => 'VacancyController@checkingForNewMessages']);
+    Route::get('deleteAccount/{user_id}', ['uses' => 'UserController@deleteAccount']);
 
     Route::resources([
         'users' => 'UserController',
