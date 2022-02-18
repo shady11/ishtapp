@@ -335,6 +335,7 @@ class UserController extends Controller
             if ($request->password) {
                 $user->password = Hash::make($request->password);
             }
+
             try {
                 $user->save();
                 return response()->json([
@@ -516,7 +517,7 @@ class UserController extends Controller
 
             $user_vacancies = UserVacancy::where('user_id', $user->id)->where('type', '<>', 'SUBMITTED')->delete();
 
-            return "OK";
+            return response()->json('OK');
         }
         return response()->json('user id does not exist');
     }
