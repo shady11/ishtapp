@@ -680,4 +680,47 @@ class UserController extends Controller
         ]);
     }
 
+    public function deleteAccount(Request $request, $user_id)
+    {
+        $user = User::findOrFail($request->user_id);
+
+        if($user) {
+            try {
+                $user_vacancies = UserVacancy::where('user_id', $user->id)->delete();
+                $user_skills = DB::table('user_skills')->where('user_id', $user->id)->delete();
+                $user_email_codes = DB::table('user_email_codes')->where('user_id', $user->id)->delete();
+    
+                $user_cv_id = UserCV::where('user_id', $user->id)->pluck('id');
+    
+                $user_experiens = UserExperience::whereIn('user_cv_id', $user_cv_id)->delete();
+
+                $user_education = UserEducation::whereIn('user_cv_id', $user_cv_id)->delete();
+
+                $user_courses = DB::table('user_courses')->whereIn('user_cv_id', $user_cv_id)->delete();
+    
+                $user_cvs = UserCV::where('user_id', $user->id)->delete();
+                $user->delete();
+
+                return response()->json([
+                    'message' => 'OK'
+                ], 200);
+    
+            } catch (QueryException $e) {
+                return response()->json([
+                    'id' => null,
+                    'token' => null,
+                    'message' => 'error!',
+                    'status' => 999,
+                ]);
+            }
+        } else {
+            return response()->json([
+                'id' => null,
+                'token' => null,
+                'message' => 'user doesn\'t exists!',
+                'status' => 999,
+            ]);
+        }
+    }
+
 }
