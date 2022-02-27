@@ -196,6 +196,7 @@ class VacancyController extends Controller
                 'recommendation_letter_type' => $item->recommendation_letter_type_id ? $item->recommendation_letter_type->getName($request->lang) : null,
                 'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
                 'vacancy_link' => $item->vacancy_link,
+                'deadline' => $item->deadline,
             ]);
         }
 
@@ -213,7 +214,7 @@ class VacancyController extends Controller
         $internship_language = IntershipLanguage::where('name_ru', $request->internship_language)->orWhere('name', $request->internship_language)->first();
         $opportunity_duration = OpportunityDuration::where('name_ru', $request->opportunity_duration)->orWhere('name', $request->opportunity_duration)->first();
         $type_of_recommended_letter = RecommendationLetterType::where('name_ru', $request->type_of_recommended_letter)->orWhere('name', $request->type_of_recommended_letter)->first();
-
+        
         if ($user && $user->type =='COMPANY') {
             if($request->salary){
                 $salary = $request->salary;
@@ -240,31 +241,40 @@ class VacancyController extends Controller
             }
 
             if($request->id){
-                $vacancy = Vacancy::update([
-                    'name' => $request->name,
-                    'salary' => $salary,
-                    'salary_from' => $request->salary_from,
-                    'salary_to' => $request->salary_to,
-                    'description' => $request->description,
-                    'busyness_id' => $request->busyness,
-                    'schedule_id' => $request->schedule,
-                    'job_type_id' => $request->job_type,
-                    'region_id' => $request->region ? $request->region : $user->region,
-                    'district_id' => $request->district ? $request->district : $user->distirct,
-                    'vacancy_type_id' => $request->type,
-                    'currency' => $request->currency,
-                    'is_active' => true,
-                    'is_disability_person_vacancy' => $request->is_disability_person_vacancy,
-                    'opportunity_id' => $opportunity ? $opportunity->id : null,
-                    'opportunity_type_id' => $opportunity_type ? $opportunity_type->id : null,
-                    'internship_language_id' => $internship_language ? $internship_language->id : null,
-                    'opportunity_duration_id' => $opportunity_duration ? $opportunity_duration->id : null,
-                    'age_from' => $request->age_from,
-                    'age_to' => $request->age_to,
-                    'recommendation_letter_type_id' => $type_of_recommended_letter ? $type_of_recommended_letter->id : null,
-                    'is_product_lab_vacancy' => $request->is_product_lab_vacancy,
-                    'vacancy_link' => $request->vacancy_link,
-                ]);
+                $vacancy = Vacancy::find($request->id);
+                if($vacancy) {
+                    $vacancy->update([
+                        'name' => $request->name ? $request->name : null,
+                        'salary' => $salary,
+                        'salary_from' => $request->salary_from,
+                        'salary_to' => $request->salary_to,
+                        'description' => $request->description,
+                        'busyness_id' => $request->busyness,
+                        'schedule_id' => $request->schedule,
+                        'job_type_id' => $request->job_type,
+                        'region_id' => $request->region ? $request->region : $user->region,
+                        'district_id' => $request->district ? $request->district : $user->distirct,
+                        'vacancy_type_id' => $request->type,
+                        'currency' => $request->currency,
+                        'is_active' => true,
+                        'is_disability_person_vacancy' => $request->is_disability_person_vacancy,
+                        'opportunity_id' => $opportunity ? $opportunity->id : null,
+                        'opportunity_type_id' => $opportunity_type ? $opportunity_type->id : null,
+                        'internship_language_id' => $internship_language ? $internship_language->id : null,
+                        'opportunity_duration_id' => $opportunity_duration ? $opportunity_duration->id : null,
+                        'age_from' => $request->age_from,
+                        'age_to' => $request->age_to,
+                        'recommendation_letter_type_id' => $type_of_recommended_letter ? $type_of_recommended_letter->id : null,
+                        'is_product_lab_vacancy' => $request->is_product_lab_vacancy,
+                        'vacancy_link' => $request->vacancy_link,
+                        'deadline' => $request->deadline,
+                    ]);
+                }
+
+                return response()->json([
+                    'id' => $request->id,
+                    'message' => 'OK'
+                ], 200);
             }
             else {
                 $vacancy = Vacancy::create([
@@ -292,6 +302,7 @@ class VacancyController extends Controller
                     'recommendation_letter_type_id' => $type_of_recommended_letter ? $type_of_recommended_letter->id : null,
                     'is_product_lab_vacancy' => $request->is_product_lab_vacancy,
                     'vacancy_link' => $request->vacancy_link,
+                    'deadline' => $request->deadline,
                     'created_at' => date('Y-m-d H:i:s'),
                 ]);
             }
@@ -380,6 +391,7 @@ class VacancyController extends Controller
                             'recommendation_letter_type' => $item->recommendation_letter_type ? $item->recommendation_letter_type->getName($request->lang) : null,
                             'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
                             'vacancy_link' => $item->vacancy_link,
+                            'deadline' => $item->deadline
                         ]);
                     }
 
@@ -427,6 +439,12 @@ class VacancyController extends Controller
                 $opportunity_type = OpportunityType::where('id', $item->opportunity_type_id)->first();
                 $internship_language = IntershipLanguage::where('id', $item->internship_language_id)->first();
                 $recommendation_letter_type = RecommendationLetterType::where('id', $item->recommendation_letter_type_id)->first();
+                $district = District::where('id', $item->district_id)->first();
+                if($item->currency) {
+                    $currency = Currency::where('id', $item->currency)->first();   
+                } else {
+                    $currency = null;
+                }
 
                 array_push($result1, [
                     'id'=> $item->id,
@@ -435,6 +453,9 @@ class VacancyController extends Controller
                     'address'=> $item->company->address,
                     'description'=> $item->description,
                     'salary'=> $item->salary,
+                    'currency' => $currency ? $currency->getName($request->lang) : null,
+                    'salary_from' => $item->salary_from,
+                    'salary_to' => $item->salary_to,
                     'company_name' => $item->company->name,
                     'company_logo'=> $item->company->avatar,
                     'busyness' => $item->busyness ? $item->busyness->getName($request->lang) : null,
@@ -442,6 +463,7 @@ class VacancyController extends Controller
                     'schedule' => $item->schedule ? $item->schedule->getName($request->lang) : null,
                     'type' => $item->vacancytype ? $item->vacancytype->getName($request->lang) : null,
                     'region' => $item->region ? $item->region->getName($request->lang) : null,
+                    'district' => $district ? $district->getName($request->lang) : null,
                     'company' => $item->company->id,
                     'opportunity' => $opportunity ? $opportunity->getName($request->lang) : null,
                     'opportunity_type' => $opportunity_type ? $opportunity_type->getName($request->lang) : null,
@@ -452,6 +474,7 @@ class VacancyController extends Controller
                     'recommendation_letter_type' => $recommendation_letter_type ? $recommendation_letter_type->getName($request->lang) : null,
                     'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
                     'vacancy_link' => $item->vacancy_link,
+                    'deadline' => $item->deadline,
                 ]);
             }
             return $result1;
@@ -536,6 +559,7 @@ class VacancyController extends Controller
                     'recommendation_letter_type' => $recommendation_letter_type ? $recommendation_letter_type->getName($request->lang) : null,
                     'is_product_lab_vacancy' => $item->is_product_lab_vacancy,
                     'vacancy_link' => $item->vacancy_link,
+                    'deadline' => $item->deadline,
                 ]);
             }
             return $result1;

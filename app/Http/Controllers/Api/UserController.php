@@ -148,6 +148,7 @@ class UserController extends Controller
                 array_push($result, [
                     'vacancy_name' => $submitted_user_vacancy->vacancy->name,
                     'id' => $submitted_user_vacancy->user->id,
+                    'user_vacancy_id' => $submitted_user_vacancy->id,
                     'name' => $submitted_user_vacancy->user->name,
                     'lastname' => $submitted_user_vacancy->user->lastname,
                     'email' => $submitted_user_vacancy->user->email,
@@ -155,7 +156,8 @@ class UserController extends Controller
                     'avatar' => $submitted_user_vacancy->user->avatar,
                     'birth_date' => $submitted_user_vacancy->user->birth_date,
                     'job_title' => UserCv::where('user_id',$submitted_user_vacancy->user->id)->first()->job_title,
-                    'experience_year' => UserCv::where('user_id',$submitted_user_vacancy->user->id)->first()->experience_year
+                    'experience_year' => UserCv::where('user_id',$submitted_user_vacancy->user->id)->first()->experience_year,
+                    'recruited' => $submitted_user_vacancy->recruited
                 ]);
             }
             return $result;
@@ -720,6 +722,68 @@ class UserController extends Controller
                 'token' => null,
                 'message' => 'user doesn\'t exists!',
                 'status' => 999,
+            ]);
+        }
+    }
+
+    public function setUserVacancyRecruit(Request $request)
+    {
+        $user = User::findOrFail($request->user_id);
+
+        $user_vacancy = UserVacancy::findOrFail($request->user_vacancy_id);
+
+        if($user) {
+            if($user_vacancy) {
+                $user_vacancy->recruited = $request->recruited;
+                // $user_vacancy->update([
+                //     'recruited' => $request->recruited,
+                // ]);
+
+                $user_vacancy->update();
+                return response()->json([
+                    'message' => 'OK'
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'Vacancy does not exist',
+                    'status' => 400,
+                ]);
+            }
+        } else {
+            return response()->json([
+                'id' => null,
+                'token' => null,
+                'message' => 'User does not exist',
+                'status' => 400,
+            ]);
+        }
+    }
+
+    public function getUserVacancyRecruit(Request $request, $vacancy_id)
+    {
+        $token = $request->header('Authorization');
+        $user = User::where("password", $token)->firstOrFail();
+
+        $user_vacancy = UserVacancy::where('user_id',  $user->id)->where('type', 'SUBMITTED')->where('vacancy_id', $vacancy_id)->first();
+
+        if($user) {
+            if($user_vacancy) {
+                return response()->json([
+                    'recruited' => $user_vacancy->recruited,
+                    'message' => 'OK'
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'Submitted vacancy does not exist',
+                    'status' => 400,
+                ]);
+            }
+        } else {
+            return response()->json([
+                'id' => null,
+                'token' => null,
+                'message' => 'User does not exist',
+                'status' => 400,
             ]);
         }
     }

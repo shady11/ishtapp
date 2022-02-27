@@ -52,6 +52,8 @@ Route::group([
     Route::get('vacancy_skillset', ['uses' => 'VacancyController@getVacancySkills']);
     Route::post('check_for_new_messages', ['uses' => 'VacancyController@checkingForNewMessages']);
     Route::get('deleteAccount/{user_id}', ['uses' => 'UserController@deleteAccount']);
+    Route::post('set_recruit', ['uses' => 'UserController@setUserVacancyRecruit']);
+    Route::get('get_recruit/{vacancy_id}', ['uses' => 'UserController@getUserVacancyRecruit']);
 
     Route::resources([
         'users' => 'UserController',
