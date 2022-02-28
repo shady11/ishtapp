@@ -830,6 +830,53 @@ class VacancyController extends Controller
                 'status' => 999,
             ]);
         }
+    }
 
+    public function deactivateVacancyWithOveredDeadline(Request $request)
+    {
+        $token = $request->header('Authorization');
+        $user = User::where("password", $token)->firstOrFail();
+
+        $vacancies = Vacancy::where("company_id", $user->id)->get();
+
+        try {
+            if($user)
+            {
+                if($vacancies)
+                {
+                    foreach($vacancies as $vacancy)
+                    {
+                        if($vacancy->deadline)
+                        {
+                            if(strtotime($vacancy->deadline) <= strtotime(date('d-m-Y')))
+                            {
+                               $vacancy->update([
+                                   'is_active'=> false
+                               ]);
+                            }
+                        }
+                    }
+                }
+            } else {
+                return response()->json([
+                    'id' => null,
+                    'token' => null,
+                    'message' => 'user does not exist!',
+                    'status' => 999,
+                ]);
+            }
+            return response()->json([
+                'id' => $user->id,
+                'message' => 'OK'
+            ], 200);
+        } catch(QueryException $e) {
+            return response()->json([
+                'id' => null,
+                'token' => null,
+                'message' => 'ERROR',
+                'status' => 999,
+            ]);
+        }
+        
     }
 }

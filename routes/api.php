@@ -54,6 +54,7 @@ Route::group([
     Route::get('deleteAccount/{user_id}', ['uses' => 'UserController@deleteAccount']);
     Route::post('set_recruit', ['uses' => 'UserController@setUserVacancyRecruit']);
     Route::get('get_recruit/{vacancy_id}', ['uses' => 'UserController@getUserVacancyRecruit']);
+    Route::put('deactivateVacancyWithOveredDeadline', ['uses' => 'VacancyController@deactivateVacancyWithOveredDeadline']);
 
     Route::resources([
         'users' => 'UserController',
