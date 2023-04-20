@@ -161,7 +161,6 @@
         $("select[name=job_type]").on("change", function() {
             table.draw();
         });
-
     </script>
 
 @endsection

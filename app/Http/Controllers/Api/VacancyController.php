@@ -214,7 +214,7 @@ class VacancyController extends Controller
         $internship_language = IntershipLanguage::where('name_ru', $request->internship_language)->orWhere('name', $request->internship_language)->first();
         $opportunity_duration = OpportunityDuration::where('name_ru', $request->opportunity_duration)->orWhere('name', $request->opportunity_duration)->first();
         $type_of_recommended_letter = RecommendationLetterType::where('name_ru', $request->type_of_recommended_letter)->orWhere('name', $request->type_of_recommended_letter)->first();
-        
+
         if ($user && $user->type =='COMPANY') {
             if($request->salary){
                 $salary = $request->salary;
@@ -419,7 +419,7 @@ class VacancyController extends Controller
             return count($vacancies);
         }
         else {
-            return 'FALSE';
+            return 0;
         }
 
     }
@@ -441,7 +441,7 @@ class VacancyController extends Controller
                 $recommendation_letter_type = RecommendationLetterType::where('id', $item->recommendation_letter_type_id)->first();
                 $district = District::where('id', $item->district_id)->first();
                 if($item->currency) {
-                    $currency = Currency::where('id', $item->currency)->first();   
+                    $currency = Currency::where('id', $item->currency)->first();
                 } else {
                     $currency = null;
                 }
@@ -634,11 +634,11 @@ class VacancyController extends Controller
 
         $skills = Skillset::all();
         $result = [];
-        
+
         $vacancies = $vacancies->whereIn('skill_id', $skill_ids);
 
         foreach ($vacancies as $item) {
-            
+
             $skill_name = $skills->where('id', $item->skill_id)->first()->getName("ru");
             $skill = $skills->where('id', $item->skill_id)->first();
             $result[] = [
@@ -704,7 +704,7 @@ class VacancyController extends Controller
 
         $vacancy = Vacancy::find($request->vacancy_id);
 
-        
+
 
         if(count($request->vacancy_skills) > 0) {
 
@@ -725,7 +725,7 @@ class VacancyController extends Controller
                 }
             }
 
-            
+
         }
 
         try {
@@ -762,11 +762,11 @@ class VacancyController extends Controller
 
                 $existing_new_messages = [];
                 $vacancies_ids = Vacancy::where('company_id', $user->id)->where('is_active', true)->pluck('id');
-                
+
                 if($vacancies_ids)
                 {
                     if($created_message_date)
-                    {      
+                    {
                        $existing_new_messages = UserVacancy::whereIn("vacancy_id", $vacancies_ids)
                             ->where("type", $type)
                             ->where("created_at",'>', Carbon::parse($created_message_date))->orderBy('created_at', 'desc')->get();
@@ -877,6 +877,6 @@ class VacancyController extends Controller
                 'status' => 999,
             ]);
         }
-        
+
     }
 }

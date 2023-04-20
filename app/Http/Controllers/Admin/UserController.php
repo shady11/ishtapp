@@ -151,13 +151,14 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => ['required', 'min:3', 'max:255'],
 //            'lastname' => ['required', 'min:3', 'max:255'],
-            'login' => ['required', 'unique:users', 'min:6', 'max:255'],
-            'email' => ['required', 'email'],
+//            'login' => ['required', 'unique:users', 'min:6', 'max:255'],
+            'email' => ['required', 'email', 'unique:users'],
             'password' => ['required', 'min:5'],
 //            'linkedin' => ['required'],
             'phone_number' => ['required'],
             'type' => ['required'],
         ]);
+        $request->login = $request->email;
         $user = User::create($request->except( 'password', 'avatar', 'avatar_remove'));
         if($request->password){
             $user->password = Hash::make($request->password);
@@ -177,6 +178,7 @@ class UserController extends Controller
 
             $user->avatar = $dir.$name;
         }
+
         $user->save();
 
         if($user && $user->type == 'USER') {
